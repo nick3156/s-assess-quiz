@@ -15,12 +15,13 @@ Sアセス一次試験対策の単一HTMLクイズアプリ。複数ソース（
 
 ## ファイル
 
-- `index.html` — クイズ本体（単一HTML）
+- `s-assess-quiz.html` — クイズ本体（単一HTML）
+- `index.html` — `s-assess-quiz.html` への自動リダイレクト（GitHub Pages のルート `/` 用）
 
 ## ローカルで動かす
 
 ブラウザで直接開くだけで動作。ビルド不要。
 
 ```
-open index.html
+open s-assess-quiz.html
 ```

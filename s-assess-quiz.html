@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#2563eb">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Sアセス一次試験 対策クイズ</title>
+<style>
+  :root {
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --primary-light: #dbeafe;
+    --primary-glow: rgba(59,130,246,0.15);
+    --correct: #22c55e;
+    --correct-light: #dcfce7;
+    --wrong: #ef4444;
+    --wrong-light: #fee2e2;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --card-hover: #f8fafc;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,0.08);
+    --radius: 14px;
+    --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  [data-theme="dark"] {
+    --primary: #60a5fa;
+    --primary-dark: #3b82f6;
+    --primary-light: #1e3a5f;
+    --primary-glow: rgba(96,165,250,0.12);
+    --correct: #4ade80;
+    --correct-light: #14532d;
+    --wrong: #f87171;
+    --wrong-light: #7f1d1d;
+    --bg: #0f172a;
+    --card: #1e293b;
+    --card-hover: #273548;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #334155;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+    transition: background var(--transition), color var(--transition);
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    margin-bottom: 20px;
+  }
+  .header-left h1 {
+    font-size: 1.3rem;
+    color: var(--primary);
+    letter-spacing: -0.02em;
+  }
+  .header-left p {
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin-top: 2px;
+  }
+  .theme-toggle {
+    width: 40px; height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: var(--card);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.15rem;
+    transition: all var(--transition);
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover { background: var(--primary-light); border-color: var(--primary); }
+
+  /* ===== STREAK BANNER ===== */
+  .streak-banner {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    color: white;
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    animation: streakPulse 0.5s ease;
+  }
+  .streak-banner.show { display: flex; }
+  @keyframes streakPulse {
+    0% { transform: scale(0.95); opacity: 0; }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* ===== STATS BAR ===== */
+  .stats-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    margin-bottom: 16px;
+    font-size: 0.88rem;
+    flex-wrap: wrap;
+    gap: 8px;
+    box-shadow: var(--shadow);
+    transition: background var(--transition), border var(--transition);
+  }
+  .stats-bar .stat { display: flex; align-items: center; gap: 6px; }
+  .stat-label { color: var(--muted); font-size: 0.78rem; }
+  .stat-value { font-weight: 700; font-size: 1rem; }
+  .stat-value.correct-count { color: var(--correct); }
+  .stat-value.wrong-count { color: var(--wrong); }
+  .accuracy { color: var(--primary); font-weight: 700; font-size: 1rem; }
+
+  /* ===== MODE TOGGLE ===== */
+  .mode-toggle {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 4px;
+    box-shadow: var(--shadow);
+  }
+  .mode-btn {
+    flex: 1;
+    padding: 9px 6px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all var(--transition);
+  }
+  .mode-btn:hover { color: var(--text); }
+  .mode-btn.active {
+    color: white;
+    background: var(--primary);
+    box-shadow: 0 2px 6px rgba(59,130,246,0.3);
+  }
+  [data-theme="dark"] .mode-btn.active { box-shadow: 0 2px 6px rgba(96,165,250,0.25); }
+
+  /* ===== CATEGORY FILTER ===== */
+  .category-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .filter-btn {
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--card);
+    color: var(--muted);
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all var(--transition);
+    font-weight: 500;
+  }
+  .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .filter-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  .filter-count {
+    display: inline-block;
+    margin-left: 3px;
+    opacity: 0.75;
+    font-size: 0.72rem;
+  }
+
+  /* ===== QUESTION CARD ===== */
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-lg);
+    transition: background var(--transition), border var(--transition);
+    animation: cardIn 0.3s ease;
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .question-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .q-number { font-size: 0.8rem; color: var(--muted); }
+  .q-category {
+    font-size: 0.72rem;
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+  .question-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    line-height: 1.8;
+  }
+
+  /* ===== CHOICES ===== */
+  .choices {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .choice-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+    cursor: pointer;
+    transition: all var(--transition);
+    text-align: left;
+    font-size: 0.93rem;
+    line-height: 1.6;
+  }
+  .choice-btn:hover:not(.disabled) {
+    border-color: var(--primary);
+    background: var(--primary-glow);
+    transform: translateX(4px);
+  }
+  .choice-btn:active:not(.disabled) { transform: scale(0.98); }
+  .choice-label {
+    flex-shrink: 0;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--muted);
+    transition: all var(--transition);
+  }
+  .choice-btn.correct-answer {
+    border-color: var(--correct);
+    background: var(--correct-light);
+    animation: correctPop 0.4s ease;
+  }
+  .choice-btn.correct-answer .choice-label { background: var(--correct); color: white; }
+  @keyframes correctPop {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+  .choice-btn.wrong-answer {
+    border-color: var(--wrong);
+    background: var(--wrong-light);
+    animation: wrongShake 0.4s ease;
+  }
+  .choice-btn.wrong-answer .choice-label { background: var(--wrong); color: white; }
+  @keyframes wrongShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(5px); }
+    60% { transform: translateX(-3px); }
+    80% { transform: translateX(2px); }
+  }
+  .choice-btn.disabled { cursor: default; }
+  .choice-btn.disabled.dimmed { opacity: 0.4; }
+
+  /* ===== RESULT BOX ===== */
+  .result-box {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 12px;
+    display: none;
+    line-height: 1.8;
+    animation: fadeUp 0.3s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .result-box.show { display: block; }
+  .result-box.correct-result {
+    background: var(--correct-light);
+    border: 1px solid var(--correct);
+  }
+  .result-box.wrong-result {
+    background: var(--wrong-light);
+    border: 1px solid var(--wrong);
+  }
+  .result-title { font-weight: 700; font-size: 1rem; margin-bottom: 8px; }
+  .result-title.correct-title { color: var(--correct); }
+  .result-title.wrong-title { color: var(--wrong); }
+  .result-explanation { font-size: 0.88rem; color: var(--text); }
+  .result-source {
+    margin-top: 10px;
+    font-size: 0.76rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+  }
+
+  /* ===== NEXT BUTTON ===== */
+  .next-btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition);
+    margin-top: 16px;
+  }
+  .next-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+  .next-btn:active:not(:disabled) { transform: scale(0.98); }
+  .next-btn:disabled {
+    background: var(--border);
+    color: var(--muted);
+    cursor: default;
+  }
+
+  /* ===== PANELS ===== */
+  .history-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px 24px;
+    margin-top: 20px;
+    box-shadow: var(--shadow);
+    transition: background var(--transition), border var(--transition);
+  }
+  .history-panel h3 {
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .history-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.83rem;
+  }
+  .history-item:last-child { border-bottom: none; }
+  .history-icon { font-size: 1.1rem; }
+  .history-text {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .stats-card {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 14px 12px;
+    text-align: center;
+    transition: background var(--transition);
+  }
+  .stats-card .sc-label { font-size: 0.73rem; color: var(--muted); margin-bottom: 2px; }
+  .stats-card .sc-value { font-size: 1.2rem; font-weight: 700; }
+  .cat-stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.83rem;
+  }
+  .cat-stats-row:last-child { border-bottom: none; }
+  .cat-bar {
+    width: 80px; height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-left: 8px;
+  }
+  .cat-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+  .session-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .session-row:last-child { border-bottom: none; }
+
+  /* ===== ACTION BUTTONS ===== */
+  .action-btns { margin-top: 16px; display: flex; gap: 8px; }
+  .action-btn {
+    flex: 1; padding: 10px; border: none; border-radius: 10px;
+    font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    transition: all var(--transition); color: white;
+  }
+  .action-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .action-btn.export { background: #64748b; }
+  .action-btn.reset { background: var(--wrong); }
+
+  @media (max-width: 480px) {
+    .container { padding: 12px 10px 32px; }
+    .question-card { padding: 20px 16px; border-radius: 14px; }
+    .header-left h1 { font-size: 1.1rem; }
+    .stats-bar { padding: 10px 14px; font-size: 0.8rem; }
+    .stats-bar .stat-value, .stats-bar .accuracy { font-size: 0.9rem; }
+    .mode-btn { font-size: 0.78rem; padding: 8px 4px; }
+    .filter-btn { padding: 7px 11px; font-size: 0.73rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-left">
+      <h1>Sアセス一次試験 対策クイズ</h1>
+      <p id="headerSub">ソース資料に基づく5択問題</p>
+    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="テーマ切替">🌙</button>
+  </header>
+
+  <div class="streak-banner" id="streakBanner">
+    <span id="streakText"></span>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-label">出題数</span>
+      <span class="stat-value" id="totalCount">0</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">正解</span>
+      <span class="stat-value correct-count" id="correctCount">0</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">不正解</span>
+      <span class="stat-value wrong-count" id="wrongCount">0</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">正答率</span>
+      <span class="accuracy" id="accuracy">--%</span>
+    </div>
+  </div>
+
+  <div class="mode-toggle">
+    <button class="mode-btn active" onclick="setMode('random', this)">ランダム出題</button>
+    <button class="mode-btn" onclick="setMode('weak', this)">苦手重点</button>
+    <button class="mode-btn" onclick="setMode('sequential', this)">順番出題</button>
+  </div>
+
+  <div class="category-filter" id="categoryFilter"></div>
+
+  <div id="quizArea"></div>
+
+  <div class="history-panel" id="historyPanel" style="display:none;">
+    <h3>直近の回答履歴</h3>
+    <div id="historyList"></div>
+  </div>
+
+  <div class="history-panel" id="statsPanel" style="display:none;">
+    <h3>学習記録（累計）</h3>
+    <div id="statsContent"></div>
+    <div class="action-btns">
+      <button class="action-btn export" onclick="exportStats()">結果をコピー</button>
+      <button class="action-btn reset" onclick="resetStats()">記録リセット</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== QUESTION DATABASE (全問ソース資料から作成) =====
+const questions = [
+
+// ===== GROUP A: 理念・ビジョン (15問) =====
+{category:"理念・ビジョン",question:"マツキヨココカラ＆カンパニーのグループ理念として正しいものはどれか。",choices:["未来の常識を創り出し、人々の生活を変えていく","美しさと健やかさを、もっと楽しく、身近に。","Find your \"!\" wow","価値を共創し分かち合う","人の想いに敏感で身近な存在であり続ける"],answer:0,explanation:"グループ理念は「未来の常識を創り出し、人々の生活を変えていく」と定められている。「美しさと健やかさを、もっと楽しく、身近に。」はグループビジョンである。",source:"グループ理念 - グループ理念"},
+{category:"理念・ビジョン",question:"マツキヨココカラ＆カンパニーのグループビジョンとして正しいものはどれか。",choices:["未来の常識を創り出し、人々の生活を変えていく","Find your \"!\" wow","価値を共創し分かち合う","美しさと健やかさを、もっと楽しく、身近に。","輝きを増していく生活・地域社会の実現に貢献する"],answer:3,explanation:"グループビジョンは「美しさと健やかさを、もっと楽しく、身近に。」と定められている。",source:"グループ理念 - グループビジョン"},
+{category:"理念・ビジョン",question:"グループビジョンで示された目指す姿として、最も適切なものはどれか。",choices:["人々の毎日の生活がもっと楽しさに満ちたものになること","アジアNo.1のドラッグストアになること","すべてのステークホルダーに均等な価値を提供すること","最高の製品とサービスで社会課題を解決すること"],answer:0,explanation:"グループビジョンでは「人々の毎日の生活がもっと楽しさに満ちたものになることを目指します」と記されている。",source:"グループ理念 - グループビジョン"},
+{category:"理念・ビジョン",question:"グループスローガンが表す場所の意味として最も適切なものはどれか。",choices:["安心と信頼で選ばれるかかりつけ薬局","すべての人に美と健康を平等に届ける場所","地域医療を支える健康ステーション","価格の安さと品ぞろえの豊富さを誇る場所","美と健康についての「！」にあふれた場所"],answer:4,explanation:"グループスローガンの説明では「美と健康についての「！」にあふれた場所となります」と記されている。",source:"グループ理念 - グループスローガン"},
+{category:"理念・ビジョン",question:"グループスローガンに込められた感情として正しいものはどれか。",choices:["訪れるたびに、思わず笑顔になってしまうような楽しさや喜びがある","訪れるたびに、思わず涙が出るような感動がある","訪れるたびに、安らぎと満足感が得られる","訪れるたびに、新しい健康知識が身につく","訪れるたびに、驚きと敬いの念が湧き上がる"],answer:0,explanation:"スローガンの説明では「訪れるたびに、思わず笑顔になってしまうような楽しさや喜びがある」と記されている。",source:"グループ理念 - グループスローガン"},
+{category:"理念・ビジョン",question:"グループスローガン「Find your \\\"!\\\"」の読み方として正しいものはどれか。",choices:["ファインド ユア エクスクラメーション","ファインド ユア ワオ","ファインド ユア ビックリ","ファインド ユア サプライズ","ファインド ユア ディスカバリー"],answer:1,explanation:"グループスローガン「Find your \\\"!\\\"」は「ファインド ユア ワオ」と読む。",source:"グループ理念 - グループスローガン"},
+{category:"理念・ビジョン",question:"グループシンボルのフォルムのモチーフとして正しいものはどれか。",choices:["桜の花びら","星（スター）","無限大（∞）","＆（アンパサンド）","リボン"],answer:3,explanation:"グループシンボルはステークホルダーの笑顔を「＆」のフォルムをモチーフに表現している。",source:"グループ理念 - グループシンボル"},
+{category:"理念・ビジョン",question:"グループシンボルの社名に込めた思いとして正しいものはどれか。",choices:["両ブランドが持つ価値を廃し、新ブランドを一から構築するという決意","国内ドラッグストア市場における独占的地位を確立するという決意","マツモトキヨシとココカラファインの両ブランドが持つ確固たるブランド価値を継承しながら、ひとつの新しいグループを創りあげていくという決意"],answer:2,explanation:"社名には「マツモトキヨシとココカラファインの両ブランドが持つ、確固たるブランド価値を継承しながらも、ひとつの新しいグループを創りあげていくという決意を込めています」と明記。",source:"グループ理念 - グループシンボル"},
+{category:"理念・ビジョン",question:"グループビジョンが大切にするものとして正しいものはどれか。",choices:["新しい技術の開発と特許の取得","人の想いに敏感で身近な存在であり続けること","高品質な独自ブランドの拡充","コスト削減による利益の最大化","社員の専門知識と資格の向上"],answer:1,explanation:"グループビジョンでは「人の想いに敏感で身近な存在であり続けることを大切にし」と明記されている。",source:"グループ理念 - グループビジョン"},
+{category:"理念・ビジョン",question:"グループ理念・ビジョンの位置づけとして正しいものはどれか。",choices:["株主向けの経営理念宣言","店舗運営のための業務マニュアル","すべての活動の基本となる、グループ社員の行動基準"],answer:2,explanation:"「グループ理念・ビジョン」は「グループ社員の行動基準となる、すべての活動の基本です」と定義されている。",source:"グループ理念 - グループ理念・ビジョン"},
+{category:"理念・ビジョン",question:"グループシンボル・スローガンの役割として正しいものはどれか。",choices:["グループの財務目標を視覚化・言語化したもの","私たちの思いを視覚化・言語化したもので、ブランドを識別していただくための中心となるもの","競合他社との差別化を示す製品戦略"],answer:1,explanation:"「私たちの思いを視覚化・言語化したものであり、ブランドを識別していただくための中心となるもの」と説明されている。",source:"グループ理念 - グループシンボル・グループスローガン"},
+{category:"理念・ビジョン",question:"グループシンボルが表現するものとして正しいものはどれか。",choices:["ステークホルダーの笑顔を＆のフォルムで表現し、暮らしのハブとしてつなぐ役割","美と健康の商品を低価格で提供すること","医療と美容の融合を実現し新産業を創出すること","地域密着型のサービスで日本全国に健康を届けること","デジタル技術で美と健康を革新すること"],answer:0,explanation:"グループシンボルはステークホルダーの笑顔を＆のフォルムで表現し、新たなブランドが暮らしのハブとなりより良い暮らしやもっと輝ける未来に「つなぐ」役割を担うことを表している。",source:"グループ理念 - グループシンボル"},
+{category:"経営方針",question:"2031年3月期のグループ経営目標（売上高）として正しいものはどれか。",choices:["1.0兆円","1.1兆円","1.2兆円","1.3兆円","1.5兆円"],answer:3,explanation:"2031年3月期のグループ経営目標における売上高は1.3兆円と定められている。",source:"IR資料 - 2031年3月期の目指す姿"},
+
+// ===== GROUP B: 経営方針 (15問) =====
+{category:"経営方針",question:"2031年3月期のEBITDAマージン目標として正しいものはどれか。",choices:["10%以上","11%以上","12%以上","13%以上","15%以上"],answer:3,explanation:"EBITDAマージンの目標は13%以上と定められている。",source:"IR資料 - 2031年3月期の目指す姿"},
+{category:"経営方針",question:"2031年3月期のROE目標として正しいものはどれか。",choices:["8%以上","10%以上","12%以上","15%以上","20%以上"],answer:2,explanation:"ROEは12%以上と設定されている。",source:"IR資料 - 2031年3月期の目指す姿"},
+{category:"経営方針",question:"配当性向の目標として正しいものはどれか。",choices:["30%","40%","50%","60%"],answer:2,explanation:"配当性向の目標は50%と定められている。",source:"IR資料 - 2031年3月期の目指す姿"},
+{category:"経営方針",question:"2031年3月期の「目指す姿」における基本的な考え方として正しいものはどれか。",choices:["価値を共創し分かち合う","未来の常識を創り出し、人々の生活を変えていく","利益の最大化と株主還元の徹底","アジアNo.1ブランドの確立","持続可能な成長と社会貢献の両立"],answer:0,explanation:"基本的な考え方は「価値を共創し分かち合う」と定められている。",source:"IR資料 - 2031年3月期の目指す姿"},
+{category:"経営方針",question:"2031年3月期のビジョンとして正しいものはどれか。",choices:["アジアNo.1のドラッグストアとなり、美と健康の分野でのリーディングポジションを確立する","日本発のウェルネスブランドをアジアに展開する","美と健康分野でEコマース首位を目指す","国内No.1のドラッグストアとなり美と健康のリーディングポジションを確立する","グローバルNo.1の美容・健康企業となる"],answer:0,explanation:"ビジョンは「アジアNo.1のドラッグストアとなり、美と健康の分野でのリーディングポジションを確立する」と明記。",source:"IR資料 - 2031年3月期の目指す姿"},
+{category:"経営方針",question:"3つの重点戦略のうち、第1の戦略として正しいものはどれか。",choices:["当社ならではのプラットフォームビジネスの強化","企業価値向上に資する持続可能な経営の実践","価値共創に向けたビジネスインフラへの投資","グローバル市場への積極的な展開","コーポレートガバナンスの抜本的改革"],answer:0,explanation:"第1の重点戦略は「当社ならではのプラットフォームビジネスの強化」である。",source:"IR資料 - 3つの重点戦略"},
+{category:"経営方針",question:"3つの重点戦略の第2の戦略として正しいものはどれか。",choices:["当社ならではのプラットフォームビジネスの強化","企業価値向上に資する持続可能な経営の実践","アジアにおけるM&A戦略の推進","デジタルトランスフォーメーションの加速","価値共創に向けたビジネスインフラへの投資"],answer:4,explanation:"第2の重点戦略は「価値共創に向けたビジネスインフラへの投資」である。",source:"IR資料 - 3つの重点戦略"},
+{category:"経営方針",question:"キャッシュアロケーションにおける成長投資の割合として正しいものはどれか。",choices:["30%","35%","40%","45%","50%"],answer:3,explanation:"成長投資に45%を配分すると定められている。",source:"IR資料 - キャッシュアロケーション"},
+{category:"経営方針",question:"キャッシュアロケーションにおける株主還元の割合として正しいものはどれか。",choices:["45%","35%","40%","30%","55%"],answer:0,explanation:"株主還元に45%を配分するとされている。",source:"IR資料 - キャッシュアロケーション"},
+{category:"経営方針",question:"キャッシュアロケーションにおける財務健全化の割合として正しいものはどれか。",choices:["20%","15%","25%","5%","10%"],answer:4,explanation:"財務健全化に10%を配分する。",source:"IR資料 - キャッシュアロケーション"},
+{category:"経営方針",question:"成長投資の具体的な内容として正しいものはどれか。",choices:["新製品研究開発・特許取得・研究施設建設","出店・中小型M&A、IT/ブランディング、環境・社会課題対応","海外子会社設立・現地スタッフ採用・海外マーケティング","配当金増額・自己株式取得・社債償還","工場建設・生産設備投資・原材料調達強化"],answer:1,explanation:"成長投資の内訳は「出店・中小型M&A、IT/ブランディング、環境・社会課題対応」である。",source:"IR資料 - キャッシュアロケーション"},
+{category:"経営方針",question:"3つの重点戦略が目指す経営の好循環として正しいものはどれか。",choices:["グローバル展開と国内収益の相互補完","確固たる収益基盤（稼ぐ）と還元の好循環による企業価値向上","研究開発投資と製品売上の好循環","デジタル化投資とコスト削減の好循環","人材投資と生産性向上の好循環"],answer:1,explanation:"「確固たる収益基盤（稼ぐ）と還元の好循環による企業価値向上を目指し」推進される。",source:"IR資料 - 3つの重点戦略"},
+{category:"経営方針",question:"プラットフォームビジネスの強化に含まれる項目として正しくないものはどれか。",choices:["新たな価値・サービスの提供","小売ビジネス領域からの拡張","事業規模の拡大","アジアにおけるプレゼンス向上","コーポレートガバナンスの充実"],answer:4,explanation:"コーポレートガバナンスの充実は第3の重点戦略に含まれる。プラットフォームビジネスの強化には新たな価値・サービスの提供、小売ビジネス領域からの拡張、事業規模の拡大、アジアにおけるプレゼンス向上が含まれる。",source:"IR資料 - 3つの重点戦略"},
+{category:"経営方針",question:"大型の連合体構想の場合の資金調達方針として正しいものはどれか。",choices:["増資のみで対応する","自己資本の範囲内で慎重に進める","負債の活用も機動的に進める","成長投資枠から全額充当する","外部投資家からの資金調達のみに依存する"],answer:2,explanation:"「大型の連合体構想の場合は、負債の活用も機動的に進める」と明記。",source:"IR資料 - キャッシュアロケーション"},
+// ===== 経営方針: 決算書Q3（2026年3月期） =====
+{category:"経営方針",question:"2026年3月期の連結業績予想における売上高として正しいものはどれか。",choices:["1兆円","1兆500億円","1兆1,000億円","1兆2,000億円"],answer:2,explanation:"2026年3月期の連結業績予想では売上高1,100,000百万円（1兆1,000億円）と公表されている。",source:"決算書Q3 P.8 - 2026年3月期連結業績予想"},
+{category:"経営方針",question:"2026年3月期の連結業績予想における営業利益率として正しいものはどれか。",choices:["7.4%","7.7%","7.8%","8.1%"],answer:2,explanation:"2026年3月期予想の営業利益は85,500百万円、売上高1,100,000百万円に対し営業利益率は7.8%。",source:"決算書Q3 P.8 - 2026年3月期連結業績予想"},
+{category:"経営方針",question:"2026年3月期の連結業績予想におけるEBITDAとして正しいものはどれか。",choices:["81,644百万円","85,500百万円","104,681百万円","108,500百万円"],answer:3,explanation:"2026年3月期予想のEBITDAは108,500百万円、EBITDAマージンは9.9%。",source:"決算書Q3 P.8 - 2026年3月期連結業績予想"},
+{category:"経営方針",question:"3Q累計（2025年4月〜12月）の連結売上高として正しいものはどれか。",choices:["801,520百万円","839,340百万円","1,061,626百万円","1,100,000百万円"],answer:1,explanation:"2026年3月期第3四半期累計の連結売上高は839,340百万円で前年同期比+4.7%。",source:"決算書Q3 P.2 - 決算概要"},
+{category:"経営方針",question:"3Q累計の連結営業利益率として正しいものはどれか。",choices:["7.4%","7.7%","7.8%","8.1%"],answer:1,explanation:"3Q累計の営業利益は64,247百万円、営業利益率は7.7%。",source:"決算書Q3 P.2 - 決算概要"},
+{category:"経営方針",question:"マツモトキヨシグループ事業の3Q累計セグメント利益率として正しいものはどれか。",choices:["6.1%","7.7%","8.4%","9.0%"],answer:2,explanation:"マツモトキヨシグループ事業の3Q累計セグメント利益は44,735百万円、売上高534,764百万円に対し利益率8.4%。",source:"決算書Q3 P.3 - セグメント業績"},
+{category:"経営方針",question:"ココカラファイングループ事業の3Q累計売上高の前年同期比として正しいものはどれか。",choices:["増収（+6.6%）","減収（△0.4%）","増収（+4.7%）","横ばい（±0%）"],answer:1,explanation:"ココカラファイングループ事業の3Q累計売上高は295,613百万円で前年同期比△0.4%の減収。構造改革の推進に伴う一時的な売上減少による。",source:"決算書Q3 P.3 - セグメント業績"},
+{category:"経営方針",question:"2025年10月1日付で子会社化した企業はどれか。",choices:["ココカラファイン","新生堂薬局","マツモトキヨシ","アインホールディングス"],answer:1,explanation:"2025年10月1日付で新生堂薬局を子会社化し、アンドカンパニー事業として連結対象となった。",source:"決算書Q3 P.3/P.7 - セグメント業績"},
+{category:"経営方針",question:"美と健康のカテゴリー売上構成比（3Q累計）として正しいものはどれか。",choices:["68.5%","70.1%","72.3%","75.0%"],answer:2,explanation:"美と健康の構成比は新商品などを中心に化粧品が牽引し、72.3%（前年同期比+0.9pt）に拡大。",source:"決算書Q3 P.5 - 商品別業績"},
+{category:"経営方針",question:"PB商品の売上構成比（3Q累計）として正しいものはどれか。",choices:["10.5%","12.3%","14.5%","15.0%"],answer:2,explanation:"PB商品の売上構成比は14.5%（前年同期差+1.3pt）。SKU数は2,542。",source:"決算書Q3 P.10 - PB商品売上動向"},
+{category:"経営方針",question:"2025年12月末時点の国内店舗数合計として正しいものはどれか。",choices:["3,499店舗","3,539店舗","3,604店舗","3,700店舗"],answer:2,explanation:"2025年12月31日現在の国内店舗数はMKG1,959+CFG1,533+ACP112=合計3,604店舗。",source:"決算書Q3 P.7 - 国内店舗の出店・閉店・改装"},
+{category:"経営方針",question:"顧客接点数（2025年12月末実績）として正しいものはどれか。",choices:["約1億2,000万","約1億4,500万","約1億6,652万","約2億"],answer:2,explanation:"顧客接点数は合計1億6,652万（2025年3月末比+844万）。カード会員、LINE会員、アプリDL、デジタル会員、海外SNSの合計。",source:"決算書Q3 P.10 - 顧客接点"},
+{category:"経営方針",question:"2025年12月末時点の自己資本比率として正しいものはどれか。",choices:["65.3%","68.7%","71.9%","75.2%"],answer:2,explanation:"自己資本比率は71.9%（前期末差△1.2pt）。5月実施の自己株式取得の影響による低下。",source:"決算書Q3 P.6 - 貸借対照表"},
+{category:"経営方針",question:"2026年3月期の通期出店計画（合計）として正しいものはどれか。",choices:["100店舗","115店舗","130店舗","150店舗"],answer:2,explanation:"通期の出店計画はMKG100店舗+CFG30店舗=合計130店舗。",source:"決算書Q3 P.8 - 通期出店・閉店・改装計画"},
+
+{category:"メンバー指導",question:"指導の基本ステップとして正しい順序はどれか。",choices:["行動変容を図らせてから、物知りにしていく","物知りにしてから、行動変容を図らせる","まず動機付けを行い、その後に知識を与える","行動変容と知識習得を同時並行で進める","まず評価を行い、その結果に基づいて指導する"],answer:1,explanation:"指導の基本ステップは「まず物知りにしていく」、次に「行動変容を図らせる」が正しい順序。",source:"JMAMレポート対策 - 問1"},
+
+// ===== GROUP C: メンバー指導 JMAM (20問) =====
+{category:"メンバー指導",question:"カウンセリング・スキルにおける「受容」によって得られる効果として正しいものはどれか。",choices:["インサイト効果（内面的気付き）","エンパワーメント効果","カタルシス効果（浄化）","モチベーション効果","コンセンサス効果"],answer:2,explanation:"「受容」によって得られるのは「カタルシス効果（浄化）」。「インサイト効果」は「自己一致」によって得られる。",source:"JMAMレポート対策 - 問1"},
+{category:"メンバー指導",question:"メンバーをほめるタイミングについて最も適切な説明はどれか。",choices:["月次の面談の際にまとめてほめる","上司の承認を得た後にほめる","特別な功績があった場合にのみ公式の場でほめる","いいと思ったらその場ですぐにほめる","業務が完全に完了してから結果を評価してほめる"],answer:3,explanation:"いいと思ったらその場ですぐにほめることが重要。計画どおりの業務遂行に対してもほめることが大切。",source:"JMAMレポート対策 - 問1"},
+{category:"メンバー指導",question:"メンバーを叱る際の正しい姿勢として適切なものはどれか。",choices:["全人格を対象にして根本的な問題を指摘する","感情を込めて叱ることで真剣さを伝える","過去の失敗も含めて総合的に叱責する","特定の行為にのみ限定して叱る","組織全体の前で叱ることで他の見本にする"],answer:3,explanation:"叱る対象は全人格ではなく、特定の行為にのみ限定する。感情的にならず後に引かないこと。",source:"JMAMレポート対策 - 問1"},
+{category:"メンバー指導",question:"OJTのプロセスとして正しい順序はどれか。",choices:["能力 → 執務態度 → 業績","業績 → 執務態度 → 能力","執務態度 → 能力 → 業績","能力 → 業績 → 執務態度"],answer:0,explanation:"OJTのプロセスは「能力 → 執務態度 → 業績」。評価のプロセスとは逆。",source:"JMAMレポート対策 - 問2"},
+{category:"メンバー指導",question:"OJTの定義として最も正確なものはどれか。",choices:["職場組織内で熟練者が非熟練者に対して直接的に日常業務を通じて行う訓練","職場外で個人学習を中心に行う能力開発","上司が月1回の面談を通じて行う指導","外部研修機関で専門講師が体系的に行う訓練","人事部門が主導する計画的な人材育成プログラム"],answer:0,explanation:"OJTとは「職場組織内」で熟練者が非熟練者に直接的に日常業務を通じて行う訓練。",source:"JMAMレポート対策 - 問2"},
+{category:"メンバー指導",question:"マネジャーの権限の活用について最も望ましい使い方はどれか。",choices:["組織の規律維持のみに活用する","業務命令の徹底のためにのみ使用する","自己の地位を強化するために活用する","目標達成の強制力として使用する","周囲との信頼関係を強化するために活用する"],answer:4,explanation:"マネジャーの権限は、周囲との信頼関係を強化するために活用することが望まれる。",source:"JMAMレポート対策 - 問2"},
+{category:"メンバー指導",question:"「叱る」と「怒る」の違いについて正しいものはどれか。",choices:["叱るは上位者から下位者、怒るは対等な関係での指摘","叱るは公開の場、怒るは個別の場での指摘","叱るも怒るも本質的な違いはない","叱るは感情的な指摘、怒るは理性的な問題点の指摘","叱るは合理的な理由による理性的な問題点の指摘、怒るは感情的な指摘"],answer:4,explanation:"「叱る」は合理的な理由による理性的な指摘、「怒る」は感情的な指摘。",source:"JMAMレポート対策 - 問3・問4"},
+{category:"メンバー指導",question:"マネジメントの4側面として正しい組み合わせはどれか。",choices:["仕事の管理、仕事の改善、メンバーの育成、職場の人間関係","仕事の管理、仕事の改善、コスト管理、品質管理","目標設定、進捗管理、評価、フィードバック","採用、育成、配置、評価","計画、実行、チェック、改善"],answer:0,explanation:"マネジメントの4側面は「仕事の管理、仕事の改善、メンバーの育成、職場の人間関係」。",source:"JMAMレポート対策 - 問3・問4"},
+{category:"メンバー指導",question:"メンバーのSOSサインとして挙げられていないものはどれか。",choices:["言い訳をする","逃避する","攻撃する","無感動になる","過剰に意欲を示す"],answer:4,explanation:"SOSサインは「言い訳、逃避、攻撃、無感動、退行」の5つ。「過剰に意欲を示す」は含まれない。",source:"JMAMレポート対策 - 問3・問4"},
+{category:"メンバー指導",question:"コンセプチュアル・スキルの説明として最も適切なものはどれか。",choices:["部下への指導・育成に関する対人関係スキル","業務遂行のための技術的・専門的なスキル","数値分析や財務管理に関する定量的スキル","コミュニケーションとプレゼンテーション能力","複雑な状況から本質を抽出し、広い視野から課題を設計する能力"],answer:4,explanation:"コンセプチュアル・スキルは複雑な状況から本質を抽出し、広い視野から課題を設計する能力。",source:"JMAMレポート対策 - 問3・問4"},
+{category:"メンバー指導",question:"PDSサイクルのPlan過程における目標設定指導として最も適切なものはどれか。",choices:["メンバーを参画させ自ら努力目標を設定させる","過去の実績をもとに自動的に目標を設定する","目標はトップダウンで決定しメンバーの参画は不要","マネジャーが目標を設定しメンバーに伝達する","組織目標と個人目標を完全に一致させる"],answer:0,explanation:"Plan過程ではメンバーを参画させ自ら努力目標を設定させることが重要。",source:"JMAMレポート対策 - 問5"},
+{category:"メンバー指導",question:"やる気を引き出すための面接で最も重要な姿勢はどれか。",choices:["業績目標を明確に示し達成を強く求める","カウンセリング・マインドをもって面接を行い話をよく聴く","問題点を的確に指摘し改善計画を立案させる","過去の失敗を分析し繰り返さないよう指導する","評価基準を説明しメンバーの納得を得る"],answer:1,explanation:"カウンセリング・マインドをもって面接を行い話をよく聴くことが重要。",source:"JMAMレポート対策 - 問5"},
+{category:"メンバー指導",question:"OJTの成否を分けるタイミングとして最も重要なのはどれか。",choices:["仕事の最中（Do）の過程のみ","仕事の後（See）の過程のみ","仕事の前（Plan）と仕事の後（See）の両過程","仕事の前（Plan）の過程のみ","全過程が均等に重要"],answer:2,explanation:"OJTの成否はPlan過程とSee過程でどれだけ有効なOJTを行っているかにかかっている。",source:"JMAMレポート対策 - 問2"},
+{category:"メンバー指導",question:"メンバーの言動への対処法として最も適切なものはどれか。",choices:["厳格なルールを設けて一貫した対応をする","問題行動はその場で即座に厳しく指摘する","言動パターンを記録して人事評価に反映する","感情的にならずおおらかに構えメンバーをよく理解し認める","論理的な根拠を示して行動を矯正する"],answer:3,explanation:"感情的にならずおおらかに構え、メンバーをよく理解し認めることが大切。",source:"JMAMレポート対策 - 問3・問4"},
+{category:"メンバー指導",question:"メンバーの言動を理解するための特徴として正しくないものはどれか。",choices:["時と状況と場所によって矛盾した言動をとる","マネジャーの感情や動きに敏感に反応する","他のメンバーと同じと思われることに抵抗を示す","自分の気持ちを言葉より態度や行動で表現する","論理的な説明を求め感情より事実を重視する"],answer:4,explanation:"メンバーの特徴は矛盾した言動、マネジャーへの敏感な反応、同一視への抵抗、態度での感情表現の4点。「論理・事実重視」は含まれない。",source:"JMAMレポート対策 - 問3・問4"},
+{category:"メンバー指導",question:"スキルアップ指導の進め方として正しいものはどれか。",choices:["仕事のあるべき姿を設計し現状とのギャップを明らかにして業務の見直しを行わせる","仕事を他者に任せスキル習得の時間を確保させる","上司が手本を見せ続けてスキルを習得させる","まず研修に参加させその後OJTで実践させる","専門書を読ませて知識を身につけさせる"],answer:0,explanation:"仕事のあるべき姿を設計し現状とのギャップを明らかにして業務を見直すことが重要。",source:"JMAMレポート対策 - 問5"},
+{category:"メンバー指導",question:"OJTの留意点として適切でないものはどれか。",choices:["能力開発の環境や条件の整備が重要","やる気やモチベーションの向上を図る","メンバーの特徴を把握し適切な仕事を割り当てる","日常業務の棚卸しや育成プランを作成する","知識・技能の伝授のみに集中し環境整備は人事部門に委ねる"],answer:4,explanation:"OJTでは知識・技能の伝授だけでなく能力開発の環境や条件の整備も重要。",source:"JMAMレポート対策 - 問3・問4"},
+{category:"メンバー指導",question:"メンバーのSOSサインのうち「退行」の意味として正しいものはどれか。",choices:["職場から物理的に離れること","以前の未成熟な行動パターンに戻ること","業務への関心を完全に失うこと","他者への批判や非難を繰り返すこと","もっともらしい理由をつけて正当化すること"],answer:1,explanation:"退行とは、成熟した行動ができなくなり以前の未成熟な行動パターンに戻ること。逃避は離れること、無感動は関心喪失、攻撃は批判、言い訳は正当化。",source:"JMAMレポート対策 - 問3・問4"},
+{category:"メンバー指導",question:"目標管理における面接で望ましい実施方法はどれか。",choices:["半期単位で面接し進捗を確認する","目標達成後にのみ面接を実施する","面接は四半期に1回程度で十分","年間単位の大きな目標で面接を行う","できるだけ小目標の単位で実行する"],answer:4,explanation:"目標管理の面接はできるだけ小目標の単位で実行することが望ましい。",source:"JMAMレポート対策 - 問1"},
+{category:"労務管理",question:"手待ち時間の労働時間への該当について正しいものはどれか。",choices:["手待ち時間は労働時間に含まれない","手待ち時間は自由に利用できるため労働時間外","手待ち時間は使用者の指揮監督下にあるため労働時間に含まれる","手待ち時間は業種によって異なる","手待ち時間は労使協定で定めた場合のみ労働時間"],answer:2,explanation:"手待ち時間は使用者の指揮監督下にあり労働時間に含まれる。",source:"JMAMレポート対策 - 問1"},
+
+// ===== GROUP D: 労務管理 JMAM (20問) =====
+{category:"労務管理",question:"1日の労働時間が8時間を超える場合の休憩時間として正しいものはどれか。",choices:["30分以上","45分以上","1時間以上","1時間30分以上"],answer:2,explanation:"8時間を超える場合は1時間以上の休憩が必要。",source:"JMAMレポート対策 - 問2"},
+{category:"労務管理",question:"1日の労働時間が6時間以下の場合の休憩について正しいものはどれか。",choices:["就業規則で定めた時間の休憩を付与する","15分以上の休憩を付与する","労使協定で定めた時間の休憩を付与する","30分以上の休憩を付与する","休憩時間を付与しなくてもよい"],answer:4,explanation:"6時間以下の場合は休憩を付与しなくてもよい。",source:"JMAMレポート対策 - 問2"},
+{category:"労務管理",question:"年次有給休暇に関する権利の組み合わせとして正しいものはどれか。",choices:["労働者側：時季変更権、使用者側：時季指定権","労働者側：時季指定権、使用者側：時季変更権","双方が時季指定権を持つ","双方が時季変更権を持つ","使用者が一方的に時季を指定できる"],answer:1,explanation:"労働者側に「時季指定権」、使用者側に「時季変更権」がある。",source:"JMAMレポート対策 - 問2"},
+{category:"労務管理",question:"労働者派遣において人材派遣会社と派遣労働者の関係として正しいものはどれか。",choices:["指揮命令関係","労働者派遣契約","雇用関係","業務委託関係","請負関係"],answer:2,explanation:"人材派遣会社と派遣労働者の間には「雇用関係」がある。",source:"JMAMレポート対策 - 問2"},
+{category:"労務管理",question:"派遣先会社と派遣労働者の関係として正しいものはどれか。",choices:["雇用関係","労働者派遣契約","請負関係","指揮命令関係","業務委託関係"],answer:3,explanation:"派遣先と派遣労働者の間には「指揮命令関係」がある。",source:"JMAMレポート対策 - 問2"},
+{category:"労務管理",question:"月間45時間以内の時間外労働の割増賃金率として正しいものはどれか。",choices:["15%以上","20%以上","25%以上","35%以上"],answer:2,explanation:"時間外労働の割増賃金率は25%以上。",source:"JMAMレポート対策 - 問2"},
+{category:"労務管理",question:"時間外労働が深夜に及んだ場合の割増賃金率として正しいものはどれか。",choices:["25%以上","35%以上","40%以上","50%以上","60%以上"],answer:3,explanation:"時間外+深夜の割増賃金率は50%以上。",source:"JMAMレポート対策 - 問2"},
+{category:"労務管理",question:"法定休日労働の割増賃金率として正しいものはどれか。",choices:["40%以上","25%以上","50%以上","35%以上","30%以上"],answer:3,explanation:"法定休日労働は35%以上。",source:"JMAMレポート対策 - 問2"},
+{category:"労務管理",question:"セクハラ「対価型」の説明として正しいものはどれか。",choices:["性的な言動への対応により解雇・減給・降格などの不利益を受けること","性的な冗談や不適切な言動が継続されること","性的な言動で就業環境が不快となり能力発揮できなくなること","身体的な接触を強要されること","職場内での性差別的発言が繰り返されること"],answer:0,explanation:"対価型は性的な言動への対応により不利益を受けること。",source:"JMAMレポート対策 - 問3・問4"},
+{category:"労務管理",question:"セクハラ「環境型」の説明として正しいものはどれか。",choices:["性的な言動への対応により昇格が阻害されること","性的な言動で就業環境が不快となり能力が十分に発揮できなくなること","解雇を条件に性的行為を要求されること","減給を条件に性的言動を容認するよう求められること","性的発言を断ったことで降格処分を受けること"],answer:1,explanation:"環境型は性的な言動により就業環境が不快となり能力発揮できなくなること。",source:"JMAMレポート対策 - 問3・問4"},
+{category:"労務管理",question:"セクハラの保護対象について正しいものはどれか。",choices:["女性労働者のみ","正規雇用労働者のみ","女性だけでなく男性労働者も保護の対象"],answer:2,explanation:"男性労働者に対するセクハラも保護対象となる。",source:"JMAMレポート対策 - 問1"},
+{category:"労務管理",question:"変形労働時間制の説明として最も適切なものはどれか。",choices:["繁忙期に勤務時間を長く設定でき残業手当の増加を抑えながら法定労働時間を超えて労働させることができる制度","1日8時間を超えても割増賃金が発生しない制度","労働者が自由に始業・終業時刻を決められる制度","年間の総労働時間を労使で協定する制度","特定の日のみ法定労働時間を超えられる制度"],answer:0,explanation:"変形労働時間制は繁忙期に勤務時間を長く設定でき残業手当の増加を抑えられる制度。",source:"JMAMレポート対策 - 問3・問4"},
+{category:"労務管理",question:"労使協定の定義として正しいものはどれか。",choices:["労働者の過半数で組織する労働組合（または過半数代表者）と締結した書面による協定","労働者全員の署名により締結する協定","労働基準監督署と使用者が締結する協定","取締役会と従業員代表が締結する協定","厚生労働大臣の認可を受けて締結する協定"],answer:0,explanation:"労使協定は労働者の過半数で組織する労働組合等と締結した書面による協定。",source:"JMAMレポート対策 - 問3・問4"},
+{category:"労務管理",question:"コアタイムの説明として正しいものはどれか。",choices:["残業手当が割増になる時間帯","労働者が任意に選択できる労働時間帯","休憩を必ず取得する時間帯","労働者が必ず労働しなければならない時間帯","深夜労働として扱われる時間帯"],answer:3,explanation:"コアタイムは労働者が必ず労働しなければならない時間帯。",source:"JMAMレポート対策 - 問3・問4"},
+{category:"労務管理",question:"ノーワーク・ノーペイの原則について正しい説明はどれか。",choices:["時間外労働に代替休暇を与えられるという原則","有休取得時には賃金を支払わなくてよいという原則","休日出勤には代休を付与しなければならない原則","残業分に必ず割増賃金を支払う原則","欠勤等で働かなかった分は賃金請求権がなく使用者にも支払い義務がない原則"],answer:4,explanation:"働かなかった分は労働者に賃金請求権がなく使用者にも支払い義務がない。",source:"JMAMレポート対策 - 問3・問4"},
+{category:"労務管理",question:"年次有給休暇の届出ルールとして正しいものはどれか。",choices:["届出不要で事後報告でも認められる","少なくとも3日前までに届け出る","当日の始業時刻前までに届け出る","少なくとも1週間前までに届け出る","前日までに届け出れば取得可能"],answer:4,explanation:"法的には前日までに届け出れば取得可能。",source:"JMAMレポート対策 - 問5"},
+{category:"労務管理",question:"時季変更権を行使できる条件として正しいものはどれか。",choices:["「事業の正常な運営を妨げる」客観的な理由が必要","管理職の判断があれば行使できる","複数メンバーが同時に休暇を取得する場合は行使できる","業務が繁忙期であれば行使できる","スケジュール変更に影響が生じる場合は行使できる"],answer:0,explanation:"「事業の正常な運営を妨げる」客観的な理由が必要。",source:"JMAMレポート対策 - 問5"},
+{category:"労務管理",question:"ポジティブ・アクションの説明として正しいものはどれか。",choices:["雇用の場における事実上の男女差を解消するために企業が行う積極的な取り組み","障がい者雇用促進のための積極的な取り組み","高齢者雇用を促進するための積極的な取り組み","外国人労働者の雇用促進のための積極的な取り組み","非正規労働者を正規雇用に転換するための取り組み"],answer:0,explanation:"ポジティブ・アクションは雇用の場における男女差を解消するための企業の積極的取り組み。",source:"JMAMレポート対策 - 問3・問4"},
+{category:"労務管理",question:"事業場外労働のみなし労働時間制が適用されない場合として正しいものはどれか。",choices:["会社貸与の携帯電話でいつでも指示を受けられる状態にある場合","具体的な指揮監督が及ばない業務の場合","外勤営業で一人で業務を行っている場合","急用連絡用のみに携帯電話を所持している場合","出張先で独立して業務を行っている場合"],answer:0,explanation:"携帯電話でいつでも指示を受けられる状態では適用されない。",source:"JMAMレポート対策 - 問1"},
+{category:"メンバー指導",question:"コーチングの手順（8ステップ）の最初のステップとして正しいものはどれか。",choices:["メンバーの真の状態（現状）を具体的に把握（確認）する","考える機会をつくる","マネジャーとしての率直な意見を伝える","メンバー自身で実施の計画を立てる","行動のフィードバックを適切に行う"],answer:0,explanation:"コーチングの手順の最初は「メンバーの真の状態（現状）を具体的に把握（確認）する」である。",source:"メンバー指導（文字起こし） 第1章 コーチングの技術"},
+
+// ===== GROUP E: メンバー指導 教科書deep (20問) =====
+{category:"メンバー指導",question:"教え方の基本プロセスの正しい順序はどれか。",choices:["やってみせる→言ってみる→させてみる→ほめてやる","言ってみる→やってみせる→させてみる→ほめてやる","させてみる→やってみせる→言ってみる→ほめてやる","やってみせる→させてみる→言ってみる→ほめてやる"],answer:1,explanation:"教え方の基本プロセスは「言ってみる（説明）→やってみせる（示範）→させてみる（実習）→ほめてやる（フィードバック）」。",source:"メンバー指導（文字起こし） 第1章 教え方の基本プロセス"},
+{category:"メンバー指導",question:"指導技術のStep 1「知る（知識）」におけるマネジャーの行動として正しいものはどれか。",choices:["観察する、記録する","計画する、指示する","実施する、鍛える","ほめる、叱る","考える、助言する"],answer:4,explanation:"Step 1「知る」ではマネジャーは「考える、助言する」行動をとる。",source:"メンバー指導（文字起こし） 第1章 指導技術の基本ステップ"},
+{category:"メンバー指導",question:"指導技術のStep 3「慣れる（態度・意欲）」のポイントとして正しいものはどれか。",choices:["ほめ方・叱り方がポイントになる","メンバーの自主性に委ねる","マネジャーとしての知識レベルに左右される","評価基準の設定が重要になる","マネジャーとしての指導技術が問われる"],answer:0,explanation:"Step 3「慣れる」では「ほめ方・叱り方がポイントになる」とされている。",source:"メンバー指導（文字起こし） 第1章 指導技術の基本ステップ"},
+{category:"メンバー指導",question:"示範の手順として正しい順序はどれか。",choices:["全体をやってみる→ポイントを指摘→質問を受ける→口頭で説明","口頭で説明→全体をやってみる→ポイントを指摘しやってみせる→質問を受ける→もう一度全体をやってみせる","質問を受ける→口頭で説明→全体をやってみる→ポイントを指摘","ポイントを指摘→全体をやってみる→口頭で説明→質問を受ける","口頭で説明→質問を受ける→全体をやってみる→ポイントを指摘"],answer:1,explanation:"示範の手順は「口頭で説明→全体をひととおりやってみる→ポイントを指摘し実際にやってみせる→質問を受ける→もう一度全体をやってみせポイントを確認」。",source:"メンバー指導（文字起こし） 第1章 示範のポイントと手順"},
+{category:"メンバー指導",question:"実習のポイントとして正しくないものはどれか。",choices:["準備を十分にしポイントを決めて観察する","やる気を助長させる働きかけをする","達成基準が明確な形として示されている","メンバーに自由に工夫させ独自の方法を開発させる","フィードバック（評価）の仕組みを考慮する"],answer:3,explanation:"実習のポイントには「教えたこと以外の作業はさせない」とあり、自由に独自の方法を開発させることは含まれない。",source:"メンバー指導（文字起こし） 第1章 実習のポイントと手順"},
+{category:"メンバー指導",question:"衛生要因に該当するものとして正しいものはどれか。",choices:["能力を認められること","重要な役割を担っていく職務","仕事の目標達成","興味深く魅力のある仕事","給与レベル、職場環境、雇用条件、福利厚生"],answer:4,explanation:"衛生要因は「給与レベル、職場環境、雇用条件、福利厚生など」。動機づけ要因とは区別される。",source:"メンバー指導（文字起こし） 第2章 動機づけの要素"},
+{category:"メンバー指導",question:"動機づけ要因に該当しないものはどれか。",choices:["福利厚生の充実","能力を認められること","興味深く魅力のある仕事","仕事の目標達成","重要な役割を担っていく職務"],answer:0,explanation:"福利厚生は衛生要因であり、動機づけ要因ではない。",source:"メンバー指導（文字起こし） 第2章 動機づけの要素"},
+{category:"メンバー指導",question:"OJTの6つの機会と方法として正しくないものはどれか。",choices:["示範","日常の接触機会","会議への出席","マネジャーとの共同による体験学習","配置転換による部署異動"],answer:4,explanation:"OJTの6つの機会と方法は(1)示範、(2)日常の接触機会、(3)会議への出席、(4)マネジャーとの共同による体験学習、(5)メンバーとの個人面接、(6)Off-JT・SD。配置転換による部署異動はこの6つに含まれない。",source:"メンバー指導（文字起こし） 第1章 OJTの機会と方法"},
+{category:"メンバー指導",question:"MTPの構造における「人の側面」に含まれるものとして正しいものはどれか。",choices:["仕事の管理と仕事の改善","仕事の改善と職場の人間関係","計画立案と評価","メンバーの育成と職場の人間関係","仕事の管理とメンバーの育成"],answer:3,explanation:"MTPの構造では「仕事の側面（仕事の管理・仕事の改善）」と「人の側面（メンバーの育成・職場の人間関係）」に分かれる。",source:"メンバー指導（文字起こし） 第1章 MTPの構造"},
+{category:"メンバー指導",question:"ナレッジ・マネジメントの説明として正しいものはどれか。",choices:["組織の財務情報を全社員と共有する仕組み","個人のノウハウを組織全体の知恵へと昇華させていく仕組み","従業員の研修受講履歴を管理する仕組み","業績評価データを分析する仕組み","顧客情報を一元管理する仕組み"],answer:1,explanation:"ナレッジ・マネジメントは「個人がもっている知識や情報を組織全体の知恵へと昇華させていく」仕組みである。",source:"メンバー指導（文字起こし） 第1章 OJTの機会と方法"},
+{category:"メンバー指導",question:"仕事の基本サイクルの最初のステップとして正しいものはどれか。",choices:["メンバーの特徴の把握","仕事の割当て","OJT実施","仕事の棚卸し","評価・実績の検討"],answer:3,explanation:"仕事の基本サイクルは「仕事の棚卸し→メンバーの特徴の把握→仕事の割当て→OJT→評価・実績の検討」。",source:"メンバー指導（文字起こし） 第1章 日常業務の見直し"},
+{category:"メンバー指導",question:"評価のプロセスとして正しい順序はどれか。",choices:["業績 → 執務態度 → 能力","業績 → 能力 → 執務態度","能力 → 業績 → 執務態度","執務態度 → 業績 → 能力","能力 → 執務態度 → 業績"],answer:0,explanation:"評価のプロセスは「業績 → 執務態度 → 能力」の順。OJTのプロセスとは逆方向。",source:"メンバー指導（文字起こし） 第1章 評価基準"},
+{category:"メンバー指導",question:"人事考課のエラーのうち「ハロー効果」の説明として正しいものはどれか。",choices:["その人物に対してもつ印象が優先し実際の状態を歪めて見てしまうこと","評価結果が中央部分に偏る傾向","評価を実際より甘く（高く）してしまう傾向","自分自身を評価の基準としてしまうこと","自信のある分野では辛く評価し自信のない分野では甘く評価する傾向"],answer:0,explanation:"ハロー効果は「その人物に対してもつ印象が優先し、実際の状態を歪めて見てしまうこと」。",source:"メンバー指導（文字起こし） 第1章 人事考課エラー"},
+{category:"メンバー指導",question:"人事考課エラーの「寛大化傾向」の説明として正しいものはどれか。",choices:["考課者が自分自身を評価基準にしてしまうこと","各考課項目間に論理的な相関があると思い込み一律に評価すること","自信のある分野で辛く評価する傾向","評価結果が中央部分に偏ること","評価を実際より甘く（高く）してしまう傾向"],answer:4,explanation:"寛大化傾向は「評価を実際より甘く（高く）してしまう傾向」のこと。",source:"メンバー指導（文字起こし） 第1章 人事考課エラー"},
+{category:"メンバー指導",question:"カウンセリングの基本スキル5つのうち「共感」によって得られる効果として正しいものはどれか。",choices:["バディ効果","ストローク効果","モチベーション効果","インサイト効果","カタルシス効果"],answer:0,explanation:"共感によって得られるのは「バディ効果」。カタルシス効果は受容、インサイト効果は自己一致による。",source:"メンバー指導（文字起こし） 第2章 カウンセリングの基本スキル"},
+{category:"メンバー指導",question:"コーチングの手順において、メンバーとマネジャーのギャップを明確にした後のステップとして正しいものはどれか。",choices:["メンバーに実行してもらう","マネジャーとしての率直な意見を伝える","行動のフィードバックを行う","メンバーの真の状態を把握する","考える機会をつくる"],answer:4,explanation:"コーチングの手順では「ギャップの明確化」の次に「考える機会をつくる」ステップが続く。",source:"メンバー指導（文字起こし） 第1章 コーチングの手順"},
+{category:"メンバー指導",question:"「対比誤差」の説明として正しいものはどれか。",choices:["その人物に対してもつ印象が優先し実際の状態を歪めること","評価結果が中央部分に偏ること","自分に自信のある分野では辛く評価し、自信のない分野では甘く評価する傾向","各考課項目間に論理的な相関があると思い込むこと","評価を実際より甘くしてしまう傾向"],answer:2,explanation:"対比誤差は「自分に自信のある分野では辛く評価し、自信のない分野では甘く評価する傾向」。",source:"メンバー指導（文字起こし） 第1章 人事考課エラー"},
+{category:"メンバー指導",question:"動機づけの最終目標として正しいものはどれか。",choices:["衛生要因の完全な充足","メンバーの離職率の低下","目標に向けての活力の増強","上司と部下の信頼関係の構築","職場環境の改善"],answer:2,explanation:"動機づけの最終目標は「目標に向けての活力の増強」にある。",source:"メンバー指導（文字起こし） 第2章 動機づけの最終目標"},
+{category:"計数管理",question:"損益分岐点売上高の計算式として正しいものはどれか。",choices:["売上高 ×（固定費 ÷ 変動費）","（固定費 + 変動費）÷ 売上高","固定費 ÷（売上高 - 変動費）","変動費 ÷（1 - 固定費÷売上高）","固定費 ÷（1 - 変動費÷売上高）"],answer:4,explanation:"損益分岐点売上高 = 固定費 ÷（1 - 変動費÷売上高）が正しい公式。",source:"計数入門（文字起こし） 第3章 損益分岐点"},
+{category:"計数管理",question:"限界利益の計算式として正しいものはどれか。",choices:["売上高 - 固定費","売上高 - 変動費","売上高 - 総費用","変動費 - 固定費","固定費 - 変動費"],answer:1,explanation:"限界利益 = 売上高 - 変動費。",source:"計数入門（文字起こし） 第3章 限界利益"},
+
+// ===== GROUP F: 計数管理 教科書deep (20問) =====
+{category:"計数管理",question:"損益分岐点比率が90%以上の場合の経営状態として正しいものはどれか。",choices:["高収益経営の状態","優良経営の状態","赤字に転落するリスクがかなり高い危険な経営状態","赤字を計上している経営状態","平均的な経営状態"],answer:2,explanation:"損益分岐点比率90%以上は「ライバル企業の動向や市場の変化によって赤字に転落するリスクがかなり高い、危険な経営状態」。",source:"計数入門（文字起こし） 第3章 損益分岐点比率の目安"},
+{category:"計数管理",question:"損益分岐点比率70%未満の場合の経営状態として正しいものはどれか。",choices:["危険な経営状態","赤字を計上している状態","平均的な経営状態","優良経営の状態","高い利益率を確保できる高収益経営の状態"],answer:4,explanation:"70%未満は「高い利益率を確保できる、高収益経営の状態」とされる。",source:"計数入門（文字起こし） 第3章 損益分岐点比率の目安"},
+{category:"計数管理",question:"同じ種類の製品を継続して作り続ける場合に適用される原価計算の方法はどれか。",choices:["個別原価計算","直接原価計算","標準原価計算","総合原価計算","活動基準原価計算"],answer:3,explanation:"同じ種類の製品を継続して製造する場合は総合原価計算が適用される。",source:"計数入門（文字起こし） 第2章 原価計算のしくみ"},
+{category:"計数管理",question:"異なる製品を個別に受注して製造する場合に適用される原価計算の方法はどれか。",choices:["総合原価計算","標準原価計算","直接原価計算","個別原価計算","活動基準原価計算"],answer:3,explanation:"異なる製品を個別に受注して製造する場合は個別原価計算が適用される。",source:"計数入門（文字起こし） 第2章 原価計算のしくみ"},
+{category:"計数管理",question:"仕掛品の加工費を計算する際に用いるものとして正しいものはどれか。",choices:["材料の投入時期","販売単価","間接費の配賦基準","固定費の割合","完成までの進捗率"],answer:4,explanation:"仕掛品の加工費は「完成までの進捗率をもとに完成品に換算して計算する」。",source:"計数入門（文字起こし） 第2章 仕掛品計算"},
+{category:"計数管理",question:"標準原価計算で直接材料費の差異分析を行う場合、分析する2つの差異はどれか。",choices:["材料費差異と労務費差異","時間差異と操業度差異","固定費差異と変動費差異","予算差異と能率差異","価格差異と数量差異"],answer:4,explanation:"直接材料費の差異は「価格差異」と「数量差異」に分けて分析する。",source:"計数入門（文字起こし） 第2章 標準原価差異分析"},
+{category:"計数管理",question:"定額法による減価償却の特徴として正しいものはどれか。",choices:["毎年一定額を償却するため各年の費用が均等になる","残存価額に一定率を掛けて計算する","耐用年数が経過するほど費用が大きくなる","利益が変動しやすい","毎年一定率で償却するため初年度の費用が最も大きい"],answer:0,explanation:"定額法は「毎年一定額を減価償却する方法」であり、各年の減価償却費は均等。",source:"計数入門（文字起こし） 第3章 減価償却"},
+{category:"計数管理",question:"定率法による減価償却の特徴として正しいものはどれか。",choices:["固定資産の種類に関係なく同じ率を適用する","最終年度に一括して費用計上する","毎年均等額を償却する","耐用年数全体を通じて同額の費用となる","初年度の減価償却費が最も大きく年々減少する"],answer:4,explanation:"定率法は毎年一定率を償却するため、初年度が最も大きく年々減少していく。",source:"計数入門（文字起こし） 第3章 減価償却"},
+{category:"計数管理",question:"埋没原価の説明として正しいものはどれか。",choices:["すでに支出が行われており採算の判断に影響を及ぼさない原価","将来発生が見込まれる原価","固定費の中で最も大きな割合を占める原価","経営判断によって増減する原価","変動費のうち削減不可能な部分"],answer:0,explanation:"埋没原価は「すでに支出が行われており、採算の判断に影響を及ぼさない原価」。",source:"計数入門（文字起こし） 第3章 採算計算"},
+{category:"計数管理",question:"増分原価の説明として正しいものはどれか。",choices:["過去に支払い済みの回収不能な原価","経営判断を行った場合に増加する分の原価","すべての製造原価を合算した原価","標準原価と実際原価の差額","固定費のうち変動する部分"],answer:1,explanation:"増分原価は「経営判断を行った場合に増加する分の原価」。",source:"計数入門（文字起こし） 第3章 採算計算"},
+{category:"計数管理",question:"全部原価計算と直接原価計算の違いとして正しいものはどれか。",choices:["全部原価計算は材料費・労務費・経費のすべてを対象とし、直接原価計算は変動費のみを原価とする","全部原価計算は変動費のみ、直接原価計算は全費用を対象とする","全部原価計算は間接費のみ、直接原価計算は直接費のみを対象とする","全部原価計算は将来原価、直接原価計算は過去原価を用いる","両者に違いはない"],answer:0,explanation:"全部原価計算は全費用を対象とし、直接原価計算は変動費のみを原価とする。",source:"計数入門（文字起こし） 第3章 全部原価計算vs直接原価計算"},
+{category:"計数管理",question:"固定費の変動費化の効果として正しいものはどれか。",choices:["変動費率が低下する","利益が直接増加する","損益分岐点比率が上昇する","安全余裕率が高まり経営のリスクが減少する","売上高が増加する"],answer:3,explanation:"固定費を変動費化すると「安全余裕率が高まり、経営のリスクを減少させることができる」。",source:"計数入門（文字起こし） 第3章 固定費の変動費化"},
+{category:"計数管理",question:"固定費の変動費化の具体例として正しくないものはどれか。",choices:["作業員をパート社員にする","社用車をレンタカーにする","自社業務を外注化する","原材料を大量一括購入する","繁忙期のみの臨時雇用を活用する"],answer:3,explanation:"原材料の大量一括購入は固定費の変動費化ではなく、変動費の削減策。",source:"計数入門（文字起こし） 第3章 固定費の変動費化"},
+{category:"計数管理",question:"原価の3要素として正しい組み合わせはどれか。",choices:["材料費、人件費、販管費","材料費、労務費、経費","直接費、間接費、固定費","変動費、固定費、準変動費","仕入原価、製造原価、売上原価"],answer:1,explanation:"製造原価は「材料費、労務費、経費」の3つに分類され、これを原価の3要素と呼ぶ。",source:"計数入門（文字起こし） 第2章 原価の構成"},
+{category:"計数管理",question:"売上原価の計算式として正しいものはどれか。",choices:["当期完成分 + 期末在庫 - 期首在庫","売上高 - 固定費","期末在庫 + 期首在庫 - 当期完成分","売上高 - 変動費","期首在庫 + 当期完成分 - 期末在庫"],answer:4,explanation:"売上原価 = 期首在庫 + 当期完成分（製造原価）- 期末在庫。",source:"計数入門（文字起こし） 第3章 製造原価と売上原価"},
+{category:"計数管理",question:"限界利益を使った損益分岐点売上高の公式として正しいものはどれか。",choices:["固定費 ÷ 限界利益率","変動費 ÷ 限界利益率","限界利益率 × 売上高","固定費 × 限界利益率","（固定費 + 変動費）÷ 限界利益率"],answer:0,explanation:"限界利益を使った損益分岐点売上高 = 固定費 ÷ 限界利益率。",source:"計数入門（文字起こし） 第3章 限界利益による損益分岐点"},
+{category:"計数管理",question:"外注化の採算計算において考慮すべき原価として正しいものはどれか。",choices:["増分原価と減分原価のみを比較する","埋没原価を含めて比較する","全部原価で比較する","固定費のみを比較する","変動費のみを比較する"],answer:0,explanation:"採算計算では増分原価と減分原価のみを計算対象とする。全部原価での比較は誤った判断につながりうる。",source:"計数入門（文字起こし） 第3章 採算計算"},
+{category:"計数管理",question:"目標利益を達成するために必要な売上高の計算式として正しいものはどれか。",choices:["（固定費 + 目標利益）÷ 限界利益率","目標利益 ÷（1 - 変動費÷売上高）","固定費 ÷（1 - 変動費÷売上高）","（変動費 + 目標利益）÷ 売上高","目標利益 × 限界利益率"],answer:0,explanation:"必要売上高 =（固定費 + 目標利益）÷（1 - 変動費÷売上高）= （固定費 + 目標利益）÷ 限界利益率。",source:"計数入門（文字起こし） 第3章 目標利益の達成"},
+{category:"労務管理",question:"フレックスタイム制の清算期間の上限として正しいものはどれか。",choices:["1ヵ月","3ヵ月","6ヵ月","1年"],answer:1,explanation:"フレックスタイム制の清算期間の上限は3ヵ月。",source:"労務管理（文字起こし） 第1章 フレックスタイム制"},
+{category:"労務管理",question:"フレックスタイム制で清算期間中の実労働時間が所定労働時間より多かった場合の扱いとして正しいものはどれか。",choices:["時間外勤務手当を支払う","翌月の所定労働時間を減らす","本人の有給休暇で相殺する","次の清算期間に繰り越して調整できる","超過分は切り捨てとなる"],answer:0,explanation:"過剰となった時間は時間外勤務手当を支払うことが必要。次の清算期間に繰り越すことはできない。",source:"労務管理（文字起こし） 第1章 フレックスタイム制"},
+
+// ===== GROUP G: 労務管理 教科書deep (20問) =====
+{category:"労務管理",question:"フレックスタイム制で清算期間中の実労働時間が不足した場合の扱いとして正しいものはどれか。",choices:["不足分は必ず賃金カットしなければならない","翌月に繰り越すことも賃金カットすることも可能","不足分は有給休暇で補填する","不足分は翌月必ず繰り越す","使用者の責に帰すべき休業として扱う"],answer:1,explanation:"不足した時間は次の清算期間に繰り越すこともできるし、ノーワーク・ノーペイの原則により賃金カットすることも可能。",source:"労務管理（文字起こし） 第1章 フレックスタイム制"},
+{category:"労務管理",question:"専門業務型裁量労働制の対象業務に含まれないものはどれか。",choices:["新商品・新技術の研究開発","システムコンサルタント","公認会計士","弁護士","一般事務（経理・総務）"],answer:4,explanation:"一般事務は専門業務型裁量労働制の対象20業務に含まれない。",source:"労務管理（文字起こし） 第1章 裁量労働制"},
+{category:"労務管理",question:"事業場外労働のみなし労働時間制の適用要件として正しくないものはどれか。",choices:["事業場外で業務に従事すること","使用者の具体的指揮監督がおよばないこと","労働時間を算定することが困難な業務であること","労使協定が事前に締結されていること","事業場外での業務・指揮監督外・算定困難の3要件すべてを満たすこと"],answer:3,explanation:"3要件は「事業場外での業務」「使用者の具体的指揮監督が及ばない」「労働時間算定が困難」。労使協定の事前締結は適用要件ではない。",source:"労務管理（文字起こし） 第1章 事業場外みなし労働時間制"},
+{category:"労務管理",question:"休日振替と代休の違いとして正しいものはどれか。",choices:["休日振替は事後、代休は事前に行う","休日振替は事前に休日と労働日を入れ替え、代休は休日労働後に別の日に休む","両者に違いはない","休日振替は割増賃金が必要、代休は不要","代休は法的に義務づけられている"],answer:1,explanation:"休日振替は事前に休日と労働日を入れ替える制度、代休は休日労働後に別の日に休む措置。代休では割増賃金（35%以上）の支払いが必要。",source:"労務管理（文字起こし） 第1章 休日振替と代休"},
+{category:"労務管理",question:"育児休業の最長期間として正しいものはどれか。",choices:["子が1歳まで","子が1歳6ヵ月まで","子が最長2歳まで","子が3歳まで","子が小学校就学前まで"],answer:2,explanation:"育児休業は原則1歳までだが、保育所入所困難等の事情がある場合、最長2歳まで延長可能。",source:"労務管理（文字起こし） 第2章 育児休業"},
+{category:"労務管理",question:"介護休業の通算日数の上限として正しいものはどれか。",choices:["93日","120日","60日","180日","90日"],answer:0,explanation:"介護休業の期間は対象家族1人につき通算して93日まで。",source:"労務管理（文字起こし） 第2章 介護休業"},
+{category:"労務管理",question:"介護休業の分割取得の上限回数として正しいものはどれか。",choices:["2回","3回","回数制限なし","4回"],answer:1,explanation:"介護休業は3回を上限として分割取得できる。",source:"労務管理（文字起こし） 第2章 介護休業"},
+{category:"労務管理",question:"子の看護休暇について、子が1人の場合の年間日数として正しいものはどれか。",choices:["3日","5日","7日","10日"],answer:1,explanation:"子が1人の場合は年に5日、2人以上の場合は年に10日まで取得可能。",source:"労務管理（文字起こし） 第2章 育児に関する制度"},
+{category:"労務管理",question:"年次有給休暇の発生要件として正しいものはどれか。",choices:["雇い入れから1年継続勤務し全労働日の8割以上出勤","雇い入れから3ヵ月継続勤務し全労働日の7割以上出勤","雇い入れから6ヵ月継続勤務し全労働日の7割以上出勤","雇い入れから1年継続勤務し全労働日の9割以上出勤","雇い入れから6ヵ月継続勤務し全労働日の8割以上出勤"],answer:4,explanation:"年次有給休暇は「6ヵ月間継続勤務し、全労働日の8割以上出勤」で発生する。",source:"労務管理（文字起こし） 第2章 年次有給休暇"},
+{category:"労務管理",question:"年次有給休暇の時効として正しいものはどれか。",choices:["1年","2年","3年","5年"],answer:1,explanation:"年次有給休暇は時効の規定により2年間は請求することができる。",source:"労務管理（文字起こし） 第2章 年次有給休暇の繰越し"},
+{category:"労務管理",question:"年次有給休暇の計画的付与において、留保しなければならない日数として正しいものはどれか。",choices:["3日","5日","7日","10日","すべて計画的に付与可能"],answer:1,explanation:"年次有給休暇のうち5日を超える部分について計画的付与が可能。つまり5日は留保しなければならない。",source:"労務管理（文字起こし） 第2章 計画的付与"},
+{category:"労務管理",question:"年10日以上の年次有給休暇が付与される労働者に対する使用者の義務として正しいものはどれか。",choices:["年3日の時季指定取得","年5日の時季指定取得","年7日の時季指定取得","年10日の時季指定取得","時季指定義務はない"],answer:1,explanation:"年10日以上付与される労働者に対し、年5日については使用者が時季を指定して取得させなければならない。",source:"労務管理（文字起こし） 第2章 年5日取得義務"},
+{category:"労務管理",question:"休日労働が深夜に及んだ場合の割増賃金率として正しいものはどれか。",choices:["35%以上","50%以上","60%以上","75%以上","85%以上"],answer:2,explanation:"休日労働（35%）+ 深夜労働（25%）= 60%以上の割増賃金が必要。",source:"労務管理（文字起こし） 第1章 割増賃金"},
+{category:"労務管理",question:"月60時間を超える時間外労働の割増賃金率として正しいものはどれか。",choices:["25%以上","35%以上","50%以上","60%以上","75%以上"],answer:2,explanation:"1ヵ月の時間外労働が60時間を超えた場合、50%以上の割増賃金が必要。",source:"労務管理（文字起こし） 第1章 割増賃金"},
+{category:"労務管理",question:"手待ち時間と手あき時間の違いとして正しいものはどれか。",choices:["手待ち時間は使用者の指揮監督下で労働時間、手あき時間は自由に利用でき休憩時間","両者とも労働時間に含まれる","手待ち時間は深夜のみ発生する","手待ち時間は休憩時間、手あき時間は労働時間","両者とも休憩時間として扱われる"],answer:0,explanation:"手待ち時間は使用者の指揮監督下にあるため労働時間。手あき時間は自由に利用できるため休憩時間とみなされる。",source:"労務管理（文字起こし） 第1章 手待ち時間と手あき時間"},
+{category:"労務管理",question:"企画業務型裁量労働制の導入に必要なものとして正しいものはどれか。",choices:["労使委員会の決議","従業員全員の同意","労使協定の締結","労働基準監督署の許可","取締役会の承認"],answer:0,explanation:"企画業務型裁量労働制は「労使委員会の決議」により導入される。専門業務型は労使協定。",source:"労務管理（文字起こし） 第1章 裁量労働制"},
+{category:"労務管理",question:"法定労働時間として正しいものはどれか。",choices:["1週38時間・1日7.5時間","1週44時間・1日8.5時間","1週42時間・1日8時間","1週35時間・1日7時間","1週40時間・1日8時間"],answer:4,explanation:"法定労働時間は原則として1週40時間・1日8時間。",source:"労務管理（文字起こし） 第1章 労働時間の基礎"},
+// ===== 理念・ビジョン 追加 (10問) =====
+{category:"理念・ビジョン",question:"グループシンボルの「＆」のフォルムが表す笑顔について正しいものはどれか。",choices:["社員だけの笑顔を表現している","笑顔は日本独自の文化的表現である","笑顔は誰もが幸せな気持ちになる世界共通のモチーフである","お客様の購買時の満足感を象徴している","経営統合の成功を祝う笑顔である"],answer:2,explanation:"「笑顔は誰もが幸せな気持ちになる世界共通のモチーフであり、世界中の人々をワクワクさせ、また自らもワクワクするような新統合会社を象徴しています」と記されている。",source:"グループ理念 - グループシンボル"},
+{category:"理念・ビジョン",question:"グループ理念・ビジョンの浸透に関する記述として正しいものはどれか。",choices:["浸透を最小限にとどめ、各社の自主性を重視する","浸透を最大化すると共に、新しいグループとしてのシナジーを生み出す","浸透は管理職のみを対象とし、一般社員には別途周知する","浸透の度合いを毎年数値化し、達成率80%以上を目指す","浸透は自然に任せ、強制しないことを方針とする"],answer:1,explanation:"「この『グループ理念・ビジョン』の浸透を最大化すると共に、新しいグループとしてのシナジーを生み出し、グループ全体の企業価値の向上を目指す」と記されている。",source:"グループ理念 - グループ理念・ビジョン"},
+
+// ===== 経営方針 追加 (21問) =====
+{category:"計数管理",question:"財務三表に含まれないものはどれか。",choices:["貸借対照表","損益計算書","キャッシュフロー計算書","製造原価報告書","該当なし（すべて含まれる）"],answer:3,explanation:"財務三表は貸借対照表、損益計算書、キャッシュフロー計算書の3つ。製造原価報告書は含まれない。",source:"計数入門（文字起こし） 第1章 経営状態を判断する数値"},
+{category:"計数管理",question:"貸借対照表から読み取れるものとして正しいものはどれか。",choices:["収益力","資金の流れ","健全性","生産性","売上高の推移"],answer:2,explanation:"貸借対照表からは企業の健全性を読み取ることができる。",source:"計数入門（文字起こし） 第1章 経営状態を判断する数値"},
+{category:"計数管理",question:"損益計算書から読み取れるものとして正しいものはどれか。",choices:["健全性","資金の流れ","収益力","資産の構成","負債の内訳"],answer:2,explanation:"損益計算書からは収益力を読み取ることができる。",source:"計数入門（文字起こし） 第1章 経営状態を判断する数値"},
+{category:"計数管理",question:"キャッシュフロー計算書から読み取れるものとして正しいものはどれか。",choices:["収益力","健全性","生産性","資金の流れ","原価構成"],answer:3,explanation:"キャッシュフロー計算書からは資金の流れを読み取ることができる。",source:"計数入門（文字起こし） 第1章 経営状態を判断する数値"},
+{category:"計数管理",question:"売上高と売上原価の差額で獲得した利益を損益計算書上では何と呼ぶか。",choices:["営業利益","経常利益","当期純利益","売上総利益","限界利益"],answer:3,explanation:"売上高と売上原価の差額は一般に粗利益と呼ばれるが、損益計算書では売上総利益と表現される。",source:"計数入門（文字起こし） 第1章 学習成果確認テスト"},
+{category:"計数管理",question:"営業利益から営業外収益を足して営業外費用を差し引いたものは何か。",choices:["経常利益","営業利益","売上総利益","当期純利益","限界利益"],answer:0,explanation:"営業利益＋営業外収益−営業外費用＝経常利益である。",source:"計数入門（文字起こし） 第1章 学習成果確認テスト"},
+{category:"計数管理",question:"過剰な在庫をもつことのもっとも大きなリスクはどれか。",choices:["生産数量のムラ","歩留まり率の低下","交叉比率の低下","値引き・廃棄ロス","人件費の増加"],answer:3,explanation:"過剰在庫のもっとも大きなリスクは値引き・廃棄ロスである。",source:"計数入門（文字起こし） 第1章 学習成果確認テスト"},
+{category:"計数管理",question:"在庫を過剰にもつことによる経営への悪影響として正しくないものはどれか。",choices:["金利費用の増加","保管費用・管理費用の増加","在庫ロスの発生","売上高の直接的な増加","経営資金の圧迫"],answer:3,explanation:"過剰在庫は金利費用、保管費用、在庫ロス、値引き・廃棄ロス、経営資金の圧迫をもたらすが、売上高の直接的な増加にはつながらない。",source:"計数入門（文字起こし） 第1章 コスト意識"},
+{category:"計数管理",question:"生産性の定義として正しいものはどれか。",choices:["売上高に対する利益の比率","投入量（インプット）に対する産出量（アウトプット）の大きさ","固定費に対する変動費の比率","総資産に対する売上高の比率","原価に対する売上高の比率"],answer:1,explanation:"生産性とは投入量（インプット）に対する産出量（アウトプット）の大きさを表すものである。",source:"計数入門（文字起こし） 第1章 生産性意識"},
+{category:"計数管理",question:"原価計算の4つの目的に含まれないものはどれか。",choices:["正しい決算書を作成する","販売価格を決定する","原価の管理を行う","従業員の給与を決定する","採算計算を行う"],answer:3,explanation:"原価計算の4つの目的は①正しい決算書作成、②販売価格決定、③原価管理、④採算計算である。従業員の給与決定は含まれない。",source:"計数入門（文字起こし） 第2章 原価の構成"},
+{category:"計数管理",question:"製造直接費の説明として正しいものはどれか。",choices:["固定費のうち製造工程で発生するもの","変動費のうち材料費に限定されるもの","どの製品のために発生したかが明らかな費用","配賦基準にもとづいて各製品に割り当てる費用","売上原価のうち直接販売に関わる費用"],answer:2,explanation:"製造直接費はどの製品のために発生したかが明らかな費用であり、製造間接費は明らかでない費用である。",source:"計数入門（文字起こし） 第2章 原価計算のしくみ"},
+{category:"計数管理",question:"製造間接費の取り扱い方として正しいものはどれか。",choices:["すべて変動費として処理する","配賦基準にもとづいて各製品に配賦される","発生した部門にのみ計上する","すべて固定費として処理する","売上原価に直接加算する"],answer:1,explanation:"製造間接費はどの製品にかかった費用か把握しにくいため、配賦基準にもとづいて各製品に配賦される。",source:"計数入門（文字起こし） 第2章 原価計算のしくみ"},
+{category:"計数管理",question:"材料費の計算方法に含まれないものはどれか。",choices:["移動平均法","総平均法","先入先出法","定額法","平均法"],answer:3,explanation:"材料費の計算には移動平均法、総平均法、先入先出法などがある。定額法は減価償却の方法であり材料費の計算方法ではない。",source:"計数入門（文字起こし） 第2章 原価計算のしくみ"},
+{category:"計数管理",question:"標準原価計算を行うもっとも重要な目的はどれか。",choices:["正確な在庫金額を算出すること","製品の販売価格を決定すること","目標とする原価との差異を分析しコストダウンにつなげること","財務諸表の作成を簡素化すること","製造工程の自動化を推進すること"],answer:2,explanation:"標準原価計算のもっとも重要な目的は、目標原価との差異を分析しコストダウンにつなげることである。",source:"計数入門（文字起こし） 第2章 標準原価計算とは"},
+{category:"計数管理",question:"標準原価の差異分析で分析する3つの費目の正しい組み合わせはどれか。",choices:["材料費、人件費、販管費","直接材料費、直接労務費、製造間接費","変動費、固定費、準変動費","直接費、間接費、一般管理費","売上原価、製造原価、仕入原価"],answer:1,explanation:"標準原価の差異分析は直接材料費、直接労務費、製造間接費の3つに分けて行う。",source:"計数入門（文字起こし） 第2章 標準原価計算とは"},
+{category:"計数管理",question:"直接材料費の数量差異の計算式として正しいものはどれか（標準単価200円、標準使用量500kg、実際単価220円、実際使用量520kg）。",choices:["（220円−200円）×500kg＝10,000円","（520kg−500kg）×220円＝4,400円","（520kg−500kg）×200円＝4,000円","（220円−200円）×520kg＝10,400円","520kg×220円−500kg×200円＝14,400円"],answer:2,explanation:"数量差異＝（実際使用量−標準使用量）×標準単価＝（520kg−500kg）×200円＝4,000円。",source:"計数入門（文字起こし） 第2章 学習成果確認テスト"},
+{category:"計数管理",question:"仕掛品がある場合の原価計算で、材料費と加工費を分けて計算する理由として正しいものはどれか。",choices:["税務上の要請があるため","材料費は工程の初めに投入され、加工費は進捗に応じて消費されるため計算方法が異なるから","材料費のほうが金額が大きいため","加工費は固定費のみで構成されるため","材料費と加工費では勘定科目が異なるため"],answer:1,explanation:"材料費は一般に製造工程の初めに投入され、労務費や経費（加工費）は進捗に応じて消費されるため、計算方法が異なる。",source:"計数入門（文字起こし） 第2章 仕掛品計算"},
+{category:"計数管理",question:"加工費に含まれる費目の組み合わせとして正しいものはどれか。",choices:["労務費と経費","材料費と経費","材料費と労務費","材料費と販管費","労務費と販管費"],answer:0,explanation:"加工費とは労務費と経費を合計したもの。",source:"計数入門（文字起こし） 第2章 仕掛品計算"},
+{category:"計数管理",question:"損益分岐点販売数量の計算式として正しいものはどれか。",choices:["固定費÷売上高","固定費÷限界利益率","固定費÷（販売単価−1個あたり変動費）","変動費÷販売単価","（固定費＋変動費）÷販売単価"],answer:2,explanation:"損益分岐点販売数量＝固定費÷（販売単価−1個あたり変動費）で計算される。",source:"計数入門（文字起こし） 第3章 損益分岐点"},
+{category:"計数管理",question:"損益分岐点比率100%以上の場合の経営状態として正しいものはどれか。",choices:["赤字を計上している経営状態","優良経営の状態","危険な経営状態","高収益経営の状態","平均的な経営状態"],answer:0,explanation:"損益分岐点比率100%以上は赤字を計上している経営状態を示す。",source:"計数入門（文字起こし） 第3章 損益分岐点比率の目安"},
+{category:"計数管理",question:"損益分岐点比率70〜80%の場合の経営状態として正しいものはどれか。",choices:["高収益経営の状態","赤字に転落するリスクがかなり高い危険な経営状態","赤字を計上している経営状態","よほど大きな環境変化がなければ赤字になることは考えにくい優良経営の状態","平均的な経営状態"],answer:3,explanation:"損益分岐点比率70〜80%は「よほど大きな環境変化がなければ赤字になることは考えにくく、優良経営の状態」とされる。",source:"計数入門（文字起こし） 第3章 損益分岐点比率の目安"},
+{category:"計数管理",question:"損益分岐点比率の計算式として正しいものはどれか。",choices:["損益分岐点売上高÷売上高×100","売上高÷損益分岐点売上高×100","（売上高−損益分岐点売上高）÷売上高×100","固定費÷売上高×100","変動費÷売上高×100"],answer:0,explanation:"損益分岐点比率＝損益分岐点売上高÷売上高×100で計算される。",source:"計数入門（文字起こし） 第3章 損益分岐点比率"},
+{category:"計数管理",question:"安全余裕率と損益分岐点比率の関係として正しいものはどれか。",choices:["安全余裕率＝損益分岐点比率","安全余裕率＝100%−損益分岐点比率","安全余裕率＝損益分岐点比率×2","安全余裕率＝損益分岐点比率÷売上高","両者に直接の関係はない"],answer:1,explanation:"安全余裕率＝100%−損益分岐点比率。損益分岐点比率90%なら安全余裕率は10%。",source:"計数入門（文字起こし） 第3章 固定費の変動費化"},
+{category:"計数管理",question:"利益をあげるための3つの方策に含まれないものはどれか。",choices:["売上高をあげる","変動費を削減する","固定費を削減する","借入金を増やす","固定費を変動費化する"],answer:3,explanation:"利益をあげるための方策は①売上高をあげる、②変動費を削減する、③固定費を削減する（変動費化含む）の3つ。借入金の増加は含まれない。",source:"計数入門（文字起こし） 第3章 目標利益の達成"},
+{category:"計数管理",question:"変動費の削減方法として製造業に該当するものはどれか。",choices:["パート社員を増やす","社用車をレンタカーにする","材料の歩留率を改善する","建物の賃借料を交渉する","間接部門の人員を削減する"],answer:2,explanation:"製造業の変動費削減には材料の歩留率や不良品発生率の改善が有効である。",source:"計数入門（文字起こし） 第3章 変動費の削減方法"},
+{category:"計数管理",question:"価値分析（VA＝バリューアナリシス）の説明として正しいものはどれか。",choices:["製品を構成する部品について機能とコストの関係を見直す手法","製品の販売価格を市場価値にもとづいて設定する手法","企業の総資産の時価評価を行う手法","顧客の生涯価値を算出する手法","在庫の棚卸評価額を見直す手法"],answer:0,explanation:"VAは製品を構成する部品について機能とコストの関係を見直す手法で、材料費削減に効果的。",source:"計数入門（文字起こし） 第3章 変動費の削減方法"},
+{category:"計数管理",question:"固定費の削減について正しい記述はどれか。",choices:["固定費はいったん発生すると一切削減できない","建物や機械の賃借料は契約時の交渉がポイントとなる","人件費は固定費に含まれない","外注化は固定費を増加させる","減価償却費は任意に変更できる"],answer:1,explanation:"建物や機械の減価償却費や賃借料はいったん取得・契約すると後から削減が難しいため、契約時の交渉がポイントとなる。",source:"計数入門（文字起こし） 第3章 固定費の削減方法"},
+{category:"計数管理",question:"減価償却が義務付けられている理由として正しいものはどれか。",choices:["税金を少なくするため","毎年の損益計算の変動を避けるため","在庫評価を正確にするため","借入金の返済計画を立てるため","売上原価を正確に算出するため"],answer:1,explanation:"取得価額を一度に費用計上すると年度間の利益が大きく変動するため、減価償却は損益計算の変動を避けるために義務付けられている。",source:"計数入門（文字起こし） 第3章 減価償却"},
+{category:"計数管理",question:"減価償却の方法について正しい記述はどれか。",choices:["企業は毎年自由に定額法と定率法を変更できる","定額法のみが認められている","いったん採用した方法は毎期継続して適用しなければならない","定率法のみが認められている","法律で定められた方法が業種ごとに決まっている"],answer:2,explanation:"定額法と定率法のどちらを採用するかは企業の任意だが、いったん採用した方法は毎期継続して適用しなければならない。",source:"計数入門（文字起こし） 第3章 減価償却"},
+{category:"計数管理",question:"全部原価計算で生産数量を増やした場合に起こる現象として正しいものはどれか。",choices:["1個あたりの変動費が減少する","1個あたりの固定費負担が小さくなる","売上原価が必ず増加する","変動費総額が減少する","固定費総額が増加する"],answer:1,explanation:"全部原価計算では大量に製造すると1個あたりの固定費負担が小さくなり、見かけ上の製造原価が低下する。",source:"計数入門（文字起こし） 第3章 全部原価計算の問題点"},
+{category:"計数管理",question:"直接原価計算の特徴として正しいものはどれか。",choices:["外部報告の制度として認められている","材料費、労務費、経費のすべてを製品原価とする","変動費のみを製品の原価とし、固定費は期間費用として計算する","在庫数量の増減が利益に大きく影響する","標準原価計算と同じ手法である"],answer:2,explanation:"直接原価計算は変動費のみを製品の原価とし、固定費は期間の費用として計算する方法。",source:"計数入門（文字起こし） 第3章 直接原価計算"},
+{category:"計数管理",question:"直接原価計算が外部報告の制度として認められていない理由に関連する記述として正しいものはどれか。",choices:["計算が複雑すぎるため","内部管理の目的で多くの企業に採用されているが、制度上は全部原価計算が求められるため","直接原価計算では利益が計算できないため","変動費の区分が法律で定められていないため","直接原価計算は新しい手法で未検証のため"],answer:1,explanation:"直接原価計算は外部報告の制度としては認められていないが、内部管理の目的で多くの企業で採用されている。",source:"計数入門（文字起こし） 第3章 全部原価計算と直接原価計算"},
+{category:"計数管理",question:"特別注文に応じるかどうかの判断で、受注を決定するための前提条件に含まれないものはどれか。",choices:["製造能力に余力があること","既存のマーケットに影響を与えないこと","利益率よりも利益額が経営の優先課題であること","増分原価を上回る受注価格であること","全部原価以上の受注価格であること"],answer:4,explanation:"前提条件は①製造能力に余力、②既存マーケットへの影響なし、③利益率より利益額を優先。全部原価以上の価格は必須ではなく、増分原価を上回ればよい。",source:"計数入門（文字起こし） 第3章 特別注文の採算計算"},
+{category:"計数管理",question:"赤字製品の廃止を判断する際にポイントとなるものはどれか。",choices:["営業利益率","売上総利益率","製品別の限界利益（貢献利益）","製品別の全部原価","製品別の売上高"],answer:2,explanation:"製品の廃止や増産の判断には、固定費を負担する前の限界利益（貢献利益）がポイントとなる。",source:"計数入門（文字起こし） 第3章 赤字製品の廃止"},
+{category:"計数管理",question:"製品の廃止判断において、廃止した製品が負担していた固定費はどうなるか。",choices:["固定費は自動的に消滅する","他の製品が負担することになる","売上原価から除外される","変動費に振り替えられる","販管費に計上される"],answer:1,explanation:"固定費は配賦計算で製品別に負担額が決まるが、その製品の製造がなくなった場合、他の製品が負担することになる。",source:"計数入門（文字起こし） 第3章 赤字製品の廃止"},
+{category:"計数管理",question:"業務改善の手順として正しい順番はどれか。",choices:["改善案の実施→問題点の把握→業務の実態把握→改善案の立案","問題点の把握→業務の実態把握→改善案の立案→改善案の実施","業務の実態把握→問題点の把握→改善案の立案→改善案の実施・定着化","改善案の立案→業務の実態把握→改善案の実施→問題点の把握","業務の実態把握→改善案の立案→問題点の把握→改善案の実施"],answer:2,explanation:"業務改善は①業務の実態把握、②問題点の把握、③改善案の立案、④改善案の実施・定着化の順で進める。",source:"計数入門（文字起こし） 第4章 業務の見える化"},
+{category:"計数管理",question:"ABC分析の目的として正しいものはどれか。",choices:["全商品を均等に管理すること","構成比率の高いものに着目し重点管理を行うこと","売上の季節変動を予測すること","顧客満足度を測定すること","製造工程のボトルネックを発見すること"],answer:1,explanation:"ABC分析は構成比率の高いものに着目し、より少ない時間で最大の効果を発揮する重点管理を行うための手法。",source:"計数入門（文字起こし） 第4章 業務の見える化"},
+{category:"計数管理",question:"小売業の売上高の分解式として正しいものはどれか。",choices:["売上高＝商品数×1点単価","売上高＝客数×客単価","売上高＝来店客数×商品数","売上高＝買上点数×来店客数","売上高＝在庫金額×回転率"],answer:1,explanation:"小売業の売上高＝客数×客単価。さらに客単価＝買上点数×1点単価に分解される。",source:"計数入門（文字起こし） 第4章 販売業務の分析"},
+{category:"計数管理",question:"Zチャートの移動合計値が右上がりの場合、何を意味するか。",choices:["売上は減少傾向","売上は横ばい","売上は増加傾向","季節変動が大きい","在庫が増加傾向"],answer:2,explanation:"Zチャートで移動合計値が右上がりの場合、売上は増加傾向を示す。",source:"計数入門（文字起こし） 第4章 移動合計値による販売予測"},
+{category:"計数管理",question:"外注化の採算計算において、外注しても減少しない費用はどれか。",choices:["直接材料費","動力費","減価償却費","外注費","変動製造費"],answer:2,explanation:"固定費である減価償却費やその他固定経費は、外注化しても減少しない。減少するのは材料費や動力費などの変動費のみ。",source:"計数入門（文字起こし） 第3章 外注化の採算計算"},
+{category:"労務管理",question:"36協定の届出先として正しいものはどれか。",choices:["都道府県労働局","厚生労働省","所轄の労働基準監督署","市区町村役場","ハローワーク"],answer:2,explanation:"36協定は所轄の労働基準監督署長に届け出なければならない。",source:"労務管理（文字起こし） 第1章 用語解説・36協定"},
+{category:"労務管理",question:"解雇予告は原則として何日前までに行わなければならないか。",choices:["7日前","14日前","30日前","60日前"],answer:2,explanation:"解雇を行う場合、少なくとも30日前に予告するか、30日分以上の解雇予告手当を支払わなければならない。",source:"労務管理（文字起こし） 第4章 解雇予告"},
+{category:"労務管理",question:"就業規則の作成義務がある事業場の要件として正しいものはどれか。",choices:["常時5人以上の労働者を使用","常時10人以上の労働者を使用","常時20人以上の労働者を使用","常時30人以上の労働者を使用","常時50人以上の労働者を使用"],answer:1,explanation:"常時10人以上の労働者を使用する事業場の使用者には就業規則の作成義務と届出義務がある。",source:"労務管理（文字起こし） 第1章 用語解説・就業規則"},
+{category:"労務管理",question:"減給の制裁について、1回の額の上限として正しいものはどれか。",choices:["平均賃金の1日分の3分の1以下","平均賃金の1日分の半額以下","平均賃金の1日分以下","平均賃金の2日分以下","平均賃金の3日分以下"],answer:1,explanation:"減給の額は1回の額が平均賃金の1日分の半額以下でなければならない。",source:"労務管理（文字起こし） 第1章 用語解説・減給の制裁"},
+{category:"労務管理",question:"減給の制裁の総額について、1賃金支払期における上限として正しいものはどれか。",choices:["賃金総額の5分の1以下","賃金総額の10分の1以下","賃金総額の4分の1以下","賃金総額の3分の1以下","賃金総額の2分の1以下"],answer:1,explanation:"減給の総額は1賃金支払期における賃金の総額の10分の1以下でなければならない。",source:"労務管理（文字起こし） 第1章 用語解説・減給の制裁"},
+{category:"労務管理",question:"深夜労働の時間帯として正しいものはどれか。",choices:["午後8時から午前3時まで","午後9時から午前4時まで","午後10時から午前5時まで","午後11時から午前6時まで","午後10時から午前6時まで"],answer:2,explanation:"深夜労働は原則として午後10時から午前5時までの労働をさす。",source:"労務管理（文字起こし） 第1章 用語解説・深夜労働"},
+{category:"労務管理",question:"ストレスチェックの実施が義務付けられる事業所の要件として正しいものはどれか。",choices:["労働者が10人以上の事業所","労働者が30人以上の事業所","すべての事業所","労働者が100人以上の事業所","労働者が50人以上の事業所"],answer:4,explanation:"労働者が50人以上いる事業所では年1回のストレスチェック実施が義務付けられている。",source:"労務管理（文字起こし） 第1章 COLUMN・ストレスチェック"},
+{category:"労務管理",question:"ストレスチェックで高ストレス者と判定された場合の対応として正しいものはどれか。",choices:["自動的に休職となる","会社が強制的に医師面談を実施する","本人からの申し出により医師の面談を受けることができる","直ちに配置転換が行われる","産業医が直接本人に結果を通知する"],answer:2,explanation:"高ストレス者と判定された場合には、本人からの申し出により医師の面談を受けることができる。",source:"労務管理（文字起こし） 第1章 COLUMN・ストレスチェック"},
+{category:"労務管理",question:"パワーハラスメントの定義の3要素に含まれないものはどれか。",choices:["性別を理由とした差別的言動","業務上必要かつ相当な範囲を超えたもの","労働者の就業環境が害されるもの","優越的な関係を背景とした言動","3要素は優越的関係・業務範囲超越・就業環境侵害である"],answer:0,explanation:"パワハラは①優越的な関係を背景とした言動、②業務上必要かつ相当な範囲を超えたもの、③労働者の就業環境が害されるもの、の全てを満たすもの。性別を理由とした差別的言動はセクハラに該当する。",source:"労務管理（文字起こし） 第3章 COLUMN・パワハラ"},
+{category:"労務管理",question:"パワーハラスメントの行為類型に含まれないものはどれか。",choices:["身体的な攻撃","精神的な攻撃","人間関係からの切り離し","過大な要求","性的な言動による不快感"],answer:4,explanation:"パワハラの行為類型は①身体的な攻撃②精神的な攻撃③人間関係からの切り離し④過大な要求⑤過小な要求⑥個の侵害の6つ。性的な言動はセクハラに該当する。",source:"労務管理（文字起こし） 第3章 COLUMN・パワハラ"},
+{category:"労務管理",question:"1ヵ月単位の変形労働時間制を導入する際に定める必要がない事項はどれか。",choices:["変形期間の週平均労働時間を40時間以内とする","各日・各週の労働時間を具体的に定める","各日の始業・終業時刻を明らかにする","変形期間の起算日を定める","労働者個人の同意を書面で得る"],answer:4,explanation:"1ヵ月単位の変形労働時間制は①週平均40時間以内②各日各週の労働時間③始業終業時刻④起算日の4事項を労使協定または就業規則で定める。労働者個人の同意は要件ではない。",source:"労務管理（文字起こし） 第1章 1ヵ月単位の変形労働時間制"},
+{category:"労務管理",question:"1年単位の変形労働時間制の対象期間として正しいものはどれか。",choices:["1ヵ月以内の期間","1ヵ月を超え1年以内の期間","6ヵ月を超え2年以内の期間","3ヵ月を超え1年以内の期間","期間の制限はない"],answer:1,explanation:"1年単位の変形労働時間制の対象期間は1ヵ月を超え1年以内の期間に限る。",source:"労務管理（文字起こし） 第1章 1年単位の変形労働時間制"},
+{category:"労務管理",question:"1週間単位の非定型的変形労働時間制を導入できる事業場の従業員数の上限として正しいものはどれか。",choices:["10人未満","20人未満","100人未満","50人未満","30人未満"],answer:4,explanation:"30人未満の従業員を使用する小売業、旅館、料理、飲食店で導入できる。",source:"労務管理（文字起こし） 第1章 1週間単位の非定型的変形労働時間制"},
+{category:"労務管理",question:"1週間単位の非定型的変形労働時間制において、特定の日に働かせることができる上限時間として正しいものはどれか。",choices:["8時間","9時間","10時間","11時間","12時間"],answer:2,explanation:"1週間単位の非定型的変形労働時間制では、1週40時間以内であれば特定の日に10時間まで働かせることができる。",source:"労務管理（文字起こし） 第1章 1週間単位の非定型的変形労働時間制"},
+{category:"労務管理",question:"業務時間外の研修が労働時間とみなされる条件として正しいものはどれか。",choices:["研修の内容が業務に関連していれば常に労働時間となる","参加が従業員の自由意思であっても労働時間となる","出欠確認がなされ不参加者が人事上不利益を受ける場合は労働時間となる","研修が社外で行われる場合は労働時間とならない","会社が費用負担していれば労働時間となる"],answer:2,explanation:"業務命令でなくても、出欠確認が行われ不参加者が人事上不利益な取扱いを受ける場合は実質的に強制参加とみなされ労働時間となる。",source:"労務管理（文字起こし） 第1章 業務命令の有無と労働時間の判断"},
+{category:"労務管理",question:"一般健康診断の受診時間の取扱いとして正しいものはどれか。",choices:["労働時間となる","労働時間とならない","労使協議で決める"],answer:1,explanation:"一般健康診断は原則として労働時間とはならないが、受診時間の賃金を支払うことが望ましいとされている。",source:"労務管理（文字起こし） 第1章 COLUMN・健康診断"},
+{category:"労務管理",question:"特殊健康診断の受診時間の取扱いとして正しいものはどれか。",choices:["労働時間となる","労働時間とならない","労使協議で決める"],answer:0,explanation:"特殊健康診断は事業の遂行のために当然実施されなければならないものなので、受診に要する時間は労働時間となる。",source:"労務管理（文字起こし） 第1章 COLUMN・健康診断"},
+{category:"労務管理",question:"間接差別として禁止される3つの措置に含まれないものはどれか。",choices:["身長・体重・体力要件","転勤要件","転勤経験要件","学歴要件"],answer:3,explanation:"間接差別は①身長・体重・体力要件②転勤要件③転勤経験要件の3つの措置に限定されている。学歴要件は含まれない。",source:"労務管理（文字起こし） 第3章 間接差別"},
+{category:"労務管理",question:"事業主が講じるべきセクシュアル・ハラスメント対策として適切でないものはどれか。",choices:["方針の明確化と周知・啓発","相談窓口の設置","事後の迅速かつ適切な対応","被害者の配置転換による隔離のみで解決","再発防止措置"],answer:3,explanation:"事業主は方針の明確化、相談窓口の設置、事後対応、再発防止など総合的な措置が必要。被害者の配置転換のみでは適切な対策とはいえない。",source:"労務管理（文字起こし） 第3章 セクシュアル・ハラスメント防止措置"},
+{category:"労務管理",question:"休日の与え方の原則として正しいものはどれか。",choices:["毎月2回以上","毎週1回以上または4週間に4日以上","毎週2回以上","4週間に2日以上","毎月4回以上"],answer:1,explanation:"休日は原則として毎週1回以上または4週間に4日以上与えなければならない。",source:"労務管理（文字起こし） 第1章 休日の正しい与え方"},
+{category:"労務管理",question:"法定休日と所定休日の違いについて正しいものはどれか。",choices:["法定休日は会社が任意に定める休日である","所定休日に労働した場合も必ず35%以上の割増賃金が必要","法定休日とは法律で義務づけられた毎週1回以上の休日のことである","法定休日は必ず日曜日でなければならない","所定休日は法律で定められた休日のことである"],answer:2,explanation:"法定休日は法律で義務づけられた毎週1回以上（または4週4日以上）の休日。所定休日は週休2日制のもう1日など法定を上回る休日のこと。",source:"労務管理（文字起こし） 第1章 法定休日と所定休日"},
+{category:"労務管理",question:"振替休日を設定する際の要件として正しいものはどれか。",choices:["振替日は翌月以降でもよい","就業規則に振替休日の規定があり、事前に振替日を特定すること","振替は口頭の合意のみで足りる","振替休日は法定休日に限り認められる","労働基準監督署への届出が必要"],answer:1,explanation:"振替休日は就業規則に規定があり、事前に振替日を特定して行う必要がある。事後に休む場合は代休となる。",source:"労務管理（文字起こし） 第1章 休日振替の要件"},
+{category:"労務管理",question:"フレックスタイム制で清算期間が1ヵ月を超える場合、1ヵ月ごとの労働時間が週平均何時間を超えてはならないか。",choices:["40時間","42時間","44時間","48時間","50時間"],answer:4,explanation:"清算期間が1ヵ月を超える場合、1ヵ月ごとの労働時間が週平均50時間を超えないことが要件。超えた時間は時間外労働となる。",source:"労務管理（文字起こし） 第1章 フレックスタイム制"},
+{category:"労務管理",question:"年次有給休暇の時間単位取得について、年間の上限日数として正しいものはどれか。",choices:["3日","制限なし","7日","10日","5日"],answer:4,explanation:"労使協定が締結されている場合、1年に5日を限度として時間単位での年次有給休暇取得が可能。",source:"労務管理（文字起こし） 第2章 時間単位の取得"},
+{category:"労務管理",question:"年次有給休暇が最初に付与される条件として、全労働日の何割以上の出勤が必要か。",choices:["6割以上","7割以上","8割以上","9割以上","10割"],answer:2,explanation:"雇入れから6ヵ月間継続勤務し、全労働日の8割以上出勤した場合に年次有給休暇が付与される。",source:"労務管理（文字起こし） 第2章 年次有給休暇の日数"},
+{category:"労務管理",question:"継続勤務6ヵ月の労働者に付与される年次有給休暇の最低日数として正しいものはどれか。",choices:["5日","7日","10日","14日"],answer:2,explanation:"6ヵ月継続勤務し8割以上出勤した場合、最低10日の年次有給休暇が付与される。",source:"労務管理（文字起こし） 第2章 年次有給休暇の日数"},
+{category:"労務管理",question:"年次有給休暇の最大付与日数（6年6ヵ月以上継続勤務）として正しいものはどれか。",choices:["20日","16日","18日","14日","25日"],answer:0,explanation:"継続勤務6年6ヵ月以上で年次有給休暇は最大20日が付与される。",source:"労務管理（文字起こし） 第2章 年次有給休暇の日数"},
+{category:"労務管理",question:"年次有給休暇管理簿の保存義務期間として正しいものはどれか。",choices:["1年間","2年間","3年間","5年間","7年間"],answer:2,explanation:"使用者には従業員ごとに年次有給休暇管理簿を作成し、3年間保存する義務がある。",source:"労務管理（文字起こし） 第2章 年5日取得義務"},
+{category:"労務管理",question:"退職前に残りの年次有給休暇を一括請求された場合の使用者の対応として正しいものはどれか。",choices:["時季変更権を行使して拒否できる","原則として拒否できない","業務引継ぎ完了を条件に認める"],answer:1,explanation:"退職間際の場合、退職日以降に変更すべき日がないため時季変更権を行使できず、請求を拒否することはできない。",source:"労務管理（文字起こし） 第2章 時季変更権の実際"},
+{category:"労務管理",question:"計画的付与で年次有給休暇残日数のない従業員への対応として正しいものはどれか。",choices:["無給で休業させればよい","出勤を命じることができる","休業手当（平均賃金の60%以上）を支払う必要がある","翌年分の有給休暇を前借りさせる","欠勤扱いとする"],answer:2,explanation:"計画的付与の場合、残日数のない従業員については使用者の責に帰すべき休業となり、休業手当（平均賃金の100分の60以上）を支払う必要がある。",source:"労務管理（文字起こし） 第2章 計画的付与"},
+{category:"労務管理",question:"産後休業の期間として正しいものはどれか。",choices:["産後4週間","産後6週間","産後8週間","産後10週間","産後12週間"],answer:2,explanation:"産後休業は産後8週間（労働基準法）。出生時育児休業は産後8週間以内に4週（28日）まで取得可能。",source:"労務管理（文字起こし） 第2章 育児に関する制度"},
+{category:"労務管理",question:"出生時育児休業（産後パパ育休）の取得可能期間として正しいものはどれか。",choices:["産後4週（28日）まで","産後6週まで","産後8週まで","産後12週まで","子が1歳になるまで"],answer:0,explanation:"出生時育児休業は産後8週間以内に4週（28日）まで取得できる。",source:"労務管理（文字起こし） 第2章 育児に関する制度"},
+{category:"労務管理",question:"介護休業の対象家族に含まれないものはどれか。",choices:["配偶者","配偶者の父母","祖父母","兄弟姉妹","おじ・おば"],answer:4,explanation:"介護休業の対象家族は配偶者、父母、子、祖父母、兄弟姉妹、孫、配偶者の父母。おじ・おばは含まれない。",source:"労務管理（文字起こし） 第2章 介護休業"},
+{category:"労務管理",question:"介護休暇について、対象家族が2人以上の場合の年間取得日数として正しいものはどれか。",choices:["3日","5日","7日","10日","14日"],answer:3,explanation:"対象家族が1人であれば年5日、2人以上であれば年10日まで介護休暇を取得できる。",source:"労務管理（文字起こし） 第2章 介護休暇制度"},
+{category:"労務管理",question:"雇用保険の加入要件として正しいものはどれか。",choices:["1週間の所定労働時間が10時間以上で14日以上雇用見込み","1週間の所定労働時間が15時間以上で30日以上雇用見込み","1週間の所定労働時間が20時間以上で31日以上雇用見込み","1週間の所定労働時間が25時間以上で60日以上雇用見込み","すべてのパートタイマーが対象"],answer:2,explanation:"雇用保険は「1週間の所定労働時間が20時間以上」「31日以上雇用される見込みがある」場合に加入義務がある。",source:"労務管理（文字起こし） 第4章 社会保険・労働保険"},
+{category:"労務管理",question:"労災保険のパートタイマーへの適用について正しいものはどれか。",choices:["雇用形態に関係なく全員適用","週20時間以上働く者のみ適用","正社員のみ適用"],answer:0,explanation:"労災保険はパートタイマーも全員が適用となる。",source:"労務管理（文字起こし） 第4章 社会保険・労働保険"},
+{category:"労務管理",question:"妊娠・出産を理由とする不利益取扱いの禁止について正しいものはどれか。",choices:["正社員のみ保護される","有期契約者も妊娠を理由とする雇止めは禁止されている","妊娠による降格は業務上の必要性があれば許される","退職勧奨は不利益取扱いに該当しない","解雇のみが禁止されている"],answer:1,explanation:"妊娠・出産等を理由とする不利益取扱い（解雇、雇止め、退職勧奨、降格、減給など）は有期契約者を含め禁止されている。",source:"労務管理（文字起こし） 第3章 妊娠出産等を理由とする不利益取扱い"},
+{category:"労務管理",question:"懲戒処分の種類に含まれないものはどれか。",choices:["けん責","減給","出勤停止","配置転換","懲戒解雇"],answer:3,explanation:"懲戒処分にはけん責、減給、出勤停止、懲戒解雇などがある。配置転換は人事権の行使であり懲戒処分ではない。",source:"労務管理（文字起こし） 第5章 懲戒処分"},
+{category:"労務管理",question:"解雇予告除外認定を受けて即時解雇ができる場合として正しいものはどれか。",choices:["業績不振による整理解雇","試用期間中の能力不足","労働者の責に帰すべき事由が重大なとき（労基署長の認定が必要）","定年退職後の再雇用打ち切り","契約期間満了による雇止め"],answer:2,explanation:"労働者の責に帰すべき事由が重大または悪質なときは、労働基準監督署長の認定を受ければ即時解雇できる。",source:"労務管理（文字起こし） 第5章 解雇予告除外認定"},
+{category:"労務管理",question:"派遣先の同一事業所に対して派遣労働者を派遣できる期間の上限として正しいものはどれか。",choices:["1年","2年","3年","4年","5年"],answer:2,explanation:"派遣先の同一の事業所に対し派遣労働者を派遣できる期間は原則として3年が限度。",source:"労務管理（文字起こし） 第4章 派遣期間の制限"},
+{category:"メンバー指導",question:"OJTの定義における「熟練者」の3つの優位性として正しいものはどれか。",choices:["知識優位、技術優位、経験優位","知識優位、指導優位、管理優位","技術優位、管理優位、人格優位","経験優位、指導優位、判断優位","知識優位、技術優位、判断優位"],answer:0,explanation:"OJTでは「知識優位、技術優位、経験優位」の熟練者が非熟練者に対して指導・支援を行う。",source:"メンバー指導（文字起こし） 第1章 OJTとは何か"},
+{category:"メンバー指導",question:"3つの教育手段のうち「自己統制型の訓練方法」と定義されるものはどれか。",choices:["OJT","Off-JT","SD（自己啓発）"],answer:2,explanation:"SD（Self Development:自己啓発）は「目標達成プロセスとの関係を自ら設定する自己統制型の訓練方法」と定義される。",source:"メンバー指導（文字起こし） 第1章 能力開発の種類と構造"},
+{category:"メンバー指導",question:"Off-JTの特徴として正しいものはどれか。",choices:["目標達成プロセスに直接関係する日常業務を通じた訓練方法","目標達成プロセスに間接的に貢献する非日常的な訓練方法","目標達成プロセスとの関係を自ら設定する自己統制型の訓練方法","職場組織内で熟練者が行う直接的な指導方法","メンバー自身の判断で行う自主的学習方法"],answer:1,explanation:"Off-JTは「目標達成プロセスに間接的に貢献する非日常的な訓練方法」である。",source:"メンバー指導（文字起こし） 第1章 能力開発の種類と構造"},
+{category:"メンバー指導",question:"PDSサイクルのPlan過程でメンバーが行うべきこととして正しくないものはどれか。",choices:["計画への参画","意見具申・提案","努力目標の設定","自己啓発目標の設定","職務の割当て"],answer:4,explanation:"職務の割当てはDo過程におけるマネジャーの役割。Plan過程でメンバーが行うのは計画への参画、意見具申、努力目標の設定、自己啓発目標の設定。",source:"メンバー指導（文字起こし） 第1章 PDSサイクル"},
+{category:"メンバー指導",question:"PDSサイクルのDo過程でマネジャーが行う役割として正しくないものはどれか。",choices:["職務の割当て","情報の提供","職務の拡大","メンバーの育成","評価基準の設定"],answer:4,explanation:"評価基準の設定はSee過程でのマネジャーの役割。Do過程では職務の割当て、情報の提供、職務の拡大・交替、メンバーの育成、動機づけを行う。",source:"メンバー指導（文字起こし） 第1章 PDSサイクル"},
+{category:"メンバー指導",question:"PDSサイクルのSee過程でマネジャーが行う役割として正しくないものはどれか。",choices:["評価基準の設定","アドバイス・支援","進捗状況の把握","フィードバック","計画立案"],answer:4,explanation:"計画立案はPlan過程の役割。See過程では評価基準、アドバイス・支援、進捗状況の把握、フィードバック、次年度への目標づくりを行う。",source:"メンバー指導（文字起こし） 第1章 PDSサイクル"},
+{category:"メンバー指導",question:"PDSサイクルの期間設定について正しい説明はどれか。",choices:["Plan過程は期首、See過程は期末の年度単位で行う","月度・週度・仕事単位できめ細かくサイクルを回す","四半期ごとにサイクルを回すのが標準的","半期ごとにPlanとSeeを行えば十分","年度単位の大きなサイクルのみが基本"],answer:1,explanation:"PDSサイクルは年度単位だけでなく「月度、週度、仕事単位で、そのつどきめ細かくサイクルを設定し、確実に回していく」ことが大切。",source:"メンバー指導（文字起こし） 第1章 PDSサイクルの期間"},
+{category:"メンバー指導",question:"OJTにおける「示範」の説明として正しいものはどれか。",choices:["メンバーに資料を配布して自習させること","マネジャーが模範を示し、メンバーが学習の材料とすること","外部講師を招いて実演してもらうこと","メンバー同士で教え合わせること","マニュアルを作成して配布すること"],answer:1,explanation:"示範とは、マネジャーの行動すべてがメンバーの学習材料となるため、常に模範を示せるようにすること。",source:"メンバー指導（文字起こし） 第1章 OJTの機会と方法"},
+{category:"メンバー指導",question:"会議をOJTの機会として活用する際のポイントとして正しいものはどれか。",choices:["マネジャーが一方的に指示を伝達する場とする","メンバーに議事録作成のみを担当させる","定例報告の場として位置づける","会議の傍聴のみに限定する","メンバーに意見を述べたり提案できる機会をつくる"],answer:4,explanation:"会議では「意見を述べたり、提案できる機会をつくり、決定事項に自分も参画しているという意識の醸成」を図る。",source:"メンバー指導（文字起こし） 第1章 OJTの機会と方法"},
+{category:"メンバー指導",question:"評価の3大要素のうち、最大の評価要素はどれか。",choices:["能力","執務態度","業績","人間関係","自己啓発"],answer:2,explanation:"評価するべき最大の要素は「業績」。執務態度や能力は業績を上げるために必要な要素。",source:"メンバー指導（文字起こし） 第1章 評価基準のあり方"},
+{category:"メンバー指導",question:"「自己投影効果」の説明として正しいものはどれか。",choices:["評価を実際より甘くしてしまう傾向","評価結果が中央部分に偏る傾向","その人物に対する印象で実際の状態を歪めること","考課者が自分自身を評価の基準としてしまうこと","各考課項目間に論理的な相関があると思い込むこと"],answer:3,explanation:"自己投影効果は「考課者が自分自身を評価の基準としてしまうこと」。",source:"メンバー指導（文字起こし） 第1章 人事考課エラー"},
+{category:"メンバー指導",question:"「論理的誤差」の説明として正しいものはどれか。",choices:["評価を実際より甘くしてしまう傾向","各考課項目間に論理的な相関関係があると思い込み一律に評価してしまうこと","考課者が自分自身を評価基準にすること","評価結果が中央部分に偏ること","人物の印象が優先し実際を歪めること"],answer:1,explanation:"論理的誤差は「各考課項目間に論理的な相関関係があると思い込み、一律に評価してしまうこと」。",source:"メンバー指導（文字起こし） 第1章 人事考課エラー"},
+{category:"メンバー指導",question:"「中心化傾向」の説明として正しいものはどれか。",choices:["考課者が自分自身を評価基準にすること","評価を実際より甘くしてしまう傾向","その人物の印象で実際を歪めること","評価結果が中央部分に偏り評価項目ごとの優劣の差が著しく少なくなること","論理的な相関があると思い込み一律に評価すること"],answer:3,explanation:"中心化傾向は「評価結果が中央部分に偏り、評価項目ごとの優劣の差が著しく少なくなること」。",source:"メンバー指導（文字起こし） 第1章 人事考課エラー"},
+{category:"メンバー指導",question:"仕事の基本サイクルの正しい順序はどれか。",choices:["メンバーの特徴の把握→仕事の棚卸し→OJT→仕事の割当て→評価","仕事の棚卸し→メンバーの特徴の把握→仕事の割当て→OJT→評価・実績の検討","OJT→仕事の割当て→仕事の棚卸し→評価→メンバーの特徴の把握","仕事の割当て→OJT→評価→仕事の棚卸し→メンバーの特徴の把握","評価・実績の検討→仕事の棚卸し→OJT→仕事の割当て→メンバーの特徴の把握"],answer:1,explanation:"仕事の基本サイクルは「仕事の棚卸し→メンバーの特徴の把握→仕事の割当て→OJT→評価・実績の検討」。",source:"メンバー指導（文字起こし） 第1章 仕事の基本サイクル"},
+{category:"メンバー指導",question:"日常業務の見直し（仕事の棚卸し）がマネジャーの立場で果たす役割として正しいものはどれか。",choices:["メンバーの育成必要点を明確にする","メンバーの自己啓発目標を明確にする","メンバーの給与査定資料とする","人事異動の判断材料とする","組織改編の根拠とする"],answer:0,explanation:"日常業務の見直しによりマネジャーにとっては「育成必要点」が明確になり、メンバーにとっては「自己啓発目標」が明確になる。",source:"メンバー指導（文字起こし） 第1章 日常業務の見直しのねらい"},
+{category:"メンバー指導",question:"正しい指導の基本条件として正しくないものはどれか。",choices:["目的別に体系化された流れを構成していること","習得したものが固有能力として段階的に蓄積されていくこと","同じやり方で誰がやっても結果が同じという形に再現できること","メンバーの個性に合わせて毎回異なる方法で行うこと","一番力の低い人に合わせた段階的な体系化がなされていること"],answer:3,explanation:"正しい指導の基本は体系化・段階的蓄積・再現性の3点。毎回異なる方法で行うことは基本条件に含まれない。",source:"メンバー指導（文字起こし） 第1章 正しい指導とは"},
+{category:"メンバー指導",question:"効果的な説明のポイントとして正しくないものはどれか。",choices:["メンバーとの信頼関係ができている","適切なタイミングで教える","教える量が適切である","メンバーの反応に配慮する","一度に全情報を網羅的に伝達する"],answer:4,explanation:"説明のポイントには「教える量が適切である」「ポイントをよくつかんでおく」とあり、一度に全情報を網羅的に伝達することは求められていない。",source:"メンバー指導（文字起こし） 第1章 説明のポイント"},
+{category:"メンバー指導",question:"説明の手順として最初に行うべきことはどれか。",choices:["質問を受ける","ミスやトラブルの元になるところを確認する","細かいステップを流れに従って説明する","教えることの全体像と目的を示す","視覚に訴える資料を配布する"],answer:3,explanation:"説明の手順は「教えることの全体像と目的を示す」ことから始まる。",source:"メンバー指導（文字起こし） 第1章 説明の手順"},
+{category:"メンバー指導",question:"効果的な示範のポイントとして正しいものはどれか。",choices:["メンバーのレベルに合わせて省略してもよい","間違ったやり方や省略は絶対しない","おおまかな流れだけ見せればよい","難しい部分は口頭説明で代替する","最新の方法のみを見せる"],answer:1,explanation:"効果的な示範のポイントは「マネジャーとして正確にできる」「間違ったやり方や省略は絶対しない」の2点。",source:"メンバー指導（文字起こし） 第1章 示範のポイント"},
+{category:"メンバー指導",question:"実習の手順において、教えたこと以外の作業をさせることについて正しいものはどれか。",choices:["メンバーの創意工夫を促すため積極的に行わせる","教えたこと以外の作業はさせない","応用力をつけるため早い段階で行わせる","マネジャーの判断で適宜追加する","メンバーの自主性に委ねる"],answer:1,explanation:"実習の手順では「教えたこと以外の作業はさせない」とされている。",source:"メンバー指導（文字起こし） 第1章 実習の手順"},
+{category:"メンバー指導",question:"フィードバックの手順として最初に行うべきことはどれか。",choices:["改善すべきところを具体的に指摘する","つぎの機会をとりつける","総合コメントをする","よかったところを具体的に取り上げてほめる","質問を受ける"],answer:3,explanation:"フィードバックの手順は「よかったところを具体的に取り上げてほめる」ことから始まる。",source:"メンバー指導（文字起こし） 第1章 フィードバックの手順"},
+{category:"メンバー指導",question:"フィードバックの手順の最後のステップとして正しいものはどれか。",choices:["改善すべきところを指摘する","質問を受けて的確に答える","よかったところをほめる","総合コメントをし再度よい点をほめる","つぎの機会をとりつける（いつ、どこで、何を、何のために、どこまで）"],answer:4,explanation:"フィードバックの手順の最後は「つぎの機会をとりつける（いつ、どこで、何を、何のために、どこまで）」。",source:"メンバー指導（文字起こし） 第1章 フィードバックの手順"},
+{category:"メンバー指導",question:"コーチングの手順の第5ステップとして正しいものはどれか。",choices:["メンバーの真の状態を把握する","マネジャーとしての率直な意見を伝える","考える機会をつくる","マネジャーとして支援できる項目について話し合う","メンバー自身で実施の計画を立てる"],answer:4,explanation:"コーチングの8ステップの第5は「メンバー自身で実施の計画を立てる」。第4が考える機会をつくる、第6がマネジャーの支援項目の話し合い。",source:"メンバー指導（文字起こし） 第1章 コーチングの手順"},
+{category:"メンバー指導",question:"コーチングの手順の第7ステップとして正しいものはどれか。",choices:["メンバー自身で実施の計画を立てる","マネジャーとして支援できる項目について話し合う","メンバーに実行してもらう","行動のフィードバックを適切に行う","ギャップを明確にする"],answer:2,explanation:"コーチングの8ステップの第7は「メンバーに実行してもらう」。第8が行動のフィードバック。",source:"メンバー指導（文字起こし） 第1章 コーチングの手順"},
+{category:"メンバー指導",question:"コーチングの語源として正しいものはどれか。",choices:["英語の「教える（coach）」から転じた言葉","「馬車」から転じた言葉で、目標達成のための支援を意味する","「指揮者」を意味するラテン語から派生した言葉","スポーツの監督を意味する言葉から転用された","軍事用語の「作戦指導」が起源"],answer:1,explanation:"コーチングは「馬車」から転じた言葉で、指導する人を馬車に見立て、目標達成のための支援を行うことを意味する。",source:"メンバー指導（文字起こし） 第1章 コーチングの注釈"},
+{category:"メンバー指導",question:"動機づけ・衛生理論を提唱した心理学者は誰か。",choices:["A.マズロー","D.マクレガー","P.ドラッカー","F.ハーズバーグ","E.メイヨー"],answer:3,explanation:"動機づけ・衛生理論はアメリカの心理学者F.ハーズバーグが提唱した理論（MH理論とも言われる）。",source:"メンバー指導（文字起こし） 第2章 動機づけ・衛生理論の注釈"},
+{category:"メンバー指導",question:"動機づけの相関図における「一体感の養成」の具体的方法として正しいものはどれか。",choices:["いいところをほめる","少し高めの目標を与え期待を明確に伝える","情報・成果を共有化し相互の意思疎通を図る","ミスはその場でただす働きかけをする","参画の機会を増やす"],answer:2,explanation:"一体感の養成は「情報・成果を共有化し、相互の意思疎通を図る」ことで実現する。",source:"メンバー指導（文字起こし） 第2章 動機づけの相関図"},
+{category:"メンバー指導",question:"動機づけの相関図における「目標の管理」の具体的方法として正しいものはどれか。",choices:["いいところをほめる","情報・成果を共有化する","相手の立場を認め欲求をつかむ","少し高めの目標を与え期待を明確に伝える","参画の機会を増やす"],answer:3,explanation:"目標の管理は「少し高めの目標を与え、期待を明確に伝える」ことで行う。",source:"メンバー指導（文字起こし） 第2章 動機づけの相関図"},
+{category:"メンバー指導",question:"「動因」と「誘因」について正しい説明はどれか。",choices:["動因は集団の目標、誘因は本人の欲求","動因は本人の欲求、誘因は集団の目標","動因も誘因も同じ意味で使われる","動因は外的要因、誘因は内的要因","動因は衛生要因、誘因は動機づけ要因と同義"],answer:1,explanation:"動因は「本人の欲求」、誘因は「集団の目標」を表し、両者が一致したときメンバーは動機づけられる。",source:"メンバー指導（文字起こし） 第2章 動因と誘因"},
+{category:"メンバー指導",question:"「人を知る3つの能力」に含まれないものはどれか。",choices:["少ない情報と推測に基づいて判断する能力","客観的に人物を判断する能力","自分が他人からどのように理解されているかを知る能力","メンバーの業績を数値化して評価する能力","3つの能力はすべて対人理解に関する能力である"],answer:3,explanation:"人を知る3つの能力は(1)少ない情報と推測で判断する能力(2)客観的に人物を判断する能力(3)自分が他人からどう理解されているかを知る能力。数値評価は含まれない。",source:"メンバー指導（文字起こし） 第2章 人を知る能力"},
+{category:"メンバー指導",question:"カウンセリングの基本スキルにおける「傾聴」の説明として正しいものはどれか。",choices:["相手の態度や話を丸ごと受け止める能力","相手が語る言葉だけでなく背景にある気持ちも能動的に聴き理解する能力","自分の感情に素直になりその感情と表現を一致させる能力","相手を内面から理解し本音で応じる能力","会話を消化した内容を伝える能力"],answer:1,explanation:"傾聴は「相手が語る言葉だけでなく、その背景にある気持ちも能動的に聴き、理解する能力」。",source:"メンバー指導（文字起こし） 第2章 カウンセリング・スキル"},
+{category:"メンバー指導",question:"カウンセリングの基本スキルにおける「自己一致」の説明として正しいものはどれか。",choices:["相手の態度や話を丸ごと受け止める能力","相手が語る言葉の背景にある気持ちを聴く能力","相手を内面から理解し本音で応じる能力","自分の感情に素直になりその感情と表現を一致させる能力","会話内容を消化して伝える能力"],answer:3,explanation:"自己一致は「自分の感情に素直になり、その感情と表現を一致させる能力」であり、インサイト効果を生む。",source:"メンバー指導（文字起こし） 第2章 カウンセリング・スキル"},
+{category:"メンバー指導",question:"カウンセリングにおけるフィードバック・スキルで、会話時間の配分として正しいものはどれか。",choices:["5割以上は聞き役に回る","7割以上は聞き役に回る","9割以上は聞き役に回る"],answer:1,explanation:"カウンセリングのフィードバックでは「会話時間の7割以上は聞き役に回り、気持ちの伝達を重視する」とされている。",source:"メンバー指導（文字起こし） 第2章 カウンセリング・スキル"},
+{category:"メンバー指導",question:"面談の流れの正しい順序はどれか。",choices:["見立て→信頼関係の成立→対処法→記録","対処法→見立て→信頼関係の成立→記録","信頼関係の成立→見立て→対処法→記録","記録→信頼関係の成立→見立て→対処法","信頼関係の成立→対処法→見立て→記録"],answer:2,explanation:"面談の流れは「信頼関係の成立→見立て（相手の状況を判断）→対処法→記録」の順。",source:"メンバー指導（文字起こし） 第2章 面談の流れ"},
+{category:"メンバー指導",question:"目標管理における3つの面接の正しい順序はどれか。",choices:["中間面接→目標面接→評価・育成面接","評価・育成面接→目標面接→中間面接","目標面接→評価・育成面接→中間面接","目標面接→中間面接→評価・育成面接","中間面接→評価・育成面接→目標面接"],answer:3,explanation:"目標管理の面接は「目標面接（Plan過程）→中間面接（Do過程）→評価・育成面接（See過程）」の順。",source:"メンバー指導（文字起こし） 第2章 目標管理における面接"},
+{category:"メンバー指導",question:"ケアが成立する人間関係の条件として正しくないものはどれか。",choices:["双方が信頼しあえる関係","双方が開放的な関係","双方が学習し成長する関係","上下関係を明確にした指導的関係","自立性を育てる関係"],answer:3,explanation:"ケアが成立する条件は信頼、開放、学習・成長、問題解決への参加、自立性の5つ。上下関係の明確化は含まれない。",source:"メンバー指導（文字起こし） 第2章 ケアが成立する人間関係"},
+{category:"メンバー指導",question:"「ほめる」と「おだてる」の違いとして正しいものはどれか。",choices:["ほめるは公の場、おだてるは個人の場で行う評価","ほめるは根拠のある適正な評価、おだてるは根拠のない過剰な評価","ほめるは結果に対する評価、おだてるは過程に対する評価","ほめるは上司から部下への評価、おだてるは同僚間の評価","ほめるもおだてるも本質的な違いはない"],answer:1,explanation:"ほめるは「根拠のある適正な評価」、おだてるは「根拠のない過剰な評価」を意味する。",source:"メンバー指導（文字起こし） 第3章 ほめるとおだてるの違い"},
+{category:"メンバー指導",question:"ほめる効果が発揮されるのはどのような場合か。",choices:["マネジャーが大勢の前で公式にほめたとき","金銭的報奨と合わせてほめたとき","相手が認めてもらいたいと思っていることをほめられたと自ら納得したとき","繰り返し何度もほめたとき","他のメンバーと比較してほめたとき"],answer:2,explanation:"ほめる効果が発揮されるのは「相手が認めてもらいたいと思っていることをほめられたと自ら納得したとき」。",source:"メンバー指導（文字起こし） 第3章 ほめるとおだてるの違い"},
+{category:"メンバー指導",question:"叱り方の原則として正しくないものはどれか。",choices:["叱る内容・動機・目的を明らかにする","教育的配慮をし相手が聴く耳をもてる時と場合を選ぶ","自尊心を傷つけないようにする","過去の失敗も含めて包括的に指摘する","短く簡単明瞭であること"],answer:3,explanation:"叱り方の原則では「特定の行為を叱る。相手の全人格を叱ってはいけない」とあり、過去の失敗を包括的に指摘することは原則に反する。",source:"メンバー指導（文字起こし） 第3章 叱り方の原則"},
+{category:"メンバー指導",question:"信頼感をもたれるための3つの要件として正しいものはどれか。",choices:["仕事熱心であること、利他的であること、責任をとること","正確であること、迅速であること、丁寧であること","知識があること、技術があること、経験があること"],answer:0,explanation:"信頼感をもたれるための要件は「仕事熱心であること」「利他的であること」「責任をとること」の3つ。",source:"メンバー指導（文字起こし） 第4章 信頼感をもたれるための要件"},
+// ===== 計算問題（固定） =====
+{category:"計数管理",question:"A社の営業キャッシュフローは800万円、投資キャッシュフローは-300万円である。フリーキャッシュフローはいくらか。",choices:["300万円","500万円","800万円","1,100万円","200万円"],answer:1,explanation:"フリーキャッシュフロー = 営業CF + 投資CF = 800 + (-300) = 500万円",source:"計数入門（文字起こし） 第1章 フリーキャッシュフロー"},
+{category:"計数管理",question:"B社の営業キャッシュフローは600万円、投資キャッシュフローは-400万円である。フリーキャッシュフローはいくらか。",choices:["400万円","600万円","1,000万円","200万円","100万円"],answer:3,explanation:"フリーキャッシュフロー = 営業CF + 投資CF = 600 + (-400) = 200万円",source:"計数入門（文字起こし） 第1章 フリーキャッシュフロー"},
+{category:"計数管理",question:"売上高10,000万円、変動費率60%、固定費2,000万円の場合、損益分岐点売上高はいくらか。",choices:["4,000万円","5,000万円","6,000万円","8,000万円","2,000万円"],answer:1,explanation:"損益分岐点売上高 = 固定費 ÷ (1 - 変動費率) = 2,000 ÷ 0.4 = 5,000万円",source:"計数入門（文字起こし） 第3章 損益分岐点"},
+{category:"計数管理",question:"売上高8,000万円、変動費率50%、固定費3,000万円の場合、損益分岐点売上高はいくらか。",choices:["3,000万円","4,000万円","5,000万円","6,000万円","8,000万円"],answer:3,explanation:"損益分岐点売上高 = 固定費 ÷ (1 - 変動費率) = 3,000 ÷ 0.5 = 6,000万円",source:"計数入門（文字起こし） 第3章 損益分岐点"},
+{category:"計数管理",question:"リードタイム3日、1日あたり平均販売数量8個、安全在庫5個の場合、発注日の適正在庫は何個か。",choices:["16個","24個","29個","32個","11個"],answer:2,explanation:"適正在庫 = リードタイム × 平均販売数量 + 安全在庫 = 3 × 8 + 5 = 29個",source:"計数入門（文字起こし） 第3章 適正在庫"},
+{category:"計数管理",question:"リードタイム2日、1日あたり平均販売数量10個、安全在庫4個の場合、発注日の適正在庫は何個か。",choices:["14個","20個","24個","16個","30個"],answer:2,explanation:"適正在庫 = リードタイム × 平均販売数量 + 安全在庫 = 2 × 10 + 4 = 24個",source:"計数入門（文字起こし） 第3章 適正在庫"},
+{category:"計数管理",question:"取得価格300万円、耐用年数5年の固定資産を定額法で償却した場合、1年目の減価償却費はいくらか。",choices:["30万円","50万円","60万円","75万円","100万円"],answer:2,explanation:"定額法: 償却率 = 1/5 = 0.2 → 300万円 × 0.2 = 60万円",source:"計数入門（文字起こし） 第3章 減価償却"},
+{category:"計数管理",question:"取得価格200万円、耐用年数4年の固定資産を定額法で償却した場合、1年目の減価償却費はいくらか。",choices:["25万円","40万円","50万円","66万円","100万円"],answer:2,explanation:"定額法: 償却率 = 1/4 = 0.25 → 200万円 × 0.25 = 50万円",source:"計数入門（文字起こし） 第3章 減価償却"},
+];
+
+// ===== LOCALSTORAGE PERSISTENCE =====
+const STORAGE_KEY = 's-assess-quiz-data';
+
+function loadSavedData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch(e) { return null; }
+}
+
+function saveData() {
+  const data = {
+    // Cumulative stats
+    totalAnswered: state.totalAnswered,
+    correctAnswered: state.correctAnswered,
+    wrongAnswered: state.wrongAnswered,
+    // Per-question history: questionIndex -> { attempts, correct, wrong, lastSeen }
+    questionStats: state.questionStats,
+    // Per-category stats
+    categoryStats: state.categoryStats,
+    // Session history
+    sessions: state.sessions,
+    // Wrong question indices for weak mode
+    wrongIndices: state.wrongQuestions.map(q => questions.indexOf(q)).filter(i => i >= 0),
+    // Used indices for no-repeat guarantee
+    usedIndicesArr: Array.from(state.usedIndices),
+    // Streak data
+    streak: state.streak,
+    maxStreak: state.maxStreak,
+    // Last saved
+    lastSaved: new Date().toISOString()
+  };
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch(e) {}
+}
+
+// ===== APP STATE =====
+let state = {
+  mode: 'random',
+  activeCategories: new Set(),
+  totalAnswered: 0,
+  correctAnswered: 0,
+  wrongAnswered: 0,
+  currentQuestion: null,
+  answered: false,
+  history: [],
+  wrongQuestions: [],
+  sequentialIndex: 0,
+  usedIndices: new Set(),
+  questionStats: {},
+  categoryStats: {},
+  sessions: [],
+  currentSession: { started: new Date().toISOString(), answered: 0, correct: 0 },
+  streak: 0,
+  maxStreak: 0
+};
+
+// ===== CATEGORIES =====
+const categories = [...new Set(questions.map(q => q.category))];
+
+function init() {
+  // Load theme preference
+  const savedTheme = localStorage.getItem('quiz-theme');
+  if (savedTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeToggle').textContent = '☀️';
+  }
+
+  // Load saved data
+  const saved = loadSavedData();
+  if (saved) {
+    state.totalAnswered = saved.totalAnswered || 0;
+    state.correctAnswered = saved.correctAnswered || 0;
+    state.wrongAnswered = saved.wrongAnswered || 0;
+    state.questionStats = saved.questionStats || {};
+    state.categoryStats = saved.categoryStats || {};
+    state.sessions = saved.sessions || [];
+    state.wrongQuestions = (saved.wrongIndices || []).map(i => questions[i]).filter(Boolean);
+    state.streak = saved.streak || 0;
+    state.maxStreak = saved.maxStreak || 0;
+    state.usedIndices = new Set(saved.usedIndicesArr || []);
+  }
+  // Init category stats & restore selection
+  const savedCategories = loadCategorySelection();
+  categories.forEach(c => {
+    if (savedCategories) {
+      if (savedCategories.includes(c)) state.activeCategories.add(c);
+    } else {
+      state.activeCategories.add(c);
+    }
+    if (!state.categoryStats[c]) {
+      state.categoryStats[c] = { total: 0, correct: 0 };
+    }
+  });
+  document.getElementById('headerSub').textContent = `全${questions.length}問 | ソース資料に基づく5択問題`;
+  renderCategoryFilter();
+  updateStats();
+  renderStatsPanel();
+  nextQuestion();
+}
+
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    document.documentElement.removeAttribute('data-theme');
+    document.getElementById('themeToggle').textContent = '🌙';
+    localStorage.setItem('quiz-theme', 'light');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeToggle').textContent = '☀️';
+    localStorage.setItem('quiz-theme', 'dark');
+  }
+}
+
+function updateStreakBanner() {
+  const banner = document.getElementById('streakBanner');
+  const text = document.getElementById('streakText');
+  if (state.streak >= 3) {
+    banner.classList.add('show');
+    text.textContent = `🔥 ${state.streak}連続正解！`;
+  } else {
+    banner.classList.remove('show');
+  }
+}
+
+function renderCategoryFilter() {
+  const el = document.getElementById('categoryFilter');
+  const totalQ = questions.length;
+  const allActive = state.activeCategories.size === categories.length;
+  el.innerHTML = `<button class="filter-btn${allActive ? ' active' : ''}" onclick="toggleAllCategories(this)">全カテゴリ <span class="filter-count">${totalQ}</span></button>` +
+    categories.map(c => {
+      const count = questions.filter(q => q.category === c).length;
+      const active = state.activeCategories.has(c);
+      return `<button class="filter-btn${active ? ' active' : ''}" onclick="toggleCategory('${c}', this)">${c} <span class="filter-count">${count}</span></button>`;
+    }).join('');
+}
+
+function toggleCategory(cat, btn) {
+  if (state.activeCategories.has(cat)) {
+    state.activeCategories.delete(cat);
+    btn.classList.remove('active');
+  } else {
+    state.activeCategories.add(cat);
+    btn.classList.add('active');
+  }
+  updateAllBtn();
+  state.usedIndices.clear();
+  state.sequentialIndex = 0;
+  saveCategorySelection();
+  nextQuestion();
+}
+
+function toggleAllCategories(btn) {
+  const allActive = state.activeCategories.size === categories.length;
+  const buttons = document.querySelectorAll('.filter-btn');
+  if (allActive) {
+    state.activeCategories.clear();
+    buttons.forEach(b => b.classList.remove('active'));
+  } else {
+    categories.forEach(c => state.activeCategories.add(c));
+    buttons.forEach(b => b.classList.add('active'));
+  }
+  state.usedIndices.clear();
+  state.sequentialIndex = 0;
+  saveCategorySelection();
+  nextQuestion();
+}
+
+function saveCategorySelection() {
+  localStorage.setItem('quiz-active-categories', JSON.stringify([...state.activeCategories]));
+}
+
+function loadCategorySelection() {
+  try {
+    const raw = localStorage.getItem('quiz-active-categories');
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch(e) { return null; }
+}
+
+function updateAllBtn() {
+  const allBtn = document.querySelector('.filter-btn');
+  if (state.activeCategories.size === categories.length) {
+    allBtn.classList.add('active');
+  } else {
+    allBtn.classList.remove('active');
+  }
+}
+
+function setMode(mode, el) {
+  state.mode = mode;
+  state.usedIndices.clear();
+  state.sequentialIndex = 0;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function getFilteredQuestions() {
+  return questions.filter(q => state.activeCategories.has(q.category));
+}
+
+function pickQuestion() {
+  const filtered = getFilteredQuestions();
+  if (filtered.length === 0) return null;
+
+  if (state.mode === 'weak' && state.wrongQuestions.length > 0) {
+    // Pick from wrong questions that match active categories, respecting no-repeat
+    const weakFiltered = state.wrongQuestions.filter(q => state.activeCategories.has(q.category));
+    if (weakFiltered.length > 0 && Math.random() < 0.7) {
+      const weakUnused = weakFiltered.filter(q => !state.usedIndices.has(questions.indexOf(q)));
+      const pool = weakUnused.length > 0 ? weakUnused : weakFiltered;
+      if (weakUnused.length === 0) state.usedIndices.clear();
+      const pick = pool[Math.floor(Math.random() * pool.length)];
+      state.usedIndices.add(questions.indexOf(pick));
+      return pick;
+    }
+  }
+
+  if (state.mode === 'sequential') {
+    const idx = state.sequentialIndex % filtered.length;
+    state.sequentialIndex++;
+    return filtered[idx];
+  }
+
+  // Random mode - try to avoid repeats
+  const filteredIndices = [];
+  questions.forEach((q, i) => {
+    if (state.activeCategories.has(q.category)) filteredIndices.push(i);
+  });
+
+  const unused = filteredIndices.filter(i => !state.usedIndices.has(i));
+  if (unused.length === 0) {
+    state.usedIndices.clear();
+    const idx = filteredIndices[Math.floor(Math.random() * filteredIndices.length)];
+    state.usedIndices.add(idx);
+    return questions[idx];
+  }
+
+  const idx = unused[Math.floor(Math.random() * unused.length)];
+  state.usedIndices.add(idx);
+  return questions[idx];
+}
+
+// ===== 正誤反転: 「正しいもの」→「誤っているもの」に自動変換 =====
+
+// ===== 計算問題ランダム化テンプレート =====
+
+function nextQuestion() {
+  state.answered = false;
+  state.currentQuestion = pickQuestion();
+  if (!state.currentQuestion) {
+    document.getElementById('quizArea').innerHTML =
+      '<div class="question-card"><p style="text-align:center;color:var(--muted);">カテゴリを選択してください</p></div>';
+    return;
+  }
+
+  renderQuestion();
+}
+
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderQuestion() {
+  const q = state.currentQuestion;
+  const labels = ['A', 'B', 'C', 'D', 'E'];
+  const area = document.getElementById('quizArea');
+
+  // Shuffle choice order: shuffleMap[displayIndex] = originalIndex
+  const indices = [0, 1, 2, 3, 4];
+  state.shuffleMap = shuffleArray(indices);
+
+  area.innerHTML = `
+    <div class="question-card" style="animation:cardIn 0.3s ease">
+      <div class="question-meta">
+        <span class="q-number">第 ${state.totalAnswered + 1} 問</span>
+        <span class="q-category">${q.category}</span>
+      </div>
+      <div class="question-text">${q.question}</div>
+      <div class="choices">
+        ${state.shuffleMap.map((origIdx, displayIdx) => `
+          <button class="choice-btn" onclick="selectAnswer(${displayIdx})" id="choice-${displayIdx}">
+            <span class="choice-label">${labels[displayIdx]}</span>
+            <span class="choice-text">${q.choices[origIdx]}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="result-box" id="resultBox"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()" disabled>次の問題へ</button>
+    </div>
+  `;
+}
+
+function selectAnswer(displayIdx) {
+  if (state.answered) return;
+  state.answered = true;
+  state.totalAnswered++;
+
+  const q = state.currentQuestion;
+  const originalIdx = state.shuffleMap[displayIdx];
+  const isCorrect = originalIdx === q.answer;
+
+  // Find which display position has the correct answer
+  const correctDisplayIdx = state.shuffleMap.indexOf(q.answer);
+
+  if (isCorrect) {
+    state.correctAnswered++;
+    state.streak++;
+    if (state.streak > state.maxStreak) state.maxStreak = state.streak;
+    state.wrongQuestions = state.wrongQuestions.filter(wq => wq !== q);
+  } else {
+    state.wrongAnswered++;
+    state.streak = 0;
+    if (!state.wrongQuestions.includes(q)) {
+      state.wrongQuestions.push(q);
+    }
+  }
+  updateStreakBanner();
+
+  // Track per-question stats
+  const qIdx = questions.indexOf(q);
+  if (!state.questionStats[qIdx]) {
+    state.questionStats[qIdx] = { attempts: 0, correct: 0, wrong: 0, lastSeen: null };
+  }
+  state.questionStats[qIdx].attempts++;
+  state.questionStats[qIdx][isCorrect ? 'correct' : 'wrong']++;
+  state.questionStats[qIdx].lastSeen = new Date().toISOString();
+
+  // Track per-category stats
+  if (!state.categoryStats[q.category]) {
+    state.categoryStats[q.category] = { total: 0, correct: 0 };
+  }
+  state.categoryStats[q.category].total++;
+  if (isCorrect) state.categoryStats[q.category].correct++;
+
+  // Track session
+  state.currentSession.answered++;
+  if (isCorrect) state.currentSession.correct++;
+
+  // Style choices (using display indices)
+  const labels = ['A', 'B', 'C', 'D', 'E'];
+  for (let i = 0; i < q.choices.length; i++) {
+    const btn = document.getElementById(`choice-${i}`);
+    btn.classList.add('disabled');
+    if (i === correctDisplayIdx) {
+      btn.classList.add('correct-answer');
+    } else if (i === displayIdx && !isCorrect) {
+      btn.classList.add('wrong-answer');
+    } else {
+      btn.classList.add('dimmed');
+    }
+  }
+
+  // Animate the question card
+  const card = document.querySelector('.question-card');
+  if (card) {
+    if (!isCorrect) card.style.animation = 'wrongShake 0.4s ease';
+  }
+
+  // Show result
+  const resultBox = document.getElementById('resultBox');
+  resultBox.className = `result-box show ${isCorrect ? 'correct-result' : 'wrong-result'}`;
+  resultBox.innerHTML = `
+    <div class="result-title ${isCorrect ? 'correct-title' : 'wrong-title'}" style="animation:fadeUp 0.3s ease">
+      ${isCorrect ? '正解!' : `不正解 (正解: ${labels[correctDisplayIdx]})`}
+    </div>
+    <div class="result-explanation">${q.explanation}</div>
+    <div class="result-source">出典: ${q.source}</div>
+  `;
+
+  // Enable next button
+  document.getElementById('nextBtn').disabled = false;
+
+  // Update stats
+  updateStats();
+
+  // Update history
+  state.history.unshift({
+    correct: isCorrect,
+    text: q.question.substring(0, 40) + '...',
+    category: q.category
+  });
+  if (state.history.length > 10) state.history.pop();
+  renderHistory();
+  renderStatsPanel();
+
+  // Save to localStorage
+  saveData();
+}
+
+function updateStats() {
+  document.getElementById('totalCount').textContent = state.totalAnswered;
+  document.getElementById('correctCount').textContent = state.correctAnswered;
+  document.getElementById('wrongCount').textContent = state.wrongAnswered;
+  const acc = state.totalAnswered > 0
+    ? Math.round(state.correctAnswered / state.totalAnswered * 100)
+    : '--';
+  document.getElementById('accuracy').textContent = acc + '%';
+}
+
+function renderHistory() {
+  const panel = document.getElementById('historyPanel');
+  const list = document.getElementById('historyList');
+  if (state.history.length === 0) {
+    panel.style.display = 'none';
+    return;
+  }
+  panel.style.display = 'block';
+  list.innerHTML = state.history.map(h => `
+    <div class="history-item">
+      <span class="history-icon">${h.correct ? '\u2705' : '\u274C'}</span>
+      <span class="history-text">${h.text}</span>
+      <span class="q-category" style="font-size:0.7rem;">${h.category}</span>
+    </div>
+  `).join('');
+}
+
+function renderStatsPanel() {
+  const panel = document.getElementById('statsPanel');
+  const content = document.getElementById('statsContent');
+  if (state.totalAnswered === 0) {
+    panel.style.display = 'none';
+    return;
+  }
+  panel.style.display = 'block';
+
+  const acc = Math.round(state.correctAnswered / state.totalAnswered * 100);
+
+  // Count unique questions seen
+  const seen = Object.keys(state.questionStats).length;
+  const total = questions.length;
+
+  // Category breakdown
+  const catHTML = categories.map(c => {
+    const cs = state.categoryStats[c] || { total: 0, correct: 0 };
+    const catAcc = cs.total > 0 ? Math.round(cs.correct / cs.total * 100) : 0;
+    const barColor = catAcc >= 80 ? 'var(--correct)' : catAcc >= 50 ? '#f59e0b' : 'var(--wrong)';
+    const catQCount = questions.filter(q => q.category === c).length;
+    const catSeen = Object.entries(state.questionStats).filter(([idx]) => questions[idx] && questions[idx].category === c).length;
+    return `<div class="cat-stats-row">
+      <span style="flex:1;">${c}</span>
+      <span style="width:45px;text-align:right;font-weight:600;color:${barColor}">${catAcc}%</span>
+      <span style="width:55px;text-align:right;color:var(--muted);font-size:0.75rem;">${catSeen}/${catQCount}問</span>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:${catAcc}%;background:${barColor}"></div></div>
+    </div>`;
+  }).join('');
+
+  // Weak questions count
+  const weakCount = state.wrongQuestions.length;
+
+  // Sessions
+  const recentSessions = state.sessions.slice(-5).reverse();
+  const sessionHTML = recentSessions.length > 0 ? `
+    <div style="margin-top:12px;">
+      <div style="font-size:0.8rem;color:var(--muted);margin-bottom:6px;">過去のセッション</div>
+      ${recentSessions.map(s => {
+        const d = new Date(s.started);
+        const dateStr = (d.getMonth()+1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
+        const sAcc = s.answered > 0 ? Math.round(s.correct / s.answered * 100) : 0;
+        return `<div class="session-row">
+          <span>${dateStr}</span>
+          <span>${s.answered}問</span>
+          <span style="font-weight:600;color:${sAcc >= 80 ? 'var(--correct)' : sAcc >= 50 ? '#f59e0b' : 'var(--wrong)'}">${sAcc}%</span>
+        </div>`;
+      }).join('')}
+    </div>` : '';
+
+  content.innerHTML = `
+    <div class="stats-grid">
+      <div class="stats-card">
+        <div class="sc-label">累計出題</div>
+        <div class="sc-value">${state.totalAnswered}問</div>
+      </div>
+      <div class="stats-card">
+        <div class="sc-label">累計正答率</div>
+        <div class="sc-value" style="color:${acc >= 80 ? 'var(--correct)' : acc >= 50 ? '#f59e0b' : 'var(--wrong)'}">${acc}%</div>
+      </div>
+      <div class="stats-card">
+        <div class="sc-label">出題済み</div>
+        <div class="sc-value">${seen}/${total}問</div>
+      </div>
+      <div class="stats-card">
+        <div class="sc-label">苦手問題</div>
+        <div class="sc-value" style="color:${weakCount > 0 ? 'var(--wrong)' : 'var(--correct)'}">${weakCount}問</div>
+      </div>
+      <div class="stats-card">
+        <div class="sc-label">最大連続正解</div>
+        <div class="sc-value" style="color:var(--primary)">🔥 ${state.maxStreak}</div>
+      </div>
+    </div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:6px;">カテゴリ別正答率</div>
+    ${catHTML}
+    ${sessionHTML}
+  `;
+}
+
+function exportStats() {
+  const acc = state.totalAnswered > 0 ? Math.round(state.correctAnswered / state.totalAnswered * 100) : 0;
+  const lines = [
+    'Sアセス クイズ結果',
+    `日時: ${new Date().toLocaleString('ja-JP')}`,
+    `累計: ${state.totalAnswered}問 / 正答率: ${acc}%`,
+    `正解: ${state.correctAnswered} / 不正解: ${state.wrongAnswered}`,
+    '',
+    'カテゴリ別:'
+  ];
+  categories.forEach(c => {
+    const cs = state.categoryStats[c] || { total: 0, correct: 0 };
+    const catAcc = cs.total > 0 ? Math.round(cs.correct / cs.total * 100) : 0;
+    lines.push(`  ${c}: ${catAcc}% (${cs.correct}/${cs.total})`);
+  });
+  if (state.wrongQuestions.length > 0) {
+    lines.push('');
+    lines.push('苦手問題:');
+    state.wrongQuestions.forEach(q => {
+      lines.push(`  - ${q.question.substring(0, 50)}...`);
+    });
+  }
+  const text = lines.join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    alert('結果をクリップボードにコピーしました');
+  }).catch(() => {
+    // Fallback for older Safari
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('結果をクリップボードにコピーしました');
+  });
+}
+
+function resetStats() {
+  if (!confirm('学習記録をすべてリセットしますか？')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state.totalAnswered = 0;
+  state.correctAnswered = 0;
+  state.wrongAnswered = 0;
+  state.questionStats = {};
+  state.categoryStats = {};
+  state.sessions = [];
+  state.wrongQuestions = [];
+  state.history = [];
+  state.streak = 0;
+  state.maxStreak = 0;
+  updateStreakBanner();
+  categories.forEach(c => {
+    state.categoryStats[c] = { total: 0, correct: 0 };
+  });
+  updateStats();
+  renderHistory();
+  renderStatsPanel();
+}
+
+// Save session on page unload
+window.addEventListener('beforeunload', function() {
+  if (state.currentSession.answered > 0) {
+    state.sessions.push(state.currentSession);
+    if (state.sessions.length > 20) state.sessions = state.sessions.slice(-20);
+    saveData();
+  }
+});
+
+// Initialize
+init();
+</script>
+</body>
+</html>
