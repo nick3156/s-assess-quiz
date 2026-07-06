@@ -1122,7 +1122,10 @@ function BookView({
         ref={edgeRef}
         className={`reader-scrub-index${tocOpen ? " is-open" : ""}${isScrubbing ? " is-scrubbing" : ""}`}
         aria-label="右端目次"
-        onPointerEnter={openToc}
+        onPointerEnter={(event) => {
+          // ホバーで開くのはマウスだけ。タッチはスクラブ開始 (pointerdown) で開く
+          if (event.pointerType === "mouse") openToc();
+        }}
         onPointerLeave={(event) => {
           if (event.pointerType === "mouse" && !isScrubbing) closeTocSoon();
         }}

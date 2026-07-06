@@ -1350,8 +1350,7 @@ blockquote {
 }
 
 .reader-scrub-index.is-open .reader-scrub-panel,
-.reader-scrub-index.is-scrubbing .reader-scrub-panel,
-.reader-scrub-index:hover .reader-scrub-panel {
+.reader-scrub-index.is-scrubbing .reader-scrub-panel {
   opacity: 1;
 }
 
@@ -1364,23 +1363,41 @@ blockquote {
 }
 
 .reader-scrub-index.is-open .reader-scrub-number-rail,
-.reader-scrub-index.is-scrubbing .reader-scrub-number-rail,
-.reader-scrub-index:hover .reader-scrub-number-rail {
+.reader-scrub-index.is-scrubbing .reader-scrub-number-rail {
   width: 30px;
   background: color-mix(in srgb, var(--text) 18%, transparent);
   opacity: 1;
 }
 
 .reader-scrub-index.is-open .reader-scrub-number-rail span,
-.reader-scrub-index.is-scrubbing .reader-scrub-number-rail span,
-.reader-scrub-index:hover .reader-scrub-number-rail span {
+.reader-scrub-index.is-scrubbing .reader-scrub-number-rail span {
   opacity: 0.72;
 }
 
 .reader-scrub-index.is-open .reader-scrub-number-rail span.active,
-.reader-scrub-index.is-scrubbing .reader-scrub-number-rail span.active,
-.reader-scrub-index:hover .reader-scrub-number-rail span.active {
+.reader-scrub-index.is-scrubbing .reader-scrub-number-rail span.active {
   opacity: 1;
+}
+
+/* ホバーでの目次プレビューはマウス環境限定 (タッチは :hover が貼り付くため) */
+@media (hover: hover) and (pointer: fine) {
+  .reader-scrub-index:hover .reader-scrub-panel {
+    opacity: 1;
+  }
+
+  .reader-scrub-index:hover .reader-scrub-number-rail {
+    width: 30px;
+    background: color-mix(in srgb, var(--text) 18%, transparent);
+    opacity: 1;
+  }
+
+  .reader-scrub-index:hover .reader-scrub-number-rail span {
+    opacity: 0.72;
+  }
+
+  .reader-scrub-index:hover .reader-scrub-number-rail span.active {
+    opacity: 1;
+  }
 }
 
 .reader-scrub-index.is-scrubbing {
