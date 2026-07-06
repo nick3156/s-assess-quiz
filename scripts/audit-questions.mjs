@@ -40,6 +40,7 @@ const questionBlocks = ts
 const counts = { member: 0, roumu: 0, keisu: 0 };
 const missingRefs = [];
 const missingExplanations = [];
+const invalidAnswers = [];
 
 for (const block of questionBlocks) {
   const id = block.match(/\bid:\s*"([^"]+)"/)?.[1] ?? "(unknown)";
@@ -48,9 +49,22 @@ for (const block of questionBlocks) {
   const sourceRef = block.match(/sourceRef:\s*{([\s\S]*?)}/)?.[1] ?? "";
   const sourceSubjectId = sourceRef.match(/\bsubjectId:\s*"(member|roumu|keisu)"/)?.[1];
   const heading = normalize(sourceRef.match(/\bheading:\s*"([^"]+)"/)?.[1] ?? "");
+  const correctIndexes = block
+    .match(/\bcorrectIndexes:\s*\[([^\]]*)]/)?.[1]
+    ?.split(",")
+    .map((value) => Number(value.trim()))
+    .filter((value) => Number.isInteger(value));
 
   if (subjectId && counts[subjectId] !== undefined) counts[subjectId] += 1;
   if (!explanation || explanation.length < 20) missingExplanations.push(id);
+  if (
+    !correctIndexes?.length ||
+    correctIndexes.length > 2 ||
+    correctIndexes.some((value) => value < 0 || value > 3) ||
+    new Set(correctIndexes).size !== correctIndexes.length
+  ) {
+    invalidAnswers.push(id);
+  }
 
   const subjectForRef = sourceSubjectId ?? subjectId;
   if (!subjectForRef || !heading || !sourceText[subjectForRef]?.includes(heading)) {
@@ -60,6 +74,10 @@ for (const block of questionBlocks) {
 
 if (missingExplanations.length) {
   fail(`questions with missing or too-short explanations: ${missingExplanations.join(", ")}`);
+}
+
+if (invalidAnswers.length) {
+  fail(`questions with invalid correctIndexes: ${invalidAnswers.join(", ")}`);
 }
 
 if (missingRefs.length) {

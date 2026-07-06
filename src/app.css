@@ -469,6 +469,11 @@ h2 {
   background: var(--accent-soft);
 }
 
+.answer.selected span {
+  background: var(--accent);
+  color: white;
+}
+
 .answer.correct {
   border-color: color-mix(in srgb, var(--success) 45%, var(--line));
   background: var(--success-soft);
@@ -487,6 +492,16 @@ h2 {
 .answer.wrong span {
   background: var(--danger);
   color: white;
+}
+
+.quiz-reveal {
+  width: 100%;
+  margin-top: 13px;
+}
+
+.quiz-reveal:disabled {
+  opacity: 0.42;
+  cursor: default;
 }
 
 .explanation {

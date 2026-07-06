@@ -45,6 +45,13 @@ function nextQuestion(current: QuizQuestion, pool: QuizQuestion[]) {
   return pool[(index + 1) % pool.length];
 }
 
+function sameIndexes(left: number[], right: number[]) {
+  if (left.length !== right.length) return false;
+  const sortedLeft = [...left].sort((a, b) => a - b);
+  const sortedRight = [...right].sort((a, b) => a - b);
+  return sortedLeft.every((value, index) => value === sortedRight[index]);
+}
+
 function findLastWrongAnswer(answers: AnswerRecord[]) {
   for (let index = answers.length - 1; index >= 0; index -= 1) {
     if (!answers[index].isCorrect) return answers[index];
@@ -65,7 +72,7 @@ export function App() {
   const [activeQuestion, setActiveQuestion] = useState<QuizQuestion>(() => {
     return questions.find((question) => question.id === progress.lastQuestionId) ?? questions[0];
   });
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
   const [showExplanation, setShowExplanation] = useState(false);
   const [query, setQuery] = useState("");
   const [activeSourceQuote, setActiveSourceQuote] = useState("");
@@ -105,13 +112,22 @@ export function App() {
     };
   });
 
-  function recordAnswer(index: number) {
-    setSelectedIndex(index);
+  function toggleAnswer(index: number) {
+    if (showExplanation) return;
+    setSelectedIndexes((current) =>
+      current.includes(index)
+        ? current.filter((selectedIndex) => selectedIndex !== index)
+        : [...current, index],
+    );
+  }
+
+  function revealAnswer() {
+    if (!selectedIndexes.length || showExplanation) return;
     setShowExplanation(true);
     const answer: AnswerRecord = {
       questionId: activeQuestion.id,
-      selectedIndex: index,
-      isCorrect: index === activeQuestion.correctIndex,
+      selectedIndexes,
+      isCorrect: sameIndexes(selectedIndexes, activeQuestion.correctIndexes),
       answeredAt: new Date().toISOString(),
     };
     const nextProgress = {
@@ -124,7 +140,7 @@ export function App() {
 
   function goToQuestion(question: QuizQuestion) {
     setActiveQuestion(question);
-    setSelectedIndex(null);
+    setSelectedIndexes([]);
     setShowExplanation(false);
     const nextProgress = { ...progress, lastQuestionId: question.id };
     setProgress(nextProgress);
@@ -167,11 +183,12 @@ export function App() {
           <QuizView
             question={activeQuestion}
             mode={quizMode}
-            selectedIndex={selectedIndex}
+            selectedIndexes={selectedIndexes}
             showExplanation={showExplanation}
             latestAnswer={latestAnswer}
             onModeChange={setQuizMode}
-            onAnswer={recordAnswer}
+            onToggleAnswer={toggleAnswer}
+            onRevealAnswer={revealAnswer}
             onNext={() => goToQuestion(nextQuestion(activeQuestion, questions))}
             onOpenBook={() => openSource(activeQuestion)}
             onBackHome={() => setView("home")}
@@ -312,22 +329,24 @@ function HomeView({
 function QuizView({
   question,
   mode,
-  selectedIndex,
+  selectedIndexes,
   showExplanation,
   latestAnswer,
   onModeChange,
-  onAnswer,
+  onToggleAnswer,
+  onRevealAnswer,
   onNext,
   onOpenBook,
   onBackHome,
 }: {
   question: QuizQuestion;
   mode: QuizMode;
-  selectedIndex: number | null;
+  selectedIndexes: number[];
   showExplanation: boolean;
   latestAnswer?: AnswerRecord;
   onModeChange: (mode: QuizMode) => void;
-  onAnswer: (index: number) => void;
+  onToggleAnswer: (index: number) => void;
+  onRevealAnswer: () => void;
   onNext: () => void;
   onOpenBook: () => void;
   onBackHome: () => void;
@@ -371,26 +390,29 @@ function QuizView({
         </div>
         <p className="question-text">{question.prompt}</p>
         <div className="source-tags">
-          <span className="chip">{question.type === "case" ? "ケース" : "4択"}</span>
+          <span className="chip">正誤複数選択</span>
           <span className="chip">出典あり</span>
         </div>
       </article>
 
       <div className="answer-list">
         {question.options.map((option, index) => {
+          const isCorrect = question.correctIndexes.includes(index);
+          const isSelected = selectedIndexes.includes(index);
           const status =
-            showExplanation && index === question.correctIndex
+            showExplanation && isCorrect
               ? "correct"
-              : showExplanation && index === selectedIndex
+              : showExplanation && isSelected
                 ? "wrong"
-                : selectedIndex === index
+                : isSelected
                   ? "selected"
                   : "";
           return (
             <button
               className={`answer ${status}`}
               key={option}
-              onClick={() => !showExplanation && onAnswer(index)}
+              onClick={() => onToggleAnswer(index)}
+              aria-pressed={isSelected}
             >
               <span>{String.fromCharCode(65 + index)}</span>
               <strong>{option}</strong>
@@ -398,6 +420,17 @@ function QuizView({
           );
         })}
       </div>
+
+      {!showExplanation && (
+        <button
+          className="dark-action quiz-reveal"
+          disabled={!selectedIndexes.length}
+          onClick={onRevealAnswer}
+        >
+          解答を見る
+          <ChevronRight />
+        </button>
+      )}
 
       {showExplanation && (
         <section className="card explanation">

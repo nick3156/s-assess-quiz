@@ -16,7 +16,10 @@
 - 校閲済みMarkdownを根拠にする。
 - 問題には必ず `sourceRef.subjectId`、`sourceRef.heading`、`sourceRef.quote` を入れる。
 - `sourceRef.heading` は教科書ジャンプに使うため、校閲済みMarkdown内の見出し表記と一致させる。
-- 出題形式は `single`、`trueFalse`、`case`、`fill` を使い分ける。
+- 原則として4肢の正誤型にする。正しいもの、または誤っているものをすべて選ばせる形式にし、正答数は1つまたは2つを基本にする。
+- 問題文では正答数を明かさない。「1つ選べ」「2つ選べ」「最も適切なもの」など、単一正答を示す表現は使わない。
+- データは `correctIndexes` に正答の選択肢番号を配列で入れる。単一正答でも `correctIndexes: [1]` のように配列で持つ。
+- `type` は原則 `trueFalse` を使う。ケース判断でも、回答操作は4肢正誤の複数選択に揃える。
 - 1つの問題で問う論点は1つに絞る。
 - 解説は、正答理由だけでなく、誤答選択肢がなぜ違うかを必要に応じて補足する。
 - 同じ見出しから複数問を作る場合は、定義、判断基準、例外、数値、ケース判断に分ける。
@@ -48,4 +51,4 @@ npm run audit:questions
 npm run build
 ```
 
-`audit:questions` は、重複ID、短すぎる解説、`sourceRef.heading` が校閲済みMarkdownに存在するかを確認する。
+`audit:questions` は、重複ID、短すぎる解説、`correctIndexes` の妥当性、`sourceRef.heading` が校閲済みMarkdownに存在するかを確認する。

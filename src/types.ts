@@ -37,14 +37,14 @@ export type QuizQuestion = {
   importance: "high" | "normal";
   prompt: string;
   options: string[];
-  correctIndex: number;
+  correctIndexes: number[];
   explanation: string;
   sourceRef: SourceRef;
 };
 
 export type AnswerRecord = {
   questionId: string;
-  selectedIndex: number;
+  selectedIndexes: number[];
   isCorrect: boolean;
   answeredAt: string;
 };
