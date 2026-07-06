@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent, ReactElement, TouchEvent } from "react";
 import {
   BarChart3,
@@ -555,18 +555,32 @@ function BookView({
     closeTimerRef.current = window.setTimeout(() => setTocOpen(false), 420);
   };
 
-  const stopScrub = () => {
+  const stopScrub = useCallback((commitSelection = true) => {
     if (!isScrubbingRef.current) return false;
+    const target = scrubTargetsRef.current[activeScrubIndexRef.current];
+    const section = target
+      ? navSections.find((candidate) => candidate.id === target.id)
+      : undefined;
+
     isScrubbingRef.current = false;
     setIsScrubbing(false);
     setScrubCursorIndex(-1);
     closeTocSoon();
+
+    if (commitSelection && target && section) {
+      onMoveSection(section);
+      setVisibleSectionId(section.id);
+      window.requestAnimationFrame(() => {
+        window.scrollTo({ top: target.y, behavior: "smooth" });
+      });
+    }
+
     return true;
-  };
+  }, [navSections, onMoveSection]);
 
   useEffect(() => {
     const finishGlobalScrub = () => {
-      stopScrub();
+      stopScrub(true);
     };
     window.addEventListener("pointerup", finishGlobalScrub);
     window.addEventListener("pointercancel", finishGlobalScrub);
@@ -578,7 +592,7 @@ function BookView({
       window.removeEventListener("touchend", finishGlobalScrub);
       window.removeEventListener("touchcancel", finishGlobalScrub);
     };
-  }, []);
+  }, [stopScrub]);
 
   const buildScrubTargets = () => {
     const accessBar = document.querySelector(".reader-access-bar");
@@ -603,12 +617,6 @@ function BookView({
     const rect = edge.getBoundingClientRect();
     const progressRatio = Math.min(Math.max((clientY - rect.top) / Math.max(1, rect.height), 0), 1);
     const scaled = progressRatio * (targets.length - 1);
-    const lowerIndex = Math.floor(scaled);
-    const upperIndex = Math.min(targets.length - 1, lowerIndex + 1);
-    const localProgress = scaled - lowerIndex;
-    const lower = targets[lowerIndex];
-    const upper = targets[upperIndex];
-    const targetY = lower.y + (upper.y - lower.y) * localProgress;
     const activeIndex = Math.round(scaled);
 
     edge.style.setProperty(
@@ -619,8 +627,6 @@ function BookView({
       "--scrub-page-y",
       `${rect.top + Math.min(Math.max(clientY - rect.top, 0), rect.height)}px`,
     );
-    window.scrollTo({ top: targetY, behavior: "auto" });
-
     if (activeScrubIndexRef.current !== activeIndex) {
       activeScrubIndexRef.current = activeIndex;
       setVisibleSectionId(targets[activeIndex].id);
@@ -650,7 +656,7 @@ function BookView({
   const finishScrub = (event: PointerEvent<HTMLElement>) => {
     if (!isScrubbingRef.current) return;
     event.currentTarget.releasePointerCapture?.(event.pointerId);
-    stopScrub();
+    stopScrub(true);
     event.preventDefault();
   };
 
@@ -677,7 +683,7 @@ function BookView({
 
   const finishTouchScrub = (event: TouchEvent<HTMLElement>) => {
     if (!isScrubbingRef.current) return;
-    stopScrub();
+    stopScrub(true);
     event.preventDefault();
   };
 
