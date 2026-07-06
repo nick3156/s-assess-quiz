@@ -11,12 +11,20 @@ import {
   ListChecks,
   RotateCcw,
   Search,
-  Settings,
   X,
 } from "lucide-react";
 import { questions } from "./data/questions";
 import { textbooks } from "./data/textbooks";
 import { loadProgress, saveProgress, summarizeProgress } from "./lib/progress";
+import {
+  DAILY_COUNT,
+  answeredTodayIds,
+  dailyQuestionSet,
+  latestAnswerMap,
+  optionDisplayOrder,
+  todayKey,
+  weakQuestionIds,
+} from "./lib/quiz";
 import {
   markdownToBlocks,
   parseTextbook,
@@ -36,15 +44,6 @@ const subjectLabel: Record<SubjectId, string> = {
   keisu: "計数入門",
 };
 
-function todayQuestionSet() {
-  return questions.slice(0, 5);
-}
-
-function nextQuestion(current: QuizQuestion, pool: QuizQuestion[]) {
-  const index = pool.findIndex((question) => question.id === current.id);
-  return pool[(index + 1) % pool.length];
-}
-
 function sameIndexes(left: number[], right: number[]) {
   if (left.length !== right.length) return false;
   const sortedLeft = [...left].sort((a, b) => a - b);
@@ -52,25 +51,27 @@ function sameIndexes(left: number[], right: number[]) {
   return sortedLeft.every((value, index) => value === sortedRight[index]);
 }
 
-function findLastWrongAnswer(answers: AnswerRecord[]) {
-  for (let index = answers.length - 1; index >= 0; index -= 1) {
-    if (!answers[index].isCorrect) return answers[index];
-  }
-  return undefined;
-}
-
 export function App() {
   const textbookSections = useMemo(
     () => textbooks.flatMap((source) => parseTextbook(source)),
     [],
   );
+  const dateKey = todayKey();
+  const dailyQuestions = useMemo(() => dailyQuestionSet(questions, dateKey), [dateKey]);
+
   const [view, setView] = useState<View>("home");
   const [quizMode, setQuizMode] = useState<QuizMode>("daily");
+  const [quizSubject, setQuizSubject] = useState<SubjectId>("member");
+  const [dailyReplay, setDailyReplay] = useState(false);
   const [activeSubject, setActiveSubject] = useState<SubjectId>("member");
   const [activeSectionId, setActiveSectionId] = useState<string | undefined>();
   const [progress, setProgress] = useState(() => loadProgress());
   const [activeQuestion, setActiveQuestion] = useState<QuizQuestion>(() => {
-    return questions.find((question) => question.id === progress.lastQuestionId) ?? questions[0];
+    return (
+      questions.find((question) => question.id === loadProgress().lastQuestionId) ??
+      dailyQuestionSet(questions, todayKey())[0] ??
+      questions[0]
+    );
   });
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
   const [showExplanation, setShowExplanation] = useState(false);
@@ -78,7 +79,25 @@ export function App() {
   const [activeSourceQuote, setActiveSourceQuote] = useState("");
 
   const summary = summarizeProgress(progress.answers);
-  const dailyQuestions = todayQuestionSet();
+  const latestByQuestion = useMemo(() => latestAnswerMap(progress.answers), [progress.answers]);
+  const weakIds = useMemo(() => weakQuestionIds(progress.answers), [progress.answers]);
+  const todayIds = useMemo(
+    () => answeredTodayIds(progress.answers, dateKey),
+    [progress.answers, dateKey],
+  );
+
+  const quizPool = useMemo(() => {
+    if (quizMode === "daily") return dailyQuestions;
+    if (quizMode === "weak") return questions.filter((question) => weakIds.has(question.id));
+    return questions.filter((question) => question.subjectId === quizSubject);
+  }, [quizMode, dailyQuestions, weakIds, quizSubject]);
+
+  const dailyAnswered = dailyQuestions.filter((question) => todayIds.has(question.id));
+  const dailyCorrect = dailyAnswered.filter(
+    (question) => latestByQuestion.get(question.id)?.isCorrect,
+  ).length;
+  const dailyDone = dailyQuestions.length > 0 && dailyAnswered.length >= dailyQuestions.length;
+
   const latestAnswer = progress.answers
     .filter((answer) => answer.questionId === activeQuestion.id)
     .at(-1);
@@ -95,19 +114,13 @@ export function App() {
 
   const subjectStats = enabledSubjects.map((subjectId) => {
     const subjectQuestions = questions.filter((question) => question.subjectId === subjectId);
-    const answered = new Set(
-      progress.answers
-        .filter((answer) =>
-          subjectQuestions.some((question) => question.id === answer.questionId),
-        )
-        .map((answer) => answer.questionId),
-    );
+    const answered = subjectQuestions.filter((question) => latestByQuestion.has(question.id));
     return {
       subjectId,
       total: subjectQuestions.length,
-      answered: answered.size,
+      answered: answered.length,
       percent: subjectQuestions.length
-        ? Math.round((answered.size / subjectQuestions.length) * 100)
+        ? Math.round((answered.length / subjectQuestions.length) * 100)
         : 0,
     };
   });
@@ -148,6 +161,42 @@ export function App() {
     setView("quiz");
   }
 
+  function enterQuizMode(mode: QuizMode, subject?: SubjectId) {
+    setQuizMode(mode);
+    setDailyReplay(false);
+    if (subject) setQuizSubject(subject);
+    let pool: QuizQuestion[];
+    if (mode === "daily") pool = dailyQuestions;
+    else if (mode === "weak") pool = questions.filter((question) => weakIds.has(question.id));
+    else
+      pool = questions.filter(
+        (question) => question.subjectId === (subject ?? quizSubject),
+      );
+    const target =
+      mode === "daily"
+        ? pool.find((question) => !todayIds.has(question.id)) ?? pool[0]
+        : pool[0];
+    if (target) {
+      goToQuestion(target);
+    } else {
+      setSelectedIndexes([]);
+      setShowExplanation(false);
+      setView("quiz");
+    }
+  }
+
+  function goToNext() {
+    const index = quizPool.findIndex((question) => question.id === activeQuestion.id);
+    if (quizMode === "daily" && dailyDone && !dailyReplay) {
+      // 今日の分を解き終えたら完了カードを見せる
+      setSelectedIndexes([]);
+      setShowExplanation(false);
+      return;
+    }
+    const next = index >= 0 ? quizPool[(index + 1) % quizPool.length] : quizPool[0];
+    if (next) goToQuestion(next);
+  }
+
   function openSource(question: QuizQuestion) {
     const section = resolveSourceSection(
       textbookSections,
@@ -168,28 +217,40 @@ export function App() {
           <HomeView
             summary={summary}
             subjectStats={subjectStats}
-            onStart={() => goToQuestion(dailyQuestions[0])}
-            onReview={() => {
-              const wrong = findLastWrongAnswer(progress.answers);
-              const target =
-                questions.find((question) => question.id === wrong?.questionId) ??
-                dailyQuestions[0];
-              goToQuestion(target);
-            }}
+            dailyAnsweredCount={dailyAnswered.length}
+            dailyCorrect={dailyCorrect}
+            dailyDone={dailyDone}
+            weakCount={weakIds.size}
+            onStart={() => enterQuizMode("daily")}
+            onReview={() => enterQuizMode("weak")}
           />
         )}
 
         {view === "quiz" && (
           <QuizView
             question={activeQuestion}
+            pool={quizPool}
             mode={quizMode}
+            subject={quizSubject}
+            dateKey={dateKey}
             selectedIndexes={selectedIndexes}
             showExplanation={showExplanation}
             latestAnswer={latestAnswer}
-            onModeChange={setQuizMode}
+            dailyDone={dailyDone}
+            dailyReplay={dailyReplay}
+            dailyCorrect={dailyCorrect}
+            weakCount={weakIds.size}
+            onModeChange={(mode) => enterQuizMode(mode)}
+            onSubjectChange={(subject) => enterQuizMode("subject", subject)}
             onToggleAnswer={toggleAnswer}
             onRevealAnswer={revealAnswer}
-            onNext={() => goToQuestion(nextQuestion(activeQuestion, questions))}
+            onNext={goToNext}
+            onReplayDaily={() => {
+              setDailyReplay(true);
+              const target = dailyQuestions[0];
+              if (target) goToQuestion(target);
+            }}
+            onReview={() => enterQuizMode("weak")}
             onOpenBook={() => openSource(activeQuestion)}
             onBackHome={() => setView("home")}
           />
@@ -214,10 +275,6 @@ export function App() {
               setActiveSectionId(section.id);
               setActiveSourceQuote("");
             }}
-            onMoveSection={(section) => {
-              setActiveSectionId(section.id);
-              setActiveSourceQuote("");
-            }}
             onBackToQuestion={() => setView("quiz")}
           />
         )}
@@ -227,6 +284,7 @@ export function App() {
             summary={summary}
             subjectStats={subjectStats}
             onReset={() => {
+              if (!window.confirm("回答履歴をすべて削除する。よい?")) return;
               const nextProgress = { answers: [] };
               setProgress(nextProgress);
               saveProgress(nextProgress);
@@ -256,42 +314,64 @@ export function App() {
 function HomeView({
   summary,
   subjectStats,
+  dailyAnsweredCount,
+  dailyCorrect,
+  dailyDone,
+  weakCount,
   onStart,
   onReview,
 }: {
   summary: ReturnType<typeof summarizeProgress>;
   subjectStats: { subjectId: SubjectId; total: number; answered: number; percent: number }[];
+  dailyAnsweredCount: number;
+  dailyCorrect: number;
+  dailyDone: boolean;
+  weakCount: number;
   onStart: () => void;
   onReview: () => void;
 }) {
+  const dateLabel = new Date().toLocaleDateString("ja-JP", {
+    month: "long",
+    day: "numeric",
+    weekday: "short",
+  });
+  const startLabel = dailyDone
+    ? "今日の5問をもう一度"
+    : dailyAnsweredCount > 0
+      ? "続きから解く"
+      : "今日の5問を解く";
   return (
     <section className="screen">
       <header className="topbar">
         <div>
-          <p className="eyebrow">2027 再受験対策</p>
+          <p className="eyebrow">{dateLabel} ・ 2027 再受験対策</p>
           <h1>今日の学習</h1>
         </div>
-        <button className="icon-button" aria-label="設定">
-          <Settings />
-        </button>
       </header>
 
       <section className="hero-panel">
         <div>
-          <p className="panel-label">今日追加された問題</p>
+          <p className="panel-label">今日のセット</p>
           <p className="hero-number">
-            5 <span>問</span>
+            {dailyAnsweredCount}
+            <span> / {DAILY_COUNT}問</span>
           </p>
+          {dailyDone && (
+            <p className="hero-note">
+              完了。正解 {dailyCorrect} / {DAILY_COUNT}
+            </p>
+          )}
         </div>
         <div className="ring" style={{ "--value": `${summary.accuracy}%` } as CSSProperties}>
           <span>{summary.accuracy}%</span>
+          <small>正答率</small>
         </div>
         <div className="button-row">
           <button className="primary-action" onClick={onStart}>
-            今日の5問を解く
+            {startLabel}
           </button>
-          <button className="secondary-action" onClick={onReview}>
-            復習
+          <button className="secondary-action" disabled={!weakCount} onClick={onReview}>
+            復習 {weakCount > 0 ? weakCount : ""}
           </button>
         </div>
       </section>
@@ -299,7 +379,7 @@ function HomeView({
       <section className="metric-grid" aria-label="学習状況">
         <Metric label="回答済み" value={`${summary.answeredCount}`} />
         <Metric label="正答率" value={`${summary.accuracy}%`} />
-        <Metric label="復習待ち" value={`${summary.wrongCount}`} />
+        <Metric label="復習待ち" value={`${weakCount}`} />
       </section>
 
       <section className="card">
@@ -328,38 +408,77 @@ function HomeView({
 
 function QuizView({
   question,
+  pool,
   mode,
+  subject,
+  dateKey,
   selectedIndexes,
   showExplanation,
   latestAnswer,
+  dailyDone,
+  dailyReplay,
+  dailyCorrect,
+  weakCount,
   onModeChange,
+  onSubjectChange,
   onToggleAnswer,
   onRevealAnswer,
   onNext,
+  onReplayDaily,
+  onReview,
   onOpenBook,
   onBackHome,
 }: {
   question: QuizQuestion;
+  pool: QuizQuestion[];
   mode: QuizMode;
+  subject: SubjectId;
+  dateKey: string;
   selectedIndexes: number[];
   showExplanation: boolean;
   latestAnswer?: AnswerRecord;
+  dailyDone: boolean;
+  dailyReplay: boolean;
+  dailyCorrect: number;
+  weakCount: number;
   onModeChange: (mode: QuizMode) => void;
+  onSubjectChange: (subject: SubjectId) => void;
   onToggleAnswer: (index: number) => void;
   onRevealAnswer: () => void;
   onNext: () => void;
+  onReplayDaily: () => void;
+  onReview: () => void;
   onOpenBook: () => void;
   onBackHome: () => void;
 }) {
+  const displayOrder = useMemo(
+    () => optionDisplayOrder(question, dateKey),
+    [question, dateKey],
+  );
+  const poolIndex = pool.findIndex((candidate) => candidate.id === question.id);
+  const poolStatus =
+    mode === "daily"
+      ? `今日のセット ${Math.min(poolIndex + 1, pool.length)} / ${pool.length}`
+      : mode === "weak"
+        ? `弱点復習 残り${pool.length}問`
+        : `${subjectLabel[subject]} ${poolIndex + 1} / ${pool.length}問`;
+  const correctLetters = question.correctIndexes
+    .map((correctIndex) => displayOrder.indexOf(correctIndex))
+    .sort((a, b) => a - b)
+    .map((displayIndex) => String.fromCharCode(65 + displayIndex))
+    .join("・");
+
+  const showCompletion = mode === "daily" && dailyDone && !dailyReplay && !showExplanation;
+  const showEmptyWeak = mode === "weak" && pool.length === 0;
+
   return (
     <section className="screen">
       <header className="topbar">
-        <button className="icon-button" aria-label="戻る" onClick={onBackHome}>
+        <button className="icon-button" aria-label="ホームへ戻る" onClick={onBackHome}>
           <ChevronLeft />
         </button>
         <div className="topbar-center">
-          <p className="eyebrow">{question.chapter}</p>
-          <h1>問題を解く</h1>
+          <h1>問題</h1>
         </div>
         <button className="icon-button" aria-label="教科書を開く" onClick={onOpenBook}>
           <BookOpen />
@@ -371,7 +490,7 @@ function QuizView({
           今日
         </button>
         <button className={mode === "weak" ? "active" : ""} onClick={() => onModeChange("weak")}>
-          弱点
+          弱点{weakCount > 0 ? ` ${weakCount}` : ""}
         </button>
         <button
           className={mode === "subject" ? "active" : ""}
@@ -381,86 +500,161 @@ function QuizView({
         </button>
       </div>
 
-      <article className="question-card">
-        <div className="question-meta">
-          <span>{subjectLabel[question.subjectId]} / {question.topic}</span>
-          <span className={`badge ${question.importance === "high" ? "warn" : "neutral"}`}>
-            {question.importance === "high" ? "重要" : "標準"}
-          </span>
-        </div>
-        <p className="question-text">{question.prompt}</p>
-        <div className="source-tags">
-          <span className="chip">正誤複数選択</span>
-          <span className="chip">出典あり</span>
-        </div>
-      </article>
-
-      <div className="answer-list">
-        {question.options.map((option, index) => {
-          const isCorrect = question.correctIndexes.includes(index);
-          const isSelected = selectedIndexes.includes(index);
-          const status =
-            showExplanation && isCorrect
-              ? "correct"
-              : showExplanation && isSelected
-                ? "wrong"
-                : isSelected
-                  ? "selected"
-                  : "";
-          return (
+      {mode === "subject" && (
+        <div className="subject-chips" aria-label="科目を選ぶ">
+          {enabledSubjects.map((subjectId) => (
             <button
-              className={`answer ${status}`}
-              key={option}
-              onClick={() => onToggleAnswer(index)}
-              aria-pressed={isSelected}
+              className={subject === subjectId ? "active" : ""}
+              key={subjectId}
+              onClick={() => onSubjectChange(subjectId)}
             >
-              <span>{String.fromCharCode(65 + index)}</span>
-              <strong>{option}</strong>
+              {subjectLabel[subjectId]}
             </button>
-          );
-        })}
-      </div>
-
-      {!showExplanation && (
-        <button
-          className="dark-action quiz-reveal"
-          disabled={!selectedIndexes.length}
-          onClick={onRevealAnswer}
-        >
-          解答を見る
-          <ChevronRight />
-        </button>
+          ))}
+        </div>
       )}
 
-      {showExplanation && (
-        <section className="card explanation">
-          <div className="result-line">
-            <div className={latestAnswer?.isCorrect ? "result-mark ok" : "result-mark ng"}>
-              {latestAnswer?.isCorrect ? <Check /> : <X />}
-            </div>
-            <div>
-              <p className="eyebrow">解説</p>
-              <h2>{latestAnswer?.isCorrect ? "正解" : "要復習"}</h2>
-            </div>
+      {showCompletion ? (
+        <section className="card quiz-complete">
+          <div className={dailyCorrect === pool.length ? "result-mark ok" : "result-mark warn"}>
+            <Check />
           </div>
-          <p>{question.explanation}</p>
-          <div className="source-box">
-            <p className="panel-label">教科書にはこう書いてある</p>
-            <blockquote>{question.sourceRef.quote}</blockquote>
-          </div>
+          <h2>今日の5問 完了</h2>
+          <p>
+            正解 {dailyCorrect} / {pool.length}。明日また新しいセットが出る。
+          </p>
           <div className="button-row">
-            <button className="dark-action" onClick={onOpenBook}>
-              教科書で確認
-              <ChevronRight />
+            <button className="primary-action" disabled={!weakCount} onClick={onReview}>
+              弱点を復習{weakCount > 0 ? ` (${weakCount})` : ""}
             </button>
-            <button className="secondary-action" onClick={onNext}>
-              次の問題
+            <button className="secondary-action" onClick={onReplayDaily}>
+              <RotateCcw />
+              もう一度
             </button>
           </div>
         </section>
+      ) : showEmptyWeak ? (
+        <section className="card quiz-complete">
+          <div className="result-mark ok">
+            <Check />
+          </div>
+          <h2>復習待ちなし</h2>
+          <p>誤答した問題がここに溜まる。今日のセットか分野別で解き進める。</p>
+          <div className="button-row">
+            <button className="primary-action" onClick={() => onModeChange("daily")}>
+              今日のセットへ
+            </button>
+            <button className="secondary-action" onClick={() => onModeChange("subject")}>
+              分野別
+            </button>
+          </div>
+        </section>
+      ) : (
+        <>
+          <p className="pool-status">{poolStatus}</p>
+
+          <article className="question-card">
+            <div className="question-meta">
+              <span>
+                {subjectLabel[question.subjectId]} / {question.topic}
+              </span>
+              <span className={`badge ${question.importance === "high" ? "warn" : "neutral"}`}>
+                {question.importance === "high" ? "重要" : "標準"}
+              </span>
+            </div>
+            <p className="question-text">{question.prompt}</p>
+            <p className="question-hint">複数選択可・正答数は解答まで非公開</p>
+          </article>
+
+          <div className="answer-list">
+            {displayOrder.map((optionIndex, displayIndex) => {
+              const option = question.options[optionIndex];
+              const isCorrect = question.correctIndexes.includes(optionIndex);
+              const isSelected = selectedIndexes.includes(optionIndex);
+              const status = showExplanation
+                ? isCorrect && isSelected
+                  ? "correct"
+                  : isCorrect
+                    ? "missed"
+                    : isSelected
+                      ? "wrong"
+                      : "muted"
+                : isSelected
+                  ? "selected"
+                  : "";
+              return (
+                <button
+                  className={`answer ${status}`}
+                  key={option}
+                  onClick={() => onToggleAnswer(optionIndex)}
+                  aria-pressed={isSelected}
+                >
+                  <span>{String.fromCharCode(65 + displayIndex)}</span>
+                  <strong>{option}</strong>
+                  {showExplanation && isCorrect && isSelected && (
+                    <Check className="answer-glyph ok" aria-label="正解" />
+                  )}
+                  {showExplanation && isCorrect && !isSelected && (
+                    <em className="answer-flag">見落とし</em>
+                  )}
+                  {showExplanation && !isCorrect && isSelected && (
+                    <X className="answer-glyph ng" aria-label="誤り" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {!showExplanation && (
+            <button
+              className="dark-action quiz-reveal"
+              disabled={!selectedIndexes.length}
+              onClick={onRevealAnswer}
+            >
+              解答を見る
+              <ChevronRight />
+            </button>
+          )}
+
+          {showExplanation && (
+            <section className="card explanation">
+              <div className="result-line">
+                <div className={latestAnswer?.isCorrect ? "result-mark ok" : "result-mark ng"}>
+                  {latestAnswer?.isCorrect ? <Check /> : <X />}
+                </div>
+                <div>
+                  <p className="eyebrow">正解は {correctLetters}</p>
+                  <h2>{latestAnswer?.isCorrect ? "正解" : "要復習"}</h2>
+                </div>
+              </div>
+              <p>{question.explanation}</p>
+              <div className="source-box">
+                <p className="panel-label">教科書にはこう書いてある</p>
+                <blockquote>{question.sourceRef.quote}</blockquote>
+              </div>
+              <div className="button-row">
+                <button className="dark-action" onClick={onOpenBook}>
+                  教科書で確認
+                  <ChevronRight />
+                </button>
+                <button className="secondary-action" onClick={onNext}>
+                  次の問題
+                </button>
+              </div>
+            </section>
+          )}
+        </>
       )}
     </section>
   );
+}
+
+function makeSnippet(section: TextbookSection, query: string) {
+  const flat = section.body.replace(/[#>*|`]/g, "").replace(/\s+/g, " ").trim();
+  const position = flat.toLowerCase().indexOf(query.toLowerCase());
+  if (position < 0) return flat.slice(0, 56);
+  const start = Math.max(0, position - 20);
+  return `${start > 0 ? "…" : ""}${flat.slice(start, position + query.length + 44)}…`;
 }
 
 function BookView({
@@ -473,7 +667,6 @@ function BookView({
   onQueryChange,
   onSubjectChange,
   onSelectSection,
-  onMoveSection,
   onBackToQuestion,
 }: {
   sections: TextbookSection[];
@@ -485,18 +678,24 @@ function BookView({
   onQueryChange: (query: string) => void;
   onSubjectChange: (subjectId: SubjectId) => void;
   onSelectSection: (section: TextbookSection) => void;
-  onMoveSection: (section: TextbookSection) => void;
   onBackToQuestion: () => void;
 }) {
   const [tocOpen, setTocOpen] = useState(false);
   const [isScrubbing, setIsScrubbing] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [accessHidden, setAccessHidden] = useState(false);
   const [visibleSectionId, setVisibleSectionId] = useState(activeSection.id);
   const [scrubCursorIndex, setScrubCursorIndex] = useState(-1);
   const edgeRef = useRef<HTMLElement | null>(null);
+  const accessBarRef = useRef<HTMLDivElement | null>(null);
+  const chapterStripRef = useRef<HTMLElement | null>(null);
+  const scrollProgressRef = useRef<HTMLSpanElement | null>(null);
   const closeTimerRef = useRef<number | undefined>(undefined);
   const scrubTargetsRef = useRef<{ id: string; y: number }[]>([]);
   const activeScrubIndexRef = useRef(-1);
   const isScrubbingRef = useRef(false);
+  const accessHiddenRef = useRef(false);
+  const updateRailRef = useRef<() => void>(() => {});
   const chapters = uniqueChapters(sections);
   const visibleSection = sections.find((section) => section.id === visibleSectionId) ?? activeSection;
   const activeChapter = visibleSection.chapterTitle;
@@ -508,10 +707,22 @@ function BookView({
   const displayedScrubIndex = isScrubbing && scrubCursorIndex >= 0
     ? scrubCursorIndex
     : activeNavIndex;
-  const activeChapterIndex = chapters.findIndex((chapter) => chapter === activeChapter);
-  const progress = chapters.length
-    ? Math.round(((activeChapterIndex + 1) / chapters.length) * 100)
-    : 0;
+
+  useEffect(() => {
+    accessHiddenRef.current = accessHidden;
+    const timer = window.setTimeout(() => updateRailRef.current(), 240);
+    return () => window.clearTimeout(timer);
+  }, [accessHidden]);
+
+  // 現在章のボタンが章ストリップの見える位置に来るよう追従させる
+  useEffect(() => {
+    const strip = chapterStripRef.current;
+    if (!strip) return;
+    const active = strip.querySelector<HTMLButtonElement>("button.active");
+    if (!active) return;
+    const target = active.offsetLeft - (strip.clientWidth - active.clientWidth) / 2;
+    strip.scrollTo({ left: Math.max(0, target), behavior: "smooth" });
+  }, [activeChapter, searchOpen]);
 
   function moveToChapter(chapter: string) {
     const firstSection = sections.find((section) => section.chapterTitle === chapter);
@@ -519,7 +730,7 @@ function BookView({
   }
 
   function moveToSection(section: TextbookSection, behavior: ScrollBehavior = "smooth") {
-    onMoveSection(section);
+    onSelectSection(section);
     setVisibleSectionId(section.id);
     window.requestAnimationFrame(() => {
       document.getElementById(section.id)?.scrollIntoView({
@@ -527,6 +738,12 @@ function BookView({
         behavior,
       });
     });
+  }
+
+  function jumpToResult(section: TextbookSection) {
+    setSearchOpen(false);
+    onQueryChange("");
+    moveToSection(section, "auto");
   }
 
   useEffect(() => {
@@ -566,6 +783,51 @@ function BookView({
     return () => observer.disconnect();
   }, [isScrubbing, sections]);
 
+  // 右端レールの上端をヘッダー下端に追従させ、スクロール方向でヘッダーを出し入れする
+  useEffect(() => {
+    const updateRail = () => {
+      const edge = edgeRef.current;
+      if (!edge) return;
+      const rect = accessBarRef.current?.getBoundingClientRect();
+      const top = accessHiddenRef.current || !rect ? 0 : Math.max(0, rect.bottom);
+      edge.style.setProperty("--rail-top", `${Math.round(top)}px`);
+    };
+    updateRailRef.current = updateRail;
+    updateRail();
+
+    const observer = new ResizeObserver(updateRail);
+    if (accessBarRef.current) observer.observe(accessBarRef.current);
+
+    let lastY = window.scrollY;
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        ticking = false;
+        const y = window.scrollY;
+        const delta = y - lastY;
+        lastY = y;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        if (scrollProgressRef.current) {
+          const percent = maxScroll > 0 ? Math.min(100, Math.max(0, (y / maxScroll) * 100)) : 0;
+          scrollProgressRef.current.style.width = `${percent}%`;
+        }
+        if (!isScrubbingRef.current) {
+          if (y < 90) setAccessHidden(false);
+          else if (delta > 10) setAccessHidden(true);
+          else if (delta < -10) setAccessHidden(false);
+        }
+        updateRail();
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
   const openToc = () => {
     window.clearTimeout(closeTimerRef.current);
     setTocOpen(true);
@@ -590,12 +852,12 @@ function BookView({
     setTocOpen(false);
 
     if (commitSelection && target && section) {
-      onMoveSection(section);
+      onSelectSection(section);
       setVisibleSectionId(section.id);
     }
 
     return true;
-  }, [navSections, onMoveSection]);
+  }, [navSections, onSelectSection]);
 
   useEffect(() => {
     const finishGlobalScrub = () => {
@@ -614,8 +876,8 @@ function BookView({
   }, [stopScrub]);
 
   const buildScrubTargets = () => {
-    const accessBar = document.querySelector(".reader-access-bar");
-    const offset = (accessBar?.getBoundingClientRect().height ?? 0) + 18;
+    const accessRect = accessBarRef.current?.getBoundingClientRect();
+    const offset = Math.max(0, accessRect?.bottom ?? 0) + 18;
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     scrubTargetsRef.current = navSections.map((section) => {
       const node = document.getElementById(section.id);
@@ -712,51 +974,102 @@ function BookView({
     event.preventDefault();
   };
 
+  const searchResults = query ? filteredSections.slice(0, 20) : [];
+
   return (
     <section className="screen book-screen">
       <header className="topbar reader-topbar">
-        <div>
+        <button className="icon-button" aria-label="問題へ戻る" onClick={onBackToQuestion}>
+          <ChevronLeft />
+        </button>
+        <div className="reader-topbar-title">
           <p className="eyebrow">{subjectLabel[activeSubject]}</p>
           <h1>電子教科書</h1>
         </div>
-        <button className="icon-button" aria-label="問題の解説へ戻る" onClick={onBackToQuestion}>
-          <ChevronLeft />
-        </button>
       </header>
 
-      <div className="reader-access-bar" aria-label="教科書内ナビゲーション">
-        <div className="book-subject-tabs reader-subject-tabs" aria-label="教科書科目">
-          {enabledSubjects.map((subjectId) => (
+      <div
+        className={`reader-access-bar${accessHidden && !searchOpen ? " is-hidden" : ""}`}
+        aria-label="教科書内ナビゲーション"
+        ref={accessBarRef}
+      >
+        {searchOpen ? (
+          <div className="reader-search-row">
+            <label className="reader-search">
+              <Search />
+              <input
+                autoFocus
+                value={query}
+                onChange={(event) => onQueryChange(event.target.value)}
+                placeholder={`${subjectLabel[activeSubject]}内を検索`}
+              />
+            </label>
             <button
-              className={activeSubject === subjectId ? "active" : ""}
-              key={subjectId}
-              onClick={() => onSubjectChange(subjectId)}
+              className="search-cancel"
+              onClick={() => {
+                setSearchOpen(false);
+                onQueryChange("");
+              }}
             >
-              {textbooks.find((book) => book.id === subjectId)?.shortTitle}
+              閉じる
             </button>
-          ))}
+          </div>
+        ) : (
+          <>
+            <div className="reader-access-row">
+              <div className="book-subject-tabs reader-subject-tabs" aria-label="教科書科目">
+                {enabledSubjects.map((subjectId) => (
+                  <button
+                    className={activeSubject === subjectId ? "active" : ""}
+                    key={subjectId}
+                    onClick={() => onSubjectChange(subjectId)}
+                  >
+                    {textbooks.find((book) => book.id === subjectId)?.shortTitle}
+                  </button>
+                ))}
+              </div>
+              <button
+                className="icon-button search-toggle"
+                aria-label="教科書内を検索"
+                onClick={() => setSearchOpen(true)}
+              >
+                <Search />
+              </button>
+            </div>
+
+            <nav className="reader-chapter-strip" aria-label="章ジャンプ" ref={chapterStripRef}>
+              {chapters.map((chapter) => (
+                <button
+                  className={chapter === activeChapter ? "active" : ""}
+                  key={chapter}
+                  onClick={() => moveToChapter(chapter)}
+                >
+                  {chapter}
+                </button>
+              ))}
+            </nav>
+          </>
+        )}
+
+        {searchOpen && query && (
+          <div className="search-results" role="listbox" aria-label="検索結果">
+            {searchResults.length === 0 && <p className="search-empty">見つからない</p>}
+            {searchResults.map((section) => (
+              <button key={section.id} onClick={() => jumpToResult(section)}>
+                <span>{section.title}</span>
+                <small>{section.chapterTitle}</small>
+                <p>{makeSnippet(section, query)}</p>
+              </button>
+            ))}
+            {filteredSections.length > searchResults.length && (
+              <p className="search-empty">他 {filteredSections.length - searchResults.length} 件</p>
+            )}
+          </div>
+        )}
+
+        <div className="reader-scroll-progress" aria-hidden="true">
+          <span ref={scrollProgressRef} />
         </div>
-
-        <nav className="reader-chapter-strip" aria-label="章ジャンプ">
-          {chapters.map((chapter) => (
-            <button
-              className={chapter === activeChapter ? "active" : ""}
-              key={chapter}
-              onClick={() => moveToChapter(chapter)}
-            >
-              {chapter}
-            </button>
-          ))}
-        </nav>
-
-        <label className="reader-search">
-          <Search />
-          <input
-            value={query}
-            onChange={(event) => onQueryChange(event.target.value)}
-            placeholder="教科書内を検索"
-          />
-        </label>
       </div>
 
       {activeSourceQuote && (
@@ -767,42 +1080,40 @@ function BookView({
         </button>
       )}
 
-      <button
-        className={`reader-toc-backdrop${tocOpen ? " is-open" : ""}`}
-        aria-label="目次を閉じる"
-        onClick={() => setTocOpen(false)}
-      />
-
       <section className="reader-layout chapter-reader-layout">
         <article className="reader-card reader-scroll-page">
-          <div className="reader-meta">
-            <span>{activeChapter}</span>
-            <span>{progress}%</span>
-          </div>
-          <h2>{activeChapter}</h2>
-          <div className="reader-progress" aria-hidden="true">
-            <span style={{ width: `${progress}%` }} />
-          </div>
           <div className="reader-body">
-            {sections.map((section) => (
-              <section
-                className={`reader-section${section.id === visibleSectionId ? " is-current" : ""}`}
-                id={section.id}
-                key={section.id}
-              >
-                <h3>{section.title}</h3>
-                {markdownToBlocks(section.body).map((block, index) => (
-                  <MarkdownBlock
-                    key={`${section.id}-${index}`}
-                    block={block}
-                    highlight={Boolean(
-                      activeSourceQuote &&
-                        block.replace(/\s+/g, "").includes(activeSourceQuote.replace(/\s+/g, "")),
-                    )}
-                  />
-                ))}
-              </section>
-            ))}
+            {sections.map((section) => {
+              const isChapterHead = section.title === section.chapterTitle;
+              return (
+                <section
+                  className={`reader-section${isChapterHead ? " reader-chapter-head" : ""}${
+                    section.id === visibleSectionId ? " is-current" : ""
+                  }`}
+                  id={section.id}
+                  key={section.id}
+                >
+                  {isChapterHead ? (
+                    <>
+                      <p className="chapter-kicker">{subjectLabel[activeSubject]}</p>
+                      <h2>{section.title}</h2>
+                    </>
+                  ) : (
+                    <h3>{section.title}</h3>
+                  )}
+                  {markdownToBlocks(section.body).map((block, index) => (
+                    <MarkdownBlock
+                      key={`${section.id}-${index}`}
+                      block={block}
+                      highlight={Boolean(
+                        activeSourceQuote &&
+                          block.replace(/\s+/g, "").includes(activeSourceQuote.replace(/\s+/g, "")),
+                      )}
+                    />
+                  ))}
+                </section>
+              );
+            })}
           </div>
         </article>
       </section>
@@ -864,8 +1175,10 @@ function BookView({
                     "--scrub-item-opacity": distance > 5 ? 0 : Math.max(0.18, 1 - distance * 0.16),
                     "--scrub-item-scale": isActive ? 1.08 : Math.max(0.76, 1 - distance * 0.052),
                   } as CSSProperties}
-                  onClick={(event) => {
-                    event.preventDefault();
+                  onClick={() => {
+                    // マウス操作 (ホバーで開いた時) はクリックでそのままジャンプ
+                    setTocOpen(false);
+                    moveToSection(section, "auto");
                   }}
                 >
                   <span>{section.title}</span>
@@ -896,7 +1209,7 @@ function ProgressView({
           <p className="eyebrow">学習記録</p>
           <h1>進捗</h1>
         </div>
-        <button className="icon-button" aria-label="リセット" onClick={onReset}>
+        <button className="icon-button" aria-label="履歴をリセット" onClick={onReset}>
           <RotateCcw />
         </button>
       </header>
