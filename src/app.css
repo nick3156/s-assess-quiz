@@ -1140,6 +1140,14 @@ blockquote {
   white-space: pre-wrap;
 }
 
+/* 重要用語 (**強調**)。蛍光マーカー風の下塗り + 太字 */
+.reader-body strong {
+  font-weight: 830;
+  background: linear-gradient(transparent 64%, var(--accent-soft) 64%);
+  border-radius: 3px;
+  padding: 0 1px;
+}
+
 .reader-body pre {
   padding: 13px;
   border-radius: var(--radius-md);

@@ -1276,9 +1276,17 @@ function TabButton({
   );
 }
 
+// 本文中の **強調** を <strong> にする (太字はプレーンテキスト描画の <pre> 系では剥がす)
+function renderInline(text: string) {
+  const parts = text.split(/\*\*([^*]+)\*\*/g);
+  if (parts.length === 1) return text;
+  return parts.map((part, index) =>
+    index % 2 === 1 ? <strong key={index}>{part}</strong> : part,
+  );
+}
+
 function MarkdownBlock({ block, highlight }: { block: string; highlight: boolean }) {
   const cleaned = block
-    .replace(/\*\*/g, "")
     .replace(/^>\s?/gm, "")
     .replace(/\n/g, "\n");
   const trimmed = cleaned.trim();
@@ -1303,14 +1311,14 @@ function MarkdownBlock({ block, highlight }: { block: string; highlight: boolean
       <>
         {/* テーブルと同じブロックに地の文が混在していても捨てない */}
         {proseLines.length > 0 && (
-          <p className={highlight ? "highlight" : ""}>{proseLines.join("\n").trim()}</p>
+          <p className={highlight ? "highlight" : ""}>{renderInline(proseLines.join("\n").trim())}</p>
         )}
         <div className={`reader-table-wrap${highlight ? " highlight" : ""}`}>
           <table className="reader-table">
           <thead>
             <tr>
               {head.map((cell) => (
-                <th key={cell}>{cell}</th>
+                <th key={cell}>{renderInline(cell)}</th>
               ))}
             </tr>
           </thead>
@@ -1318,7 +1326,7 @@ function MarkdownBlock({ block, highlight }: { block: string; highlight: boolean
             {bodyRows.map((row, rowIndex) => (
               <tr key={`${row.join("-")}-${rowIndex}`}>
                 {row.map((cell, cellIndex) => (
-                  <td key={`${cell}-${cellIndex}`}>{cell}</td>
+                  <td key={`${cell}-${cellIndex}`}>{renderInline(cell)}</td>
                 ))}
               </tr>
             ))}
@@ -1332,7 +1340,7 @@ function MarkdownBlock({ block, highlight }: { block: string; highlight: boolean
   if (/^```/.test(trimmed)) {
     return (
       <pre className={highlight ? "highlight" : ""}>
-        {trimmed.replace(/^```[a-zA-Z]*\n?/, "").replace(/```$/, "").trim()}
+        {trimmed.replace(/^```[a-zA-Z]*\n?/, "").replace(/```$/, "").replace(/\*\*/g, "").trim()}
       </pre>
     );
   }
@@ -1355,7 +1363,7 @@ function MarkdownBlock({ block, highlight }: { block: string; highlight: boolean
     .join(" ");
 
   if (trimmed.includes("|") || trimmed.includes("→")) {
-    return <pre className={className}>{trimmed}</pre>;
+    return <pre className={className}>{trimmed.replace(/\*\*/g, "")}</pre>;
   }
 
   const lines = trimmed.split("\n").filter(Boolean);
@@ -1368,22 +1376,24 @@ function MarkdownBlock({ block, highlight }: { block: string; highlight: boolean
     return (
       <ol className={className} start={start}>
         {lines.map((line) => (
-          <li key={line}>{line.trim().replace(/^\d+[.)]\s*/, "")}</li>
+          <li key={line}>{renderInline(line.trim().replace(/^\d+[.)]\s*/, ""))}</li>
         ))}
       </ol>
     );
   }
 
-  const isList = lines.length > 1 && lines.every((line) => /^(\d+\.|[-*]|・)/.test(line.trim()));
+  // 行頭の ** (強調開始) はリスト記号 * と誤認しない
+  const isList =
+    lines.length > 1 && lines.every((line) => /^(\d+\.|-|\*(?!\*)|・)/.test(line.trim()));
   if (isList) {
     return (
       <ul className={className}>
         {lines.map((line) => (
-          <li key={line}>{line.replace(/^(\d+\.|[-*]|・)\s*/, "")}</li>
+          <li key={line}>{renderInline(line.replace(/^(\d+\.|-|\*(?!\*)|・)\s*/, ""))}</li>
         ))}
       </ul>
     );
   }
 
-  return <p className={className}>{trimmed.replace(/^[-*]\s+/gm, "・")}</p>;
+  return <p className={className}>{renderInline(trimmed.replace(/^[-*]\s+/gm, "・"))}</p>;
 }
