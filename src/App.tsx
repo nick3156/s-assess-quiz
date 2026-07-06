@@ -7,7 +7,6 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
-  CircleAlert,
   Home,
   ListChecks,
   RotateCcw,
@@ -44,14 +43,6 @@ function todayQuestionSet() {
 function nextQuestion(current: QuizQuestion, pool: QuizQuestion[]) {
   const index = pool.findIndex((question) => question.id === current.id);
   return pool[(index + 1) % pool.length];
-}
-
-function sourceStatusLabel(subjectId: SubjectId) {
-  const status = textbooks.find((source) => source.id === subjectId)?.reviewStatus;
-  if (status === "reviewed") return "校閲済み";
-  if (status === "partialScan") return "スキャン照合中";
-  if (status === "partialLawCheck") return "法改正・照合中";
-  return "スキャン待ち";
 }
 
 function findLastWrongAnswer(answers: AnswerRecord[]) {
@@ -297,7 +288,6 @@ function HomeView({
       <section className="card">
         <div className="section-head">
           <h2>科目別</h2>
-          <span className="badge blue">計数も校閲中</span>
         </div>
         <div className="subject-list">
           {subjectStats.map((stat) => (
@@ -308,7 +298,6 @@ function HomeView({
                   {stat.answered} / {stat.total}問
                 </span>
               </div>
-              <span className="badge neutral">{sourceStatusLabel(stat.subjectId)}</span>
               <div className="bar">
                 <span style={{ width: `${stat.percent}%` }} />
               </div>
@@ -384,7 +373,6 @@ function QuizView({
         <div className="source-tags">
           <span className="chip">{question.type === "case" ? "ケース" : "4択"}</span>
           <span className="chip">出典あり</span>
-          <span className="chip">{sourceStatusLabel(question.subjectId)}</span>
         </div>
       </article>
 
@@ -756,7 +744,6 @@ function BookView({
         <article className="reader-card reader-scroll-page">
           <div className="reader-meta">
             <span>{activeChapter}</span>
-            <span>{sourceStatusLabel(visibleSection.subjectId)}</span>
             <span>{progress}%</span>
           </div>
           <h2>{activeChapter}</h2>
@@ -885,23 +872,6 @@ function ProgressView({
         <Metric label="回答済み" value={`${summary.answeredCount}`} />
         <Metric label="正解" value={`${summary.correctCount}`} />
         <Metric label="誤答" value={`${summary.wrongCount}`} />
-      </section>
-
-      <section className="card">
-        <div className="section-head">
-          <h2>実装状態</h2>
-          <span className="badge warn">限定公開前提</span>
-        </div>
-        <div className="notice-list">
-          <p>
-            <CircleAlert />
-            教科書本文を内蔵するため、公開時はアクセス制限を前提にする。
-          </p>
-          <p>
-            <CircleAlert />
-            計数入門はスキャン原本から教科書化を進行中。問題化は照合済みチャンクから始める。
-          </p>
-        </div>
       </section>
 
       <section className="card">
