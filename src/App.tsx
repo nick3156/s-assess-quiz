@@ -1284,6 +1284,9 @@ function MarkdownBlock({ block, highlight }: { block: string; highlight: boolean
   const trimmed = cleaned.trim();
 
   const tableLines = trimmed.split("\n").filter((line) => line.trim().startsWith("|"));
+  const proseLines = trimmed
+    .split("\n")
+    .filter((line) => line.trim() && !line.trim().startsWith("|"));
   const isMarkdownTable =
     tableLines.length >= 2 && tableLines.some((line) => /^\|\s*:?-{3,}:?\s*\|/.test(line));
   if (isMarkdownTable) {
@@ -1297,8 +1300,13 @@ function MarkdownBlock({ block, highlight }: { block: string; highlight: boolean
       );
     const [head = [], ...bodyRows] = rows;
     return (
-      <div className={`reader-table-wrap${highlight ? " highlight" : ""}`}>
-        <table className="reader-table">
+      <>
+        {/* テーブルと同じブロックに地の文が混在していても捨てない */}
+        {proseLines.length > 0 && (
+          <p className={highlight ? "highlight" : ""}>{proseLines.join("\n").trim()}</p>
+        )}
+        <div className={`reader-table-wrap${highlight ? " highlight" : ""}`}>
+          <table className="reader-table">
           <thead>
             <tr>
               {head.map((cell) => (
@@ -1315,8 +1323,9 @@ function MarkdownBlock({ block, highlight }: { block: string; highlight: boolean
               </tr>
             ))}
           </tbody>
-        </table>
-      </div>
+          </table>
+        </div>
+      </>
     );
   }
 
@@ -1337,7 +1346,8 @@ function MarkdownBlock({ block, highlight }: { block: string; highlight: boolean
 
   const className = [
     /^【?Case\s*\d+/i.test(trimmed) || trimmed.includes("Case ") ? "case-block" : "",
-    trimmed.includes("図表") ? "figure-block" : "",
+    // 図表スタイルはキャプション (行頭が図表〜) だけ。地の文の言及はボックス化しない
+    /^【?図表/.test(trimmed) ? "figure-block" : "",
     trimmed.includes("用語解説") || trimmed.includes("[注釈]") ? "note-block" : "",
     highlight ? "highlight" : "",
   ]
@@ -1349,6 +1359,21 @@ function MarkdownBlock({ block, highlight }: { block: string; highlight: boolean
   }
 
   const lines = trimmed.split("\n").filter(Boolean);
+
+  // 番号付きリストは番号を保持して <ol> 描画 (本文が「1において…」等で項目番号を参照するため)
+  const isNumberedList =
+    lines.length > 1 && lines.every((line) => /^\d+[.)]\s/.test(line.trim()));
+  if (isNumberedList) {
+    const start = Number(lines[0].trim().match(/^(\d+)/)?.[1] ?? "1");
+    return (
+      <ol className={className} start={start}>
+        {lines.map((line) => (
+          <li key={line}>{line.trim().replace(/^\d+[.)]\s*/, "")}</li>
+        ))}
+      </ol>
+    );
+  }
+
   const isList = lines.length > 1 && lines.every((line) => /^(\d+\.|[-*]|・)/.test(line.trim()));
   if (isList) {
     return (

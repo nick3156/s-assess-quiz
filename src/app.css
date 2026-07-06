@@ -1117,7 +1117,8 @@ blockquote {
 
 .reader-body p,
 .reader-body pre,
-.reader-body ul {
+.reader-body ul,
+.reader-body ol {
   margin: 0;
   min-width: 0;
   max-width: 100%;
@@ -1152,6 +1153,19 @@ blockquote {
   gap: 8px;
   padding: 0;
   list-style: none;
+}
+
+.reader-body ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 1.6em;
+  list-style: decimal;
+}
+
+.reader-body ol li::marker {
+  color: var(--accent);
+  font-weight: 780;
 }
 
 .reader-body li {
