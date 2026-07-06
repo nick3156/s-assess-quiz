@@ -567,14 +567,12 @@ function BookView({
     isScrubbingRef.current = false;
     setIsScrubbing(false);
     setScrubCursorIndex(-1);
-    closeTocSoon();
+    window.clearTimeout(closeTimerRef.current);
+    setTocOpen(false);
 
     if (commitSelection && target && section) {
       onMoveSection(section);
       setVisibleSectionId(section.id);
-      window.requestAnimationFrame(() => {
-        window.scrollTo({ top: target.y, behavior: "smooth" });
-      });
     }
 
     return true;
@@ -635,7 +633,9 @@ function BookView({
     );
     if (activeScrubIndexRef.current !== activeIndex) {
       activeScrubIndexRef.current = activeIndex;
+      setVisibleSectionId(targets[activeIndex].id);
       setScrubCursorIndex(activeIndex);
+      window.scrollTo({ top: targets[activeIndex].y, behavior: "auto" });
     }
   };
 
