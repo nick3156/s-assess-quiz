@@ -475,6 +475,8 @@ function BookView({
   const closeTimerRef = useRef<number | undefined>(undefined);
   const scrubTargetsRef = useRef<{ id: string; y: number }[]>([]);
   const activeScrubIndexRef = useRef(-1);
+  const scrubStartYRef = useRef(0);
+  const scrubStartIndexRef = useRef(0);
   const isScrubbingRef = useRef(false);
   const chapters = uniqueChapters(sections);
   const visibleSection = sections.find((section) => section.id === visibleSectionId) ?? activeSection;
@@ -615,21 +617,24 @@ function BookView({
     const targets = scrubTargetsRef.current;
     if (!edge || !targets.length) return;
     const rect = edge.getBoundingClientRect();
-    const progressRatio = Math.min(Math.max((clientY - rect.top) / Math.max(1, rect.height), 0), 1);
-    const scaled = progressRatio * (targets.length - 1);
-    const activeIndex = Math.round(scaled);
+    const localY = Math.min(Math.max(clientY - rect.top, 0), rect.height);
+    const itemStepPx = 30;
+    const indexDelta = Math.round((clientY - scrubStartYRef.current) / itemStepPx);
+    const activeIndex = Math.min(
+      Math.max(scrubStartIndexRef.current + indexDelta, 0),
+      targets.length - 1,
+    );
 
     edge.style.setProperty(
       "--scrub-y",
-      `${Math.min(Math.max(clientY - rect.top, 0), rect.height)}px`,
+      `${localY}px`,
     );
     edge.style.setProperty(
       "--scrub-page-y",
-      `${rect.top + Math.min(Math.max(clientY - rect.top, 0), rect.height)}px`,
+      `${rect.top + localY}px`,
     );
     if (activeScrubIndexRef.current !== activeIndex) {
       activeScrubIndexRef.current = activeIndex;
-      setVisibleSectionId(targets[activeIndex].id);
       setScrubCursorIndex(activeIndex);
     }
   };
@@ -637,10 +642,13 @@ function BookView({
   const startScrub = (event: PointerEvent<HTMLElement>) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
     buildScrubTargets();
-    activeScrubIndexRef.current = -1;
+    const startIndex = Math.min(Math.max(activeNavIndex, 0), Math.max(scrubTargetsRef.current.length - 1, 0));
+    scrubStartYRef.current = event.clientY;
+    scrubStartIndexRef.current = startIndex;
+    activeScrubIndexRef.current = startIndex;
     isScrubbingRef.current = true;
     setIsScrubbing(true);
-    setScrubCursorIndex(activeNavIndex);
+    setScrubCursorIndex(startIndex);
     openToc();
     event.currentTarget.setPointerCapture?.(event.pointerId);
     scrubToPointer(event.clientY);
@@ -664,10 +672,13 @@ function BookView({
     const touch = event.touches[0];
     if (!touch) return;
     buildScrubTargets();
-    activeScrubIndexRef.current = -1;
+    const startIndex = Math.min(Math.max(activeNavIndex, 0), Math.max(scrubTargetsRef.current.length - 1, 0));
+    scrubStartYRef.current = touch.clientY;
+    scrubStartIndexRef.current = startIndex;
+    activeScrubIndexRef.current = startIndex;
     isScrubbingRef.current = true;
     setIsScrubbing(true);
-    setScrubCursorIndex(activeNavIndex);
+    setScrubCursorIndex(startIndex);
     openToc();
     scrubToPointer(touch.clientY);
     event.preventDefault();
@@ -806,7 +817,7 @@ function BookView({
             const top = navSections.length > 1 ? (index / (navSections.length - 1)) * 100 : 50;
             return (
               <span
-                className={section.id === visibleSectionId ? "active" : ""}
+                className={index === displayedScrubIndex ? "active" : ""}
                 key={`${section.id}-num`}
                 style={{ top: `${top}%` }}
               >
@@ -827,7 +838,7 @@ function BookView({
             {navSections.map((section, index) => {
               const offset = index - displayedScrubIndex;
               const distance = Math.abs(offset);
-              const isActive = section.id === visibleSectionId;
+              const isActive = index === displayedScrubIndex;
               return (
                 <button
                   className={`reader-scrub-item${isActive ? " active" : ""}`}
