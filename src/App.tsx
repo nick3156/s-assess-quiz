@@ -475,8 +475,6 @@ function BookView({
   const closeTimerRef = useRef<number | undefined>(undefined);
   const scrubTargetsRef = useRef<{ id: string; y: number }[]>([]);
   const activeScrubIndexRef = useRef(-1);
-  const scrubStartYRef = useRef(0);
-  const scrubStartIndexRef = useRef(0);
   const isScrubbingRef = useRef(false);
   const chapters = uniqueChapters(sections);
   const visibleSection = sections.find((section) => section.id === visibleSectionId) ?? activeSection;
@@ -616,10 +614,9 @@ function BookView({
     if (!edge || !targets.length) return;
     const rect = edge.getBoundingClientRect();
     const localY = Math.min(Math.max(clientY - rect.top, 0), rect.height);
-    const itemStepPx = 30;
-    const indexDelta = Math.round((clientY - scrubStartYRef.current) / itemStepPx);
+    const progressRatio = localY / Math.max(1, rect.height);
     const activeIndex = Math.min(
-      Math.max(scrubStartIndexRef.current + indexDelta, 0),
+      Math.max(Math.round(progressRatio * (targets.length - 1)), 0),
       targets.length - 1,
     );
 
@@ -643,8 +640,6 @@ function BookView({
     if (event.pointerType === "mouse" && event.button !== 0) return;
     buildScrubTargets();
     const startIndex = Math.min(Math.max(activeNavIndex, 0), Math.max(scrubTargetsRef.current.length - 1, 0));
-    scrubStartYRef.current = event.clientY;
-    scrubStartIndexRef.current = startIndex;
     activeScrubIndexRef.current = startIndex;
     isScrubbingRef.current = true;
     setIsScrubbing(true);
@@ -673,8 +668,6 @@ function BookView({
     if (!touch) return;
     buildScrubTargets();
     const startIndex = Math.min(Math.max(activeNavIndex, 0), Math.max(scrubTargetsRef.current.length - 1, 0));
-    scrubStartYRef.current = touch.clientY;
-    scrubStartIndexRef.current = startIndex;
     activeScrubIndexRef.current = startIndex;
     isScrubbingRef.current = true;
     setIsScrubbing(true);
