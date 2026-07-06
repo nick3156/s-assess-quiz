@@ -68,7 +68,7 @@ button {
   min-height: 100vh;
   background: linear-gradient(180deg, var(--surface) 0, var(--bg) 170px);
   padding-bottom: calc(84px + env(safe-area-inset-bottom));
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .app-main {
@@ -1562,10 +1562,11 @@ blockquote {
     var(--bg);
   padding-left: 0;
   padding-right: 0;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .book-screen .reader-topbar,
+.reader-access-bar,
 .reader-subject-tabs,
 .reader-chapter-strip,
 .book-screen .reader-search,
@@ -1578,25 +1579,29 @@ blockquote {
 }
 
 .book-screen .reader-topbar {
+  margin-bottom: 12px;
+}
+
+.reader-access-bar {
   position: sticky;
   top: 0;
   z-index: 34;
-  width: 100%;
-  max-width: none;
-  margin-bottom: 10px;
-  padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 10px;
-  border-bottom: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  backdrop-filter: blur(22px) saturate(1.35);
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: calc(8px + env(safe-area-inset-top, 0px)) 0 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface) 96%, transparent), color-mix(in srgb, var(--bg) 86%, transparent));
+  backdrop-filter: blur(24px) saturate(1.35);
+  box-shadow: 0 10px 22px oklch(0 0 0 / 0.055);
 }
 
 .reader-subject-tabs {
-  position: sticky;
-  top: calc(72px + env(safe-area-inset-top, 0px));
-  z-index: 33;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: 10px;
+  width: 100%;
+  margin: 0;
   padding: 3px;
   border-radius: var(--radius-md);
   backdrop-filter: blur(18px) saturate(1.24);
@@ -1610,16 +1615,13 @@ blockquote {
 }
 
 .reader-chapter-strip {
-  position: sticky;
-  top: calc(126px + env(safe-area-inset-top, 0px));
-  z-index: 32;
   display: flex;
   gap: 9px;
-  margin-top: 10px;
+  width: 100%;
+  margin: 0;
   padding: 1px 0 9px;
   overflow-x: auto;
   scrollbar-width: none;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 96%, transparent), color-mix(in srgb, var(--bg) 72%, transparent));
 }
 
 .reader-chapter-strip::-webkit-scrollbar {
@@ -1649,7 +1651,8 @@ blockquote {
 }
 
 .book-screen .reader-search {
-  margin-top: 8px;
+  width: 100%;
+  margin-top: 0;
   border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--surface) 92%, transparent);
 }
@@ -1666,7 +1669,7 @@ blockquote {
   width: 100%;
   max-width: 43rem;
   padding: 22px 2px 56px;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .book-screen .reader-card h2 {
@@ -1682,7 +1685,7 @@ blockquote {
 }
 
 .book-screen .reader-section {
-  scroll-margin-top: 176px;
+  scroll-margin-top: calc(172px + env(safe-area-inset-top, 0px));
   min-width: 0;
   max-width: 100%;
   padding: 30px 0 8px;

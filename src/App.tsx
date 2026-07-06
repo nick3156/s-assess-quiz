@@ -548,8 +548,8 @@ function BookView({
   };
 
   const buildScrubTargets = () => {
-    const topbar = document.querySelector(".reader-topbar");
-    const offset = (topbar?.getBoundingClientRect().height ?? 0) + 18;
+    const accessBar = document.querySelector(".reader-access-bar");
+    const offset = (accessBar?.getBoundingClientRect().height ?? 0) + 18;
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     scrubTargetsRef.current = sections.map((section) => {
       const node = document.getElementById(section.id);
@@ -671,38 +671,40 @@ function BookView({
         </button>
       </header>
 
-      <div className="book-subject-tabs reader-subject-tabs" aria-label="教科書科目">
-        {enabledSubjects.map((subjectId) => (
-          <button
-            className={activeSubject === subjectId ? "active" : ""}
-            key={subjectId}
-            onClick={() => onSubjectChange(subjectId)}
-          >
-            {textbooks.find((book) => book.id === subjectId)?.shortTitle}
-          </button>
-        ))}
+      <div className="reader-access-bar" aria-label="教科書内ナビゲーション">
+        <div className="book-subject-tabs reader-subject-tabs" aria-label="教科書科目">
+          {enabledSubjects.map((subjectId) => (
+            <button
+              className={activeSubject === subjectId ? "active" : ""}
+              key={subjectId}
+              onClick={() => onSubjectChange(subjectId)}
+            >
+              {textbooks.find((book) => book.id === subjectId)?.shortTitle}
+            </button>
+          ))}
+        </div>
+
+        <nav className="reader-chapter-strip" aria-label="章ジャンプ">
+          {chapters.map((chapter) => (
+            <button
+              className={chapter === activeChapter ? "active" : ""}
+              key={chapter}
+              onClick={() => moveToChapter(chapter)}
+            >
+              {chapter}
+            </button>
+          ))}
+        </nav>
+
+        <label className="reader-search">
+          <Search />
+          <input
+            value={query}
+            onChange={(event) => onQueryChange(event.target.value)}
+            placeholder="教科書内を検索"
+          />
+        </label>
       </div>
-
-      <nav className="reader-chapter-strip" aria-label="章ジャンプ">
-        {chapters.map((chapter) => (
-          <button
-            className={chapter === activeChapter ? "active" : ""}
-            key={chapter}
-            onClick={() => moveToChapter(chapter)}
-          >
-            {chapter}
-          </button>
-        ))}
-      </nav>
-
-      <label className="reader-search">
-        <Search />
-        <input
-          value={query}
-          onChange={(event) => onQueryChange(event.target.value)}
-          placeholder="教科書内を検索"
-        />
-      </label>
 
       {activeSourceQuote && (
         <button className="source-jump" onClick={() => moveToSection(activeSection)}>
