@@ -1771,79 +1771,115 @@ blockquote {
   position: fixed;
   top: calc(166px + env(safe-area-inset-top, 0px));
   right: 0;
-  z-index: 48;
-  width: 31px;
+  z-index: 58;
+  width: 44px;
   height: calc(100svh - 166px - 76px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
   min-height: 260px;
   touch-action: none;
   user-select: none;
   --scrub-y: 50%;
+  --scrub-page-y: 50svh;
 }
 
 .reader-scrub-zone {
   position: absolute;
-  inset: 0 0 0 -12px;
+  inset: 0;
 }
 
-.reader-scrub-handle {
+.reader-scrub-number-rail {
   position: absolute;
-  top: 50%;
-  right: 5px;
-  width: 7px;
-  min-height: min(220px, 58%);
+  inset: 4px 4px 4px auto;
+  width: 24px;
   border-radius: var(--pill);
-  background: color-mix(in srgb, var(--text) 22%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--surface) 70%, transparent);
-  transform: translateY(-50%);
+  background: color-mix(in srgb, var(--text) 11%, transparent);
+  opacity: 0.55;
+  transition: opacity 130ms ease, background 130ms ease, width 130ms ease;
+}
+
+.reader-scrub-number-rail span {
+  position: absolute;
+  right: 50%;
+  width: 24px;
+  color: color-mix(in srgb, var(--text) 52%, transparent);
+  font-size: 9px;
+  font-weight: 860;
+  line-height: 1;
+  text-align: center;
+  transform: translate(50%, -50%) scale(0.88);
+  opacity: 0;
+  transition: opacity 100ms ease, transform 100ms ease, color 100ms ease;
+}
+
+.reader-scrub-number-rail span.active {
+  color: white;
+  transform: translate(50%, -50%) scale(1.18);
 }
 
 .reader-scrub-tracker {
   position: absolute;
   top: var(--scrub-y);
-  right: 5px;
-  width: 18px;
-  height: 18px;
+  right: 4px;
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 35px;
   border-radius: var(--pill);
   background: var(--accent);
-  box-shadow: 0 8px 18px color-mix(in srgb, var(--accent) 28%, transparent);
+  color: white;
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--accent) 34%, transparent);
+  font-size: 13px;
+  font-weight: 900;
   opacity: 0;
-  transform: translate(3px, -50%) scale(0.72);
+  transform: translate(0, -50%) scale(0.78);
   transition: opacity 120ms ease, transform 120ms ease;
 }
 
 .reader-scrub-panel {
-  position: absolute;
-  top: 0;
-  right: 8px;
-  width: min(284px, calc(100vw - 58px));
-  max-height: min(650px, calc(100svh - 176px - env(safe-area-inset-bottom, 0px)));
-  overflow-y: auto;
-  padding: 12px;
-  border: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
-  border-radius: 22px;
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(26px) saturate(1.35);
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  padding: calc(20px + env(safe-area-inset-top, 0px)) 58px calc(96px + env(safe-area-inset-bottom, 0px)) 20px;
+  border: 0;
+  border-radius: 0;
+  background:
+    radial-gradient(circle at 84% var(--scrub-page-y), color-mix(in srgb, var(--accent) 20%, transparent), transparent 170px),
+    color-mix(in srgb, var(--surface) 80%, transparent);
+  box-shadow: none;
+  backdrop-filter: blur(30px) saturate(1.25);
   opacity: 0;
   pointer-events: none;
-  transform: translateX(24px) scale(0.96);
-  transform-origin: right center;
-  transition: opacity 150ms ease, transform 150ms ease;
+  transform: none;
+  transition: opacity 140ms ease;
 }
 
 .reader-scrub-index.is-open .reader-scrub-panel,
 .reader-scrub-index.is-scrubbing .reader-scrub-panel,
 .reader-scrub-index:hover .reader-scrub-panel {
   opacity: 1;
-  pointer-events: auto;
-  transform: translateX(0) scale(1);
 }
 
-.reader-scrub-index.is-open .reader-scrub-handle,
-.reader-scrub-index.is-scrubbing .reader-scrub-handle,
-.reader-scrub-index:hover .reader-scrub-handle {
-  width: 9px;
-  background: color-mix(in srgb, var(--accent) 54%, transparent);
+.reader-scrub-index.is-open .reader-scrub-number-rail,
+.reader-scrub-index.is-scrubbing .reader-scrub-number-rail,
+.reader-scrub-index:hover .reader-scrub-number-rail {
+  width: 30px;
+  background: color-mix(in srgb, var(--text) 18%, transparent);
+  opacity: 1;
+}
+
+.reader-scrub-index.is-open .reader-scrub-number-rail span,
+.reader-scrub-index.is-scrubbing .reader-scrub-number-rail span,
+.reader-scrub-index:hover .reader-scrub-number-rail span {
+  opacity: 0.72;
+}
+
+.reader-scrub-index.is-open .reader-scrub-number-rail span.active,
+.reader-scrub-index.is-scrubbing .reader-scrub-number-rail span.active,
+.reader-scrub-index:hover .reader-scrub-number-rail span.active {
+  opacity: 1;
+}
+
+.reader-scrub-index.is-scrubbing {
+  width: 52px;
 }
 
 .reader-scrub-index.is-scrubbing .reader-scrub-tracker {
@@ -1852,39 +1888,58 @@ blockquote {
 }
 
 .reader-scrub-title {
+  position: absolute;
+  top: calc(18px + env(safe-area-inset-top, 0px));
+  left: 22px;
+  right: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 6px 8px 10px;
+  padding: 0;
   color: var(--text-2);
   font-size: 12px;
   font-weight: 850;
   letter-spacing: 0.06em;
 }
 
+.reader-scrub-list {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
 .reader-scrub-item {
+  position: absolute;
+  top: var(--scrub-page-y);
+  right: 62px;
   display: grid;
   gap: 2px;
-  width: 100%;
-  min-height: 47px;
-  padding: 9px 10px;
+  width: min(332px, calc(100vw - 92px));
+  min-height: 50px;
+  padding: 9px 12px;
   border: 0;
-  border-radius: 13px;
+  border-radius: 14px;
   background: transparent;
   color: var(--text-2);
   cursor: ns-resize;
   text-align: left;
-  transition: background 120ms ease, color 120ms ease, transform 120ms ease;
+  opacity: var(--scrub-item-opacity);
+  transform:
+    translateY(calc(-50% + var(--scrub-item-y)))
+    translateX(var(--scrub-item-shift))
+    scale(var(--scrub-item-scale));
+  transform-origin: right center;
+  transition: background 90ms ease, color 90ms ease, opacity 90ms ease, transform 90ms ease;
 }
 
 .reader-scrub-item.active,
 .reader-scrub-item:hover,
 .reader-scrub-item:focus-visible {
-  background: var(--accent-soft);
+  background: color-mix(in srgb, var(--accent-soft) 92%, var(--surface));
   color: var(--accent);
   outline: none;
-  transform: translateX(-8px) scale(1.045);
+  box-shadow: 0 12px 26px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
 .reader-scrub-item span,

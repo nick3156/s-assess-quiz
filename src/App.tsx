@@ -470,6 +470,7 @@ function BookView({
   const [tocOpen, setTocOpen] = useState(false);
   const [isScrubbing, setIsScrubbing] = useState(false);
   const [visibleSectionId, setVisibleSectionId] = useState(activeSection.id);
+  const [scrubCursorIndex, setScrubCursorIndex] = useState(-1);
   const edgeRef = useRef<HTMLElement | null>(null);
   const closeTimerRef = useRef<number | undefined>(undefined);
   const scrubTargetsRef = useRef<{ id: string; y: number }[]>([]);
@@ -479,6 +480,13 @@ function BookView({
   const visibleSection = sections.find((section) => section.id === visibleSectionId) ?? activeSection;
   const activeChapter = visibleSection.chapterTitle;
   const navSections = query ? filteredSections : sections;
+  const activeNavIndex = Math.max(
+    0,
+    navSections.findIndex((section) => section.id === visibleSectionId),
+  );
+  const displayedScrubIndex = isScrubbing && scrubCursorIndex >= 0
+    ? scrubCursorIndex
+    : activeNavIndex;
   const activeChapterIndex = chapters.findIndex((chapter) => chapter === activeChapter);
   const progress = chapters.length
     ? Math.round(((activeChapterIndex + 1) / chapters.length) * 100)
@@ -547,11 +555,36 @@ function BookView({
     closeTimerRef.current = window.setTimeout(() => setTocOpen(false), 420);
   };
 
+  const stopScrub = () => {
+    if (!isScrubbingRef.current) return false;
+    isScrubbingRef.current = false;
+    setIsScrubbing(false);
+    setScrubCursorIndex(-1);
+    closeTocSoon();
+    return true;
+  };
+
+  useEffect(() => {
+    const finishGlobalScrub = () => {
+      stopScrub();
+    };
+    window.addEventListener("pointerup", finishGlobalScrub);
+    window.addEventListener("pointercancel", finishGlobalScrub);
+    window.addEventListener("touchend", finishGlobalScrub);
+    window.addEventListener("touchcancel", finishGlobalScrub);
+    return () => {
+      window.removeEventListener("pointerup", finishGlobalScrub);
+      window.removeEventListener("pointercancel", finishGlobalScrub);
+      window.removeEventListener("touchend", finishGlobalScrub);
+      window.removeEventListener("touchcancel", finishGlobalScrub);
+    };
+  }, []);
+
   const buildScrubTargets = () => {
     const accessBar = document.querySelector(".reader-access-bar");
     const offset = (accessBar?.getBoundingClientRect().height ?? 0) + 18;
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    scrubTargetsRef.current = sections.map((section) => {
+    scrubTargetsRef.current = navSections.map((section) => {
       const node = document.getElementById(section.id);
       return {
         id: section.id,
@@ -561,19 +594,6 @@ function BookView({
         ),
       };
     });
-  };
-
-  const syncPanelToActiveItem = (targetIndex: number) => {
-    const panel = document.querySelector(".reader-scrub-panel");
-    const activeItem = document.querySelector<HTMLElement>(
-      `.reader-scrub-item[data-target="${scrubTargetsRef.current[targetIndex]?.id}"]`,
-    );
-    if (!panel || !activeItem) return;
-    const itemRect = activeItem.getBoundingClientRect();
-    const panelRect = panel.getBoundingClientRect();
-    if (itemRect.top < panelRect.top + 18 || itemRect.bottom > panelRect.bottom - 18) {
-      activeItem.scrollIntoView({ block: "nearest" });
-    }
   };
 
   const scrubToPointer = (clientY: number) => {
@@ -595,12 +615,16 @@ function BookView({
       "--scrub-y",
       `${Math.min(Math.max(clientY - rect.top, 0), rect.height)}px`,
     );
+    edge.style.setProperty(
+      "--scrub-page-y",
+      `${rect.top + Math.min(Math.max(clientY - rect.top, 0), rect.height)}px`,
+    );
     window.scrollTo({ top: targetY, behavior: "auto" });
 
     if (activeScrubIndexRef.current !== activeIndex) {
       activeScrubIndexRef.current = activeIndex;
       setVisibleSectionId(targets[activeIndex].id);
-      syncPanelToActiveItem(activeIndex);
+      setScrubCursorIndex(activeIndex);
     }
   };
 
@@ -610,6 +634,7 @@ function BookView({
     activeScrubIndexRef.current = -1;
     isScrubbingRef.current = true;
     setIsScrubbing(true);
+    setScrubCursorIndex(activeNavIndex);
     openToc();
     event.currentTarget.setPointerCapture?.(event.pointerId);
     scrubToPointer(event.clientY);
@@ -624,10 +649,8 @@ function BookView({
 
   const finishScrub = (event: PointerEvent<HTMLElement>) => {
     if (!isScrubbingRef.current) return;
-    isScrubbingRef.current = false;
-    setIsScrubbing(false);
     event.currentTarget.releasePointerCapture?.(event.pointerId);
-    closeTocSoon();
+    stopScrub();
     event.preventDefault();
   };
 
@@ -638,6 +661,7 @@ function BookView({
     activeScrubIndexRef.current = -1;
     isScrubbingRef.current = true;
     setIsScrubbing(true);
+    setScrubCursorIndex(activeNavIndex);
     openToc();
     scrubToPointer(touch.clientY);
     event.preventDefault();
@@ -653,9 +677,7 @@ function BookView({
 
   const finishTouchScrub = (event: TouchEvent<HTMLElement>) => {
     if (!isScrubbingRef.current) return;
-    isScrubbingRef.current = false;
-    setIsScrubbing(false);
-    closeTocSoon();
+    stopScrub();
     event.preventDefault();
   };
 
@@ -773,26 +795,55 @@ function BookView({
         onTouchCancel={finishTouchScrub}
       >
         <div className="reader-scrub-zone" aria-hidden="true" />
-        <div className="reader-scrub-handle" aria-hidden="true" />
-        <div className="reader-scrub-tracker" aria-hidden="true" />
-        <nav className="reader-scrub-panel" aria-label="目次">
+        <div className="reader-scrub-number-rail" aria-hidden="true">
+          {navSections.map((section, index) => {
+            const top = navSections.length > 1 ? (index / (navSections.length - 1)) * 100 : 50;
+            return (
+              <span
+                className={section.id === visibleSectionId ? "active" : ""}
+                key={`${section.id}-num`}
+                style={{ top: `${top}%` }}
+              >
+                {index + 1}
+              </span>
+            );
+          })}
+        </div>
+        <div className="reader-scrub-tracker" aria-hidden="true">
+          {displayedScrubIndex + 1}
+        </div>
+        <nav className="reader-scrub-panel" aria-label="目次" aria-hidden={!tocOpen}>
           <div className="reader-scrub-title">
             <span>{query ? "検索結果" : subjectLabel[activeSubject]}</span>
-            <strong>{navSections.length}</strong>
+            <strong>{displayedScrubIndex + 1} / {navSections.length}</strong>
           </div>
-          {navSections.map((section) => (
-            <button
-              className={`reader-scrub-item${section.id === visibleSectionId ? " active" : ""}`}
-              data-target={section.id}
-              key={section.id}
-              onClick={(event) => {
-                event.preventDefault();
-              }}
-            >
-              <span>{section.title}</span>
-              <small>{section.chapterTitle}</small>
-            </button>
-          ))}
+          <div className="reader-scrub-list">
+            {navSections.map((section, index) => {
+              const offset = index - displayedScrubIndex;
+              const distance = Math.abs(offset);
+              const isActive = section.id === visibleSectionId;
+              return (
+                <button
+                  className={`reader-scrub-item${isActive ? " active" : ""}`}
+                  data-target={section.id}
+                  key={section.id}
+                  style={{
+                    "--scrub-item-offset": offset,
+                    "--scrub-item-y": `${offset * 57}px`,
+                    "--scrub-item-shift": `${isActive ? -8 : Math.min(48, distance * 8)}px`,
+                    "--scrub-item-opacity": distance > 5 ? 0 : Math.max(0.18, 1 - distance * 0.16),
+                    "--scrub-item-scale": isActive ? 1.08 : Math.max(0.76, 1 - distance * 0.052),
+                  } as CSSProperties}
+                  onClick={(event) => {
+                    event.preventDefault();
+                  }}
+                >
+                  <span>{section.title}</span>
+                  <small>{section.chapterTitle}</small>
+                </button>
+              );
+            })}
+          </div>
         </nav>
       </aside>
     </section>
