@@ -1,0 +1,24 @@
+{
+  "name": "Sアセス一次試験",
+  "short_name": "Sアセス",
+  "description": "Sアセス一次試験の問題演習と教科書確認",
+  "start_url": "/s-assess-quiz/",
+  "scope": "/s-assess-quiz/",
+  "display": "standalone",
+  "background_color": "#f5f5f7",
+  "theme_color": "#f5f5f7",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

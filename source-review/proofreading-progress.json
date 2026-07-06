@@ -1,0 +1,1226 @@
+{
+  "version": 1,
+  "updatedAt": "2026-07-05T19:01:32.995Z",
+  "note": "PDFスキャンのページ単位進捗。done以外は未完了扱い。PDFは編集しない。",
+  "scans": [
+    {
+      "id": "member-1",
+      "subject": "member",
+      "title": "メンバー指導①",
+      "pdf": "メンバー指導①.pdf",
+      "pages": [
+        {
+          "page": 1,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-06-30T15:06:46.522Z",
+          "summary": "印刷p6-13をスキャン照合。POINT、Case、図表1-1〜1-3、欄外注を確認し、校閲版の追加修正なし。"
+        },
+        {
+          "page": 2,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-06-30T15:06:46.523Z",
+          "summary": "印刷p6-13をスキャン照合。POINT、Case、図表1-1〜1-3、欄外注を確認し、校閲版の追加修正なし。"
+        },
+        {
+          "page": 3,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-06-30T15:06:46.523Z",
+          "summary": "印刷p6-13をスキャン照合。POINT、Case、図表1-1〜1-3、欄外注を確認し、校閲版の追加修正なし。"
+        },
+        {
+          "page": 4,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-06-30T15:06:46.523Z",
+          "summary": "印刷p6-13をスキャン照合。POINT、Case、図表1-1〜1-3、欄外注を確認し、校閲版の追加修正なし。"
+        },
+        {
+          "page": 5,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-06-30T19:10:31.256Z",
+          "summary": "印刷p14-19とPDF8枚目p24-25をスキャン照合。3-2/3-4/4-1/4-2の欠落本文・MTP欄外注・図表説明を復元し、iCloud同期とbuild確認済み。"
+        },
+        {
+          "page": 6,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-06-30T19:10:31.256Z",
+          "summary": "印刷p14-19とPDF8枚目p24-25をスキャン照合。3-2/3-4/4-1/4-2の欠落本文・MTP欄外注・図表説明を復元し、iCloud同期とbuild確認済み。"
+        },
+        {
+          "page": 7,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-06-30T19:10:31.256Z",
+          "summary": "印刷p14-19とPDF8枚目p24-25をスキャン照合。3-2/3-4/4-1/4-2の欠落本文・MTP欄外注・図表説明を復元し、iCloud同期とbuild確認済み。"
+        },
+        {
+          "page": 8,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-06-30T19:10:31.256Z",
+          "summary": "印刷p14-19とPDF8枚目p24-25をスキャン照合。3-2/3-4/4-1/4-2の欠落本文・MTP欄外注・図表説明を復元し、iCloud同期とbuild確認済み。"
+        },
+        {
+          "page": 9,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T00:08:17.602Z",
+          "summary": "メンバー指導①p26-33をスキャン照合。6章の図表ラベル、示範・実習・フィードバック説明を補強し、7章冒頭は既存本文の反映を確認。"
+        },
+        {
+          "page": 10,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T00:08:17.602Z",
+          "summary": "メンバー指導①p26-33をスキャン照合。6章の図表ラベル、示範・実習・フィードバック説明を補強し、7章冒頭は既存本文の反映を確認。"
+        },
+        {
+          "page": 11,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T00:08:17.602Z",
+          "summary": "メンバー指導①p26-33をスキャン照合。6章の図表ラベル、示範・実習・フィードバック説明を補強し、7章冒頭は既存本文の反映を確認。"
+        },
+        {
+          "page": 12,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T00:08:17.602Z",
+          "summary": "メンバー指導①p26-33をスキャン照合。6章の図表ラベル、示範・実習・フィードバック説明を補強し、7章冒頭は既存本文の反映を確認。"
+        },
+        {
+          "page": 13,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T05:12:54.690Z",
+          "summary": "メンバー指導①p34-41をスキャン照合。7-2末尾は既存反映を確認し、第2章扉、1-1/1-2、2-1/2-2、3-1/3-2のCase解説・欄外注・チェックリストコメントを補強。iCloud同期とbuild確認済み。"
+        },
+        {
+          "page": 14,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T05:12:54.690Z",
+          "summary": "メンバー指導①p34-41をスキャン照合。7-2末尾は既存反映を確認し、第2章扉、1-1/1-2、2-1/2-2、3-1/3-2のCase解説・欄外注・チェックリストコメントを補強。iCloud同期とbuild確認済み。"
+        },
+        {
+          "page": 15,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T05:12:54.690Z",
+          "summary": "メンバー指導①p34-41をスキャン照合。7-2末尾は既存反映を確認し、第2章扉、1-1/1-2、2-1/2-2、3-1/3-2のCase解説・欄外注・チェックリストコメントを補強。iCloud同期とbuild確認済み。"
+        },
+        {
+          "page": 16,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T05:12:54.690Z",
+          "summary": "メンバー指導①p34-41をスキャン照合。7-2末尾は既存反映を確認し、第2章扉、1-1/1-2、2-1/2-2、3-1/3-2のCase解説・欄外注・チェックリストコメントを補強。iCloud同期とbuild確認済み。"
+        },
+        {
+          "page": 17,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T10:15:51.120Z",
+          "summary": "印刷p42-49をスキャン照合。4章カウンセリング、5章面談・面接、6章ケア序盤のCase、図表、欄外注、チェックリストを復元し、iCloud同期とbuild確認済み。"
+        },
+        {
+          "page": 18,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T10:15:51.121Z",
+          "summary": "印刷p42-49をスキャン照合。4章カウンセリング、5章面談・面接、6章ケア序盤のCase、図表、欄外注、チェックリストを復元し、iCloud同期とbuild確認済み。"
+        },
+        {
+          "page": 19,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T10:15:51.121Z",
+          "summary": "印刷p42-49をスキャン照合。4章カウンセリング、5章面談・面接、6章ケア序盤のCase、図表、欄外注、チェックリストを復元し、iCloud同期とbuild確認済み。"
+        },
+        {
+          "page": 20,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T10:15:51.121Z",
+          "summary": "印刷p42-49をスキャン照合。4章カウンセリング、5章面談・面接、6章ケア序盤のCase、図表、欄外注、チェックリストを復元し、iCloud同期とbuild確認済み。"
+        },
+        {
+          "page": 21,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T11:58:49.005Z",
+          "summary": "メンバー指導① p50-57: 第2章7アドバイス、第3章扉、ほめる/おだてる、気づきとほめ方原則を原本画像で照合・補強"
+        },
+        {
+          "page": 22,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T11:58:49.005Z",
+          "summary": "メンバー指導① p50-57: 第2章7アドバイス、第3章扉、ほめる/おだてる、気づきとほめ方原則を原本画像で照合・補強"
+        },
+        {
+          "page": 23,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T11:58:49.005Z",
+          "summary": "メンバー指導① p50-57: 第2章7アドバイス、第3章扉、ほめる/おだてる、気づきとほめ方原則を原本画像で照合・補強"
+        },
+        {
+          "page": 24,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T11:58:49.005Z",
+          "summary": "メンバー指導① p50-57: 第2章7アドバイス、第3章扉、ほめる/おだてる、気づきとほめ方原則を原本画像で照合・補強"
+        }
+      ]
+    },
+    {
+      "id": "member-2",
+      "subject": "member",
+      "title": "メンバー指導②",
+      "pdf": "メンバー指導②.pdf",
+      "pages": [
+        {
+          "page": 1,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T05:50:16.748Z",
+          "summary": "メンバー指導② p58-65: 第3章2-2続きから5節を原本照合し、ほめ方/叱り方チェックリスト・図表3-2・欄外注・ADVICEを補強。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 2,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T05:50:16.749Z",
+          "summary": "メンバー指導② p58-65: 第3章2-2続きから5節を原本照合し、ほめ方/叱り方チェックリスト・図表3-2・欄外注・ADVICEを補強。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 3,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T05:50:16.749Z",
+          "summary": "メンバー指導② p58-65: 第3章2-2続きから5節を原本照合し、ほめ方/叱り方チェックリスト・図表3-2・欄外注・ADVICEを補強。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 4,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T05:50:16.749Z",
+          "summary": "メンバー指導② p58-65: 第3章2-2続きから5節を原本照合し、ほめ方/叱り方チェックリスト・図表3-2・欄外注・ADVICEを補強。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 5,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T19:12:46.883Z",
+          "summary": "メンバー指導② p66-73: 第3章6-7節と第4章扉を原本照合し、POINT・Case・図表3-2/3-3・SOSサイン・質問分類・ADVICEを補強"
+        },
+        {
+          "page": 6,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T19:12:46.884Z",
+          "summary": "メンバー指導② p66-73: 第3章6-7節と第4章扉を原本照合し、POINT・Case・図表3-2/3-3・SOSサイン・質問分類・ADVICEを補強"
+        },
+        {
+          "page": 7,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T19:12:46.884Z",
+          "summary": "メンバー指導② p66-73: 第3章6-7節と第4章扉を原本照合し、POINT・Case・図表3-2/3-3・SOSサイン・質問分類・ADVICEを補強"
+        },
+        {
+          "page": 8,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-01T19:12:46.884Z",
+          "summary": "メンバー指導② p66-73: 第3章6-7節と第4章扉を原本照合し、POINT・Case・図表3-2/3-3・SOSサイン・質問分類・ADVICEを補強"
+        },
+        {
+          "page": 9,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T00:13:29.199Z",
+          "summary": "第4章1-4節をスキャン照合し、POINT・Case・図表4-1〜4-4・欄外注・ADVICEを補強。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 10,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T00:13:29.200Z",
+          "summary": "第4章1-4節をスキャン照合し、POINT・Case・図表4-1〜4-4・欄外注・ADVICEを補強。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 11,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T00:13:29.200Z",
+          "summary": "第4章1-4節をスキャン照合し、POINT・Case・図表4-1〜4-4・欄外注・ADVICEを補強。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 12,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T00:13:29.200Z",
+          "summary": "第4章1-4節をスキャン照合し、POINT・Case・図表4-1〜4-4・欄外注・ADVICEを補強。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 13,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T05:54:05.757Z",
+          "summary": "第4章5節の正確さ・迅速さ、Case5、図表4-5〜4-7を原本照合して補強"
+        },
+        {
+          "page": 14,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T05:54:05.758Z",
+          "summary": "第4章5節の正確さ・迅速さ、Case5、図表4-5〜4-7を原本照合して補強"
+        }
+      ]
+    },
+    {
+      "id": "roumu-1",
+      "subject": "roumu",
+      "title": "労務管理①",
+      "pdf": "労務管理①.pdf",
+      "pages": [
+        {
+          "page": 1,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T05:54:05.810Z",
+          "summary": "導入プロローグ1〜4と労働法・労働協約・就業規則・労働契約の関係図を原本照合して補強"
+        },
+        {
+          "page": 2,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T05:54:05.811Z",
+          "summary": "導入プロローグ1〜4と労働法・労働協約・就業規則・労働契約の関係図を原本照合して補強"
+        },
+        {
+          "page": 3,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T05:52:58.354Z",
+          "summary": "労務管理① p4-11: 導入5、第1章扉、労働時間・勉強会・フレックスタイム制前半をスキャン照合し、欠落していた導入/章扉/参考欄を補強。法定労働時間・健康診断・フレックスタイム制は公的情報で確認。"
+        },
+        {
+          "page": 4,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T05:52:58.354Z",
+          "summary": "労務管理① p4-11: 導入5、第1章扉、労働時間・勉強会・フレックスタイム制前半をスキャン照合し、欠落していた導入/章扉/参考欄を補強。法定労働時間・健康診断・フレックスタイム制は公的情報で確認。"
+        },
+        {
+          "page": 5,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T05:52:58.354Z",
+          "summary": "労務管理① p4-11: 導入5、第1章扉、労働時間・勉強会・フレックスタイム制前半をスキャン照合し、欠落していた導入/章扉/参考欄を補強。法定労働時間・健康診断・フレックスタイム制は公的情報で確認。"
+        },
+        {
+          "page": 6,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T05:52:58.354Z",
+          "summary": "労務管理① p4-11: 導入5、第1章扉、労働時間・勉強会・フレックスタイム制前半をスキャン照合し、欠落していた導入/章扉/参考欄を補強。法定労働時間・健康診断・フレックスタイム制は公的情報で確認。"
+        },
+        {
+          "page": 7,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T06:32:38.332Z",
+          "summary": "労務管理① p12-19: フレックスタイム制図表1-4、1ヵ月単位変形労働時間制図表1-5を復元し、事業場外みなし労働時間制・裁量労働制を原本照合"
+        },
+        {
+          "page": 8,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T06:32:38.332Z",
+          "summary": "労務管理① p12-19: フレックスタイム制図表1-4、1ヵ月単位変形労働時間制図表1-5を復元し、事業場外みなし労働時間制・裁量労働制を原本照合"
+        },
+        {
+          "page": 9,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T06:32:38.332Z",
+          "summary": "労務管理① p12-19: フレックスタイム制図表1-4、1ヵ月単位変形労働時間制図表1-5を復元し、事業場外みなし労働時間制・裁量労働制を原本照合"
+        },
+        {
+          "page": 10,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T06:32:38.332Z",
+          "summary": "労務管理① p12-19: フレックスタイム制図表1-4、1ヵ月単位変形労働時間制図表1-5を復元し、事業場外みなし労働時間制・裁量労働制を原本照合"
+        },
+        {
+          "page": 11,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T10:10:09.304Z",
+          "summary": "印刷p20-27をスキャン照合。休憩・手あき/手待ち・休日・休日研修・残業取扱いを確認し、図表1-7 残業時間の構成をMarkdown表で復元。iCloud同期とbuild確認済み。"
+        },
+        {
+          "page": 12,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T10:10:09.304Z",
+          "summary": "印刷p20-27をスキャン照合。休憩・手あき/手待ち・休日・休日研修・残業取扱いを確認し、図表1-7 残業時間の構成をMarkdown表で復元。iCloud同期とbuild確認済み。"
+        },
+        {
+          "page": 13,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T10:10:09.304Z",
+          "summary": "印刷p20-27をスキャン照合。休憩・手あき/手待ち・休日・休日研修・残業取扱いを確認し、図表1-7 残業時間の構成をMarkdown表で復元。iCloud同期とbuild確認済み。"
+        },
+        {
+          "page": 14,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T10:10:09.304Z",
+          "summary": "印刷p20-27をスキャン照合。休憩・手あき/手待ち・休日・休日研修・残業取扱いを確認し、図表1-7 残業時間の構成をMarkdown表で復元。iCloud同期とbuild確認済み。"
+        },
+        {
+          "page": 15,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T15:12:36.699Z",
+          "summary": "印刷p28-35をスキャン照合。12-3の図表1-9/1-10と安全配慮義務COLUMNを復元し、第2章扉・年休1節・時季変更権2節の既存反映を確認。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 16,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T15:12:36.700Z",
+          "summary": "印刷p28-35をスキャン照合。12-3の図表1-9/1-10と安全配慮義務COLUMNを復元し、第2章扉・年休1節・時季変更権2節の既存反映を確認。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 17,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T15:12:36.700Z",
+          "summary": "印刷p28-35をスキャン照合。12-3の図表1-9/1-10と安全配慮義務COLUMNを復元し、第2章扉・年休1節・時季変更権2節の既存反映を確認。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 18,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T15:12:36.700Z",
+          "summary": "印刷p28-35をスキャン照合。12-3の図表1-9/1-10と安全配慮義務COLUMNを復元し、第2章扉・年休1節・時季変更権2節の既存反映を確認。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 19,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T19:08:36.558Z",
+          "summary": "労務管理① 19-22枚目（印刷p36-43）を照合し、育児制度図表と介護制度表をMarkdown表で補強。年休・育児介護制度は厚労省資料で確認。"
+        },
+        {
+          "page": 20,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T19:08:36.558Z",
+          "summary": "労務管理① 19-22枚目（印刷p36-43）を照合し、育児制度図表と介護制度表をMarkdown表で補強。年休・育児介護制度は厚労省資料で確認。"
+        },
+        {
+          "page": 21,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T19:08:36.558Z",
+          "summary": "労務管理① 19-22枚目（印刷p36-43）を照合し、育児制度図表と介護制度表をMarkdown表で補強。年休・育児介護制度は厚労省資料で確認。"
+        },
+        {
+          "page": 22,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-02T19:08:36.558Z",
+          "summary": "労務管理① 19-22枚目（印刷p36-43）を照合し、育児制度図表と介護制度表をMarkdown表で補強。年休・育児介護制度は厚労省資料で確認。"
+        },
+        {
+          "page": 23,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T13:37:07.055Z",
+          "summary": "印刷p44-45の2025年改正育児・介護休業法COLUMNを原本照合し、介護・育児の個別周知/意向確認、柔軟な働き方措置、公表義務拡大を表と箇条書きで補強。"
+        }
+      ]
+    },
+    {
+      "id": "roumu-2",
+      "subject": "roumu",
+      "title": "労務管理②",
+      "pdf": "労務管理②.pdf",
+      "pages": [
+        {
+          "page": 1,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T13:37:07.251Z",
+          "summary": "印刷p47-51の第3章扉、男女雇用機会均等法1節、図表3-1、ポジティブ・アクション例、間接差別2節冒頭を原本照合して補強。"
+        },
+        {
+          "page": 2,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T13:37:07.251Z",
+          "summary": "印刷p47-51の第3章扉、男女雇用機会均等法1節、図表3-1、ポジティブ・アクション例、間接差別2節冒頭を原本照合して補強。"
+        },
+        {
+          "page": 3,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T13:37:07.251Z",
+          "summary": "印刷p47-51の第3章扉、男女雇用機会均等法1節、図表3-1、ポジティブ・アクション例、間接差別2節冒頭を原本照合して補強。"
+        },
+        {
+          "page": 4,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T00:25:11.845Z",
+          "summary": "労務管理② p52-59: 間接差別2-3、セクハラ措置義務、パワハラCOLUMN、妊娠・出産等不利益取扱い、母性健康管理措置を原本画像と公的情報で補強"
+        },
+        {
+          "page": 5,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T00:25:11.846Z",
+          "summary": "労務管理② p52-59: 間接差別2-3、セクハラ措置義務、パワハラCOLUMN、妊娠・出産等不利益取扱い、母性健康管理措置を原本画像と公的情報で補強"
+        },
+        {
+          "page": 6,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T00:25:11.846Z",
+          "summary": "労務管理② p52-59: 間接差別2-3、セクハラ措置義務、パワハラCOLUMN、妊娠・出産等不利益取扱い、母性健康管理措置を原本画像と公的情報で補強"
+        },
+        {
+          "page": 7,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T00:25:11.846Z",
+          "summary": "労務管理② p52-59: 間接差別2-3、セクハラ措置義務、パワハラCOLUMN、妊娠・出産等不利益取扱い、母性健康管理措置を原本画像と公的情報で補強"
+        },
+        {
+          "page": 8,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T00:30:29.000Z",
+          "summary": "労務管理② p60-67: 図表3-3、マタハラCOLUMN、第4章扉、パートタイマー労務管理、雇入れ・解雇/雇止めを原本照合して補強。社会保険・パート有期法・雇止め基準は厚労省資料で確認。"
+        },
+        {
+          "page": 9,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T00:30:29.000Z",
+          "summary": "労務管理② p60-67: 図表3-3、マタハラCOLUMN、第4章扉、パートタイマー労務管理、雇入れ・解雇/雇止めを原本照合して補強。社会保険・パート有期法・雇止め基準は厚労省資料で確認。"
+        },
+        {
+          "page": 10,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T00:30:29.000Z",
+          "summary": "労務管理② p60-67: 図表3-3、マタハラCOLUMN、第4章扉、パートタイマー労務管理、雇入れ・解雇/雇止めを原本照合して補強。社会保険・パート有期法・雇止め基準は厚労省資料で確認。"
+        },
+        {
+          "page": 11,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T00:30:29.000Z",
+          "summary": "労務管理② p60-67: 図表3-3、マタハラCOLUMN、第4章扉、パートタイマー労務管理、雇入れ・解雇/雇止めを原本照合して補強。社会保険・パート有期法・雇止め基準は厚労省資料で確認。"
+        },
+        {
+          "page": 12,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:00:46.499Z",
+          "summary": "雇入通知書例、有期契約改正COLUMN、パート年休比例付与表、派遣契約外業務・三者関係、派遣期間3年上限冒頭をスキャン照合して補強"
+        },
+        {
+          "page": 13,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:00:46.500Z",
+          "summary": "雇入通知書例、有期契約改正COLUMN、パート年休比例付与表、派遣契約外業務・三者関係、派遣期間3年上限冒頭をスキャン照合して補強"
+        },
+        {
+          "page": 14,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:00:46.500Z",
+          "summary": "雇入通知書例、有期契約改正COLUMN、パート年休比例付与表、派遣契約外業務・三者関係、派遣期間3年上限冒頭をスキャン照合して補強"
+        },
+        {
+          "page": 15,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:00:46.500Z",
+          "summary": "雇入通知書例、有期契約改正COLUMN、パート年休比例付与表、派遣契約外業務・三者関係、派遣期間3年上限冒頭をスキャン照合して補強"
+        },
+        {
+          "page": 16,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:21:12.213Z",
+          "summary": "労務管理② p76-83: 第4章5-2、第5章扉、懲戒処分1-3、無許可兼業4-1を原本照合・補強。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 17,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:21:12.213Z",
+          "summary": "労務管理② p76-83: 第4章5-2、第5章扉、懲戒処分1-3、無許可兼業4-1を原本照合・補強。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 18,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:21:12.213Z",
+          "summary": "労務管理② p76-83: 第4章5-2、第5章扉、懲戒処分1-3、無許可兼業4-1を原本照合・補強。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 19,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:21:12.213Z",
+          "summary": "労務管理② p76-83: 第4章5-2、第5章扉、懲戒処分1-3、無許可兼業4-1を原本照合・補強。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 20,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:12:20.804Z",
+          "summary": "労務管理② p84-90: 第5章4-2/4-3・5、解雇予告COLUMN、第6章扉・配置転換・転勤拒否をスキャン照合し補強。iCloud同期・build成功。"
+        },
+        {
+          "page": 21,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:12:20.805Z",
+          "summary": "労務管理② p84-90: 第5章4-2/4-3・5、解雇予告COLUMN、第6章扉・配置転換・転勤拒否をスキャン照合し補強。iCloud同期・build成功。"
+        },
+        {
+          "page": 22,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:12:20.805Z",
+          "summary": "労務管理② p84-90: 第5章4-2/4-3・5、解雇予告COLUMN、第6章扉・配置転換・転勤拒否をスキャン照合し補強。iCloud同期・build成功。"
+        },
+        {
+          "page": 23,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:12:20.805Z",
+          "summary": "労務管理② p84-90: 第5章4-2/4-3・5、解雇予告COLUMN、第6章扉・配置転換・転勤拒否をスキャン照合し補強。iCloud同期・build成功。"
+        }
+      ]
+    },
+    {
+      "id": "keisu-1",
+      "subject": "keisu",
+      "title": "計数①",
+      "pdf": "計数①.pdf",
+      "pages": [
+        {
+          "page": 1,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:13:05.845Z",
+          "summary": "計数①の学習予定表、序章扉、序-1全体、序-2の利益・コスト意識までを原本画像から復元。図表序-1と計数感覚レベル表をMarkdown表化。"
+        },
+        {
+          "page": 2,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:13:05.846Z",
+          "summary": "計数①の学習予定表、序章扉、序-1全体、序-2の利益・コスト意識までを原本画像から復元。図表序-1と計数感覚レベル表をMarkdown表化。"
+        },
+        {
+          "page": 3,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:13:05.846Z",
+          "summary": "計数①の学習予定表、序章扉、序-1全体、序-2の利益・コスト意識までを原本画像から復元。図表序-1と計数感覚レベル表をMarkdown表化。"
+        },
+        {
+          "page": 4,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:13:05.846Z",
+          "summary": "計数①の学習予定表、序章扉、序-1全体、序-2の利益・コスト意識までを原本画像から復元。図表序-1と計数感覚レベル表をMarkdown表化。"
+        },
+        {
+          "page": 5,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:39:47.468Z",
+          "summary": "計数① 5-8枚目（印刷p8-15）を照合し、序章後半、第1章扉、1-1の図表1-1/1-2と利益計算導入を復元"
+        },
+        {
+          "page": 6,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:39:47.469Z",
+          "summary": "計数① 5-8枚目（印刷p8-15）を照合し、序章後半、第1章扉、1-1の図表1-1/1-2と利益計算導入を復元"
+        },
+        {
+          "page": 7,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:39:47.469Z",
+          "summary": "計数① 5-8枚目（印刷p8-15）を照合し、序章後半、第1章扉、1-1の図表1-1/1-2と利益計算導入を復元"
+        },
+        {
+          "page": 8,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T01:39:47.469Z",
+          "summary": "計数① 5-8枚目（印刷p8-15）を照合し、序章後半、第1章扉、1-1の図表1-1/1-2と利益計算導入を復元"
+        },
+        {
+          "page": 9,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T03:11:46.268Z",
+          "summary": "計数① p16-19,p22-23: 収益・費用・損益計算、コスト意識、在庫コスト、3ム/3M導入を原本画像から復元。"
+        },
+        {
+          "page": 10,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T03:11:46.268Z",
+          "summary": "計数① p16-19,p22-23: 収益・費用・損益計算、コスト意識、在庫コスト、3ム/3M導入を原本画像から復元。"
+        },
+        {
+          "page": 11,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T06:25:15.297Z",
+          "summary": "計数① p20-21,p32-37: 図表1-4の通勤手当込み合計472,000円を再確認し保留解除。貸借対照表健全性評価、CF計算書、CF3パターン、損益計算書、部門損益計算書を原本画像から復元。"
+        },
+        {
+          "page": 12,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T03:11:46.268Z",
+          "summary": "計数① p16-19,p22-23: 収益・費用・損益計算、コスト意識、在庫コスト、3ム/3M導入を原本画像から復元。"
+        },
+        {
+          "page": 13,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T02:52:18.575Z",
+          "summary": "計数① p24-31: ムリ・ムダ・ムラ、生産性指標、財務三表と貸借対照表例を原本照合して復元"
+        },
+        {
+          "page": 14,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T02:52:18.576Z",
+          "summary": "計数① p24-31: ムリ・ムダ・ムラ、生産性指標、財務三表と貸借対照表例を原本照合して復元"
+        },
+        {
+          "page": 15,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T02:52:18.576Z",
+          "summary": "計数① p24-31: ムリ・ムダ・ムラ、生産性指標、財務三表と貸借対照表例を原本照合して復元"
+        },
+        {
+          "page": 16,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T02:52:18.576Z",
+          "summary": "計数① p24-31: ムリ・ムダ・ムラ、生産性指標、財務三表と貸借対照表例を原本照合して復元"
+        },
+        {
+          "page": 17,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T06:25:15.297Z",
+          "summary": "計数① p20-21,p32-37: 図表1-4の通勤手当込み合計472,000円を再確認し保留解除。貸借対照表健全性評価、CF計算書、CF3パターン、損益計算書、部門損益計算書を原本画像から復元。"
+        },
+        {
+          "page": 18,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T06:25:15.297Z",
+          "summary": "計数① p20-21,p32-37: 図表1-4の通勤手当込み合計472,000円を再確認し保留解除。貸借対照表健全性評価、CF計算書、CF3パターン、損益計算書、部門損益計算書を原本画像から復元。"
+        },
+        {
+          "page": 19,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T06:25:15.297Z",
+          "summary": "計数① p20-21,p32-37: 図表1-4の通勤手当込み合計472,000円を再確認し保留解除。貸借対照表健全性評価、CF計算書、CF3パターン、損益計算書、部門損益計算書を原本画像から復元。"
+        },
+        {
+          "page": 20,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T06:19:16.524Z",
+          "summary": "計数① p38-45: 1-4部門貢献利益末尾、第1章まとめ/確認テスト、第2章扉、2-1原価計算目的と製造業・販売業・サービス業の活動プロセスを原本画像から復元"
+        },
+        {
+          "page": 21,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T06:19:16.524Z",
+          "summary": "計数① p38-45: 1-4部門貢献利益末尾、第1章まとめ/確認テスト、第2章扉、2-1原価計算目的と製造業・販売業・サービス業の活動プロセスを原本画像から復元"
+        },
+        {
+          "page": 22,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T06:19:16.524Z",
+          "summary": "計数① p38-45: 1-4部門貢献利益末尾、第1章まとめ/確認テスト、第2章扉、2-1原価計算目的と製造業・販売業・サービス業の活動プロセスを原本画像から復元"
+        },
+        {
+          "page": 23,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T06:19:16.524Z",
+          "summary": "計数① p38-45: 1-4部門貢献利益末尾、第1章まとめ/確認テスト、第2章扉、2-1原価計算目的と製造業・販売業・サービス業の活動プロセスを原本画像から復元"
+        },
+        {
+          "page": 24,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T06:49:54.123Z",
+          "summary": "計数① 24枚目（印刷p46-47）: 原価とは何か、非原価項目、原価の構成、製造原価3要素の導入を原本画像から復元"
+        }
+      ]
+    },
+    {
+      "id": "keisu-2",
+      "subject": "keisu",
+      "title": "計数②",
+      "pdf": "計数②.pdf",
+      "pages": [
+        {
+          "page": 1,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T06:49:54.146Z",
+          "summary": "計数② 1-3枚目（印刷p48-53）: 材料費・労務費・製造経費、販売費一般管理費、総合原価計算ケース1-2、直接費・間接費、配賦基準を復元"
+        },
+        {
+          "page": 2,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T06:49:54.147Z",
+          "summary": "計数② 1-3枚目（印刷p48-53）: 材料費・労務費・製造経費、販売費一般管理費、総合原価計算ケース1-2、直接費・間接費、配賦基準を復元"
+        },
+        {
+          "page": 3,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T06:49:54.147Z",
+          "summary": "計数② 1-3枚目（印刷p48-53）: 材料費・労務費・製造経費、販売費一般管理費、総合原価計算ケース1-2、直接費・間接費、配賦基準を復元"
+        },
+        {
+          "page": 4,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T06:37:21.613Z",
+          "summary": "計数② p54-61: 製品別原価計算、配賦基準変更、仕掛品原価計算、材料費計算導入をスキャン照合し、図表2-9〜2-14を復元・検算"
+        },
+        {
+          "page": 5,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T06:37:21.614Z",
+          "summary": "計数② p54-61: 製品別原価計算、配賦基準変更、仕掛品原価計算、材料費計算導入をスキャン照合し、図表2-9〜2-14を復元・検算"
+        },
+        {
+          "page": 6,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T06:37:21.614Z",
+          "summary": "計数② p54-61: 製品別原価計算、配賦基準変更、仕掛品原価計算、材料費計算導入をスキャン照合し、図表2-9〜2-14を復元・検算"
+        },
+        {
+          "page": 7,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T06:37:21.614Z",
+          "summary": "計数② p54-61: 製品別原価計算、配賦基準変更、仕掛品原価計算、材料費計算導入をスキャン照合し、図表2-9〜2-14を復元・検算"
+        },
+        {
+          "page": 8,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T10:23:19.436Z",
+          "summary": "..."
+        },
+        {
+          "page": 9,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T10:23:19.436Z",
+          "summary": "..."
+        },
+        {
+          "page": 10,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T10:23:19.436Z",
+          "summary": "..."
+        },
+        {
+          "page": 11,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T10:23:19.436Z",
+          "summary": "..."
+        },
+        {
+          "page": 12,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T13:47:22.031Z",
+          "summary": "直接労務費作業時間差異、製造間接費差異分析、第3章損益分岐点冒頭を原本照合し、表・式・グラフ概要を復元"
+        },
+        {
+          "page": 13,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T13:47:22.031Z",
+          "summary": "直接労務費作業時間差異、製造間接費差異分析、第3章損益分岐点冒頭を原本照合し、表・式・グラフ概要を復元"
+        },
+        {
+          "page": 14,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T13:47:22.031Z",
+          "summary": "直接労務費作業時間差異、製造間接費差異分析、第3章損益分岐点冒頭を原本照合し、表・式・グラフ概要を復元"
+        },
+        {
+          "page": 15,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T13:47:22.031Z",
+          "summary": "直接労務費作業時間差異、製造間接費差異分析、第3章損益分岐点冒頭を原本照合し、表・式・グラフ概要を復元"
+        },
+        {
+          "page": 16,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T13:40:41.837Z",
+          "summary": "計数② p78-85: 第3章3-1の損益分岐点図表、固定費/変動費区分、E販売店の損益分岐点計算、限界利益導入をスキャン照合・復元"
+        },
+        {
+          "page": 17,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T13:40:41.837Z",
+          "summary": "計数② p78-85: 第3章3-1の損益分岐点図表、固定費/変動費区分、E販売店の損益分岐点計算、限界利益導入をスキャン照合・復元"
+        },
+        {
+          "page": 18,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T13:40:41.837Z",
+          "summary": "計数② p78-85: 第3章3-1の損益分岐点図表、固定費/変動費区分、E販売店の損益分岐点計算、限界利益導入をスキャン照合・復元"
+        },
+        {
+          "page": 19,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T13:40:41.837Z",
+          "summary": "計数② p78-85: 第3章3-1の損益分岐点図表、固定費/変動費区分、E販売店の損益分岐点計算、限界利益導入をスキャン照合・復元"
+        },
+        {
+          "page": 20,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T15:17:35.271Z",
+          "summary": "限界利益図表、損益分岐点比率・安全余裕率、原価用語整理、F部門ケース冒頭を原本画像で照合・補強"
+        },
+        {
+          "page": 21,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T15:17:35.271Z",
+          "summary": "限界利益図表、損益分岐点比率・安全余裕率、原価用語整理、F部門ケース冒頭を原本画像で照合・補強"
+        },
+        {
+          "page": 22,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T15:17:35.271Z",
+          "summary": "限界利益図表、損益分岐点比率・安全余裕率、原価用語整理、F部門ケース冒頭を原本画像で照合・補強"
+        },
+        {
+          "page": 23,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T15:17:35.271Z",
+          "summary": "限界利益図表、損益分岐点比率・安全余裕率、原価用語整理、F部門ケース冒頭を原本画像で照合・補強"
+        },
+        {
+          "page": 24,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T19:19:48.742Z",
+          "summary": "計数②24枚目を照合し、G部門目標利益計画と図表3-14を復元"
+        }
+      ]
+    },
+    {
+      "id": "keisu-3",
+      "subject": "keisu",
+      "title": "計数③",
+      "pdf": "計数③.pdf",
+      "pages": [
+        {
+          "page": 1,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T19:19:49.439Z",
+          "summary": "計数③1-3枚目を照合し、固定費変動費化と採算計算原価導入を確認・補強"
+        },
+        {
+          "page": 2,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T19:19:49.439Z",
+          "summary": "計数③1-3枚目を照合し、固定費変動費化と採算計算原価導入を確認・補強"
+        },
+        {
+          "page": 3,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T19:19:49.439Z",
+          "summary": "計数③1-3枚目を照合し、固定費変動費化と採算計算原価導入を確認・補強"
+        },
+        {
+          "page": 4,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T23:47:43.544Z",
+          "summary": "計数③ p102-109: 減価償却費の定率法図表3-18と外注化導入を復元し、外注化・特別注文前半を原本照合"
+        },
+        {
+          "page": 5,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T23:47:43.544Z",
+          "summary": "計数③ p102-109: 減価償却費の定率法図表3-18と外注化導入を復元し、外注化・特別注文前半を原本照合"
+        },
+        {
+          "page": 6,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T23:47:43.544Z",
+          "summary": "計数③ p102-109: 減価償却費の定率法図表3-18と外注化導入を復元し、外注化・特別注文前半を原本照合"
+        },
+        {
+          "page": 7,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-03T23:47:43.544Z",
+          "summary": "計数③ p102-109: 減価償却費の定率法図表3-18と外注化導入を復元し、外注化・特別注文前半を原本照合"
+        },
+        {
+          "page": 8,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-04T00:10:46.055Z",
+          "summary": "第3章の原価以下特別注文末尾、赤字製品廃止、全部原価計算と直接原価計算、第3章まとめ・確認テスト冒頭を照合。第3章まとめと確認テストを復元し、計数表を検算。"
+        },
+        {
+          "page": 9,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-04T00:10:46.055Z",
+          "summary": "第3章の原価以下特別注文末尾、赤字製品廃止、全部原価計算と直接原価計算、第3章まとめ・確認テスト冒頭を照合。第3章まとめと確認テストを復元し、計数表を検算。"
+        },
+        {
+          "page": 10,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-04T00:10:46.055Z",
+          "summary": "第3章の原価以下特別注文末尾、赤字製品廃止、全部原価計算と直接原価計算、第3章まとめ・確認テスト冒頭を照合。第3章まとめと確認テストを復元し、計数表を検算。"
+        },
+        {
+          "page": 11,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-04T00:10:46.055Z",
+          "summary": "第3章の原価以下特別注文末尾、赤字製品廃止、全部原価計算と直接原価計算、第3章まとめ・確認テスト冒頭を照合。第3章まとめと確認テストを復元し、計数表を検算。"
+        },
+        {
+          "page": 12,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-05T14:53:52.449Z",
+          "summary": "計数③p118相当: スキャン単独では薄いが、既存文字起こしの第3章Q1/Q2本文と原本p160解答・計算解説の整合を確認。現行Markdownを採用して照合完了。"
+        },
+        {
+          "page": 13,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-04T05:10:29.551Z",
+          "summary": "計数③ p120-125: 第4章4-1の学習ポイント、業務改善プロセス、ABC分析、図表4-2、ポートフォリオ分析、ケース13、図表4-3/4-4、ワークサンプリング手法冒頭を原本照合して復元。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 14,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-04T05:10:29.551Z",
+          "summary": "計数③ p120-125: 第4章4-1の学習ポイント、業務改善プロセス、ABC分析、図表4-2、ポートフォリオ分析、ケース13、図表4-3/4-4、ワークサンプリング手法冒頭を原本照合して復元。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 15,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-04T05:10:29.551Z",
+          "summary": "計数③ p120-125: 第4章4-1の学習ポイント、業務改善プロセス、ABC分析、図表4-2、ポートフォリオ分析、ケース13、図表4-3/4-4、ワークサンプリング手法冒頭を原本照合して復元。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 16,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-04T10:09:18.045Z",
+          "summary": "4-1ワークサンプリング手法後半、アンケート調査、図表4-5〜4-9、4-2業務改善の実践導入を原本画像から復元。iCloud同期・build成功"
+        },
+        {
+          "page": 17,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-04T10:09:18.045Z",
+          "summary": "4-1ワークサンプリング手法後半、アンケート調査、図表4-5〜4-9、4-2業務改善の実践導入を原本画像から復元。iCloud同期・build成功"
+        },
+        {
+          "page": 18,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-04T10:09:18.045Z",
+          "summary": "4-1ワークサンプリング手法後半、アンケート調査、図表4-5〜4-9、4-2業務改善の実践導入を原本画像から復元。iCloud同期・build成功"
+        },
+        {
+          "page": 19,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-04T15:10:41.322Z",
+          "summary": "印刷p132-137をスキャン照合。在庫改善、製造工程改善、作業プロセス分担改善の本文・図表4-10〜4-14を復元し、計算根拠を記録。"
+        },
+        {
+          "page": 20,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-04T15:10:41.322Z",
+          "summary": "印刷p132-137をスキャン照合。在庫改善、製造工程改善、作業プロセス分担改善の本文・図表4-10〜4-14を復元し、計算根拠を記録。"
+        },
+        {
+          "page": 21,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-04T15:10:41.322Z",
+          "summary": "印刷p132-137をスキャン照合。在庫改善、製造工程改善、作業プロセス分担改善の本文・図表4-10〜4-14を復元し、計算根拠を記録。"
+        },
+        {
+          "page": 22,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-04T19:11:28.559Z",
+          "summary": "印刷p138-143をスキャン照合。図表4-15と4-3導入・図表4-16〜4-20を確認し、4章まとめ/確認テストの順序崩れを修正。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 23,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-04T19:11:28.559Z",
+          "summary": "印刷p138-143をスキャン照合。図表4-15と4-3導入・図表4-16〜4-20を確認し、4章まとめ/確認テストの順序崩れを修正。iCloud同期とbuild成功。"
+        },
+        {
+          "page": 24,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-04T19:11:28.559Z",
+          "summary": "印刷p138-143をスキャン照合。図表4-15と4-3導入・図表4-16〜4-20を確認し、4章まとめ/確認テストの順序崩れを修正。iCloud同期とbuild成功。"
+        }
+      ]
+    },
+    {
+      "id": "keisu-4",
+      "subject": "keisu",
+      "title": "計数④",
+      "pdf": "計数④.pdf",
+      "pages": [
+        {
+          "page": 1,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-05T00:09:03.820Z",
+          "summary": "印刷p144-149をスキャン照合。顧客ABC分析、図表4-21〜4-25、拡販余地分析を確認し、図表4-21のn累計98.0%とその他10社Cランクを補正。iCloud同期・audit・build成功。"
+        },
+        {
+          "page": 2,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-05T00:09:03.820Z",
+          "summary": "印刷p144-149をスキャン照合。顧客ABC分析、図表4-21〜4-25、拡販余地分析を確認し、図表4-21のn累計98.0%とその他10社Cランクを補正。iCloud同期・audit・build成功。"
+        },
+        {
+          "page": 3,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-05T00:09:03.820Z",
+          "summary": "印刷p144-149をスキャン照合。顧客ABC分析、図表4-21〜4-25、拡販余地分析を確認し、図表4-21のn累計98.0%とその他10社Cランクを補正。iCloud同期・audit・build成功。"
+        },
+        {
+          "page": 4,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-05T05:10:30.531Z",
+          "summary": "計数④p150-155: 販売予測と季節変動、季節指数表、月別販売目標、移動合計値/Zチャートを照合・復元"
+        },
+        {
+          "page": 5,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-05T05:10:30.531Z",
+          "summary": "計数④p150-155: 販売予測と季節変動、季節指数表、月別販売目標、移動合計値/Zチャートを照合・復元"
+        },
+        {
+          "page": 6,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-05T05:10:30.531Z",
+          "summary": "計数④p150-155: 販売予測と季節変動、季節指数表、月別販売目標、移動合計値/Zチャートを照合・復元"
+        },
+        {
+          "page": 7,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-05T10:06:42.702Z",
+          "summary": "計数④p156-160: Zチャートのパターン、第4章まとめ・確認テスト、学習成果確認テスト解答を原本照合し、解答欄を本文へ追加。iCloud同期・audit・build成功。"
+        },
+        {
+          "page": 8,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-05T10:06:42.702Z",
+          "summary": "計数④p156-160: Zチャートのパターン、第4章まとめ・確認テスト、学習成果確認テスト解答を原本照合し、解答欄を本文へ追加。iCloud同期・audit・build成功。"
+        },
+        {
+          "page": 9,
+          "status": "done",
+          "claimedAt": null,
+          "completedAt": "2026-07-05T10:06:42.702Z",
+          "summary": "計数④p156-160: Zチャートのパターン、第4章まとめ・確認テスト、学習成果確認テスト解答を原本照合し、解答欄を本文へ追加。iCloud同期・audit・build成功。"
+        }
+      ]
+    }
+  ]
+}

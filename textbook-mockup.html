@@ -1,0 +1,1075 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Sアセス電子教科書モックアップ</title>
+    <style>
+      :root {
+        --bg: #f5f6f8;
+        --surface: #ffffff;
+        --surface-elevated: rgba(255, 255, 255, 0.86);
+        --surface-muted: #eef0f4;
+        --surface-warm: #fff8e8;
+        --surface-cool: #edf7ff;
+        --text: #111318;
+        --text-2: #555c67;
+        --text-3: #858b95;
+        --separator: #d6d9df;
+        --separator-soft: #eceef2;
+        --accent: #007aff;
+        --accent-soft: #dceeff;
+        --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.08);
+        --shadow-md: 0 12px 36px rgba(16, 24, 40, 0.14);
+        --radius-sm: 10px;
+        --radius-md: 14px;
+        --radius-lg: 20px;
+        --safe-top: env(safe-area-inset-top, 0px);
+        --safe-bottom: env(safe-area-inset-bottom, 0px);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        background: var(--bg);
+      }
+
+      body {
+        margin: 0;
+        color: var(--text);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(245, 246, 248, 0.92) 34%, var(--bg)),
+          var(--bg);
+        font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "YuGothic", "Noto Sans JP", sans-serif;
+        font-size: 16px;
+        line-height: 1.86;
+        letter-spacing: 0;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      button,
+      a {
+        font: inherit;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .app {
+        min-height: 100svh;
+        padding: calc(10px + var(--safe-top)) 0 calc(56px + var(--safe-bottom));
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        padding: calc(8px + var(--safe-top)) 16px 10px;
+        background: color-mix(in srgb, var(--surface-elevated) 92%, transparent);
+        border-bottom: 1px solid color-mix(in srgb, var(--separator-soft) 84%, transparent);
+        backdrop-filter: blur(22px) saturate(1.4);
+        -webkit-backdrop-filter: blur(22px) saturate(1.4);
+      }
+
+      .topbar-inner {
+        max-width: 820px;
+        margin: 0 auto;
+      }
+
+      .book-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      .book-kicker {
+        margin: 0;
+        color: var(--text-2);
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      .book-title {
+        margin: 2px 0 0;
+        font-size: 20px;
+        font-weight: 800;
+        line-height: 1.2;
+      }
+
+      .toc-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border: 1px solid var(--separator);
+        border-radius: 999px;
+        color: var(--text);
+        background: var(--surface);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .toc-button span {
+        display: block;
+        width: 18px;
+        height: 14px;
+        border-top: 2px solid currentColor;
+        border-bottom: 2px solid currentColor;
+        position: relative;
+      }
+
+      .toc-button span::before {
+        content: "";
+        position: absolute;
+        inset: 5px 0 auto;
+        border-top: 2px solid currentColor;
+      }
+
+      .subject-tabs,
+      .chapter-strip {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .subject-tabs::-webkit-scrollbar,
+      .chapter-strip::-webkit-scrollbar {
+        display: none;
+      }
+
+      .subject-tabs {
+        padding: 3px;
+        border: 1px solid var(--separator);
+        border-radius: var(--radius-md);
+        background: var(--surface-muted);
+      }
+
+      .subject-chip,
+      .chapter-chip {
+        flex: 0 0 auto;
+        min-height: 38px;
+        border: 0;
+        border-radius: 12px;
+        white-space: nowrap;
+        color: var(--text-2);
+        font-weight: 750;
+        background: transparent;
+      }
+
+      .subject-chip {
+        min-width: 112px;
+        padding: 7px 14px;
+      }
+
+      .subject-chip.active {
+        color: var(--text);
+        background: var(--surface);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .chapter-strip {
+        margin-top: 10px;
+        padding-bottom: 1px;
+      }
+
+      .chapter-chip {
+        padding: 8px 13px;
+        border: 1px solid var(--separator);
+        background: var(--surface);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .chapter-chip.active {
+        color: var(--accent);
+        border-color: color-mix(in srgb, var(--accent) 34%, var(--separator));
+        background: var(--accent-soft);
+      }
+
+      .reader {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 18px 18px 0;
+      }
+
+      .chapter {
+        scroll-margin-top: 158px;
+        padding: 28px 0 22px;
+        border-bottom: 1px solid var(--separator);
+      }
+
+      .chapter:first-child {
+        padding-top: 16px;
+      }
+
+      .chapter-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        color: var(--text-2);
+        background: var(--surface-muted);
+        font-size: 13px;
+        font-weight: 760;
+        line-height: 1.2;
+      }
+
+      .chapter h1 {
+        margin: 0 0 12px;
+        font-size: clamp(30px, 8.4vw, 48px);
+        line-height: 1.12;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        margin: 0 0 22px;
+        color: var(--text-2);
+        font-size: 17px;
+        line-height: 1.9;
+      }
+
+      .section {
+        scroll-margin-top: 148px;
+        padding: 28px 0 8px;
+      }
+
+      .section + .section {
+        border-top: 1px solid var(--separator-soft);
+      }
+
+      .section h2 {
+        margin: 0 0 14px;
+        font-size: 25px;
+        line-height: 1.28;
+        letter-spacing: 0;
+      }
+
+      .section h3 {
+        margin: 28px 0 10px;
+        font-size: 20px;
+        line-height: 1.36;
+      }
+
+      p {
+        margin: 0 0 18px;
+      }
+
+      strong {
+        font-weight: 800;
+      }
+
+      .point,
+      .case,
+      .note,
+      .formula-card {
+        margin: 22px 0;
+        padding: 16px 16px 15px;
+        border: 1px solid var(--separator);
+        border-radius: var(--radius-md);
+        background: var(--surface);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .point {
+        border-color: color-mix(in srgb, var(--accent) 28%, var(--separator));
+        background: var(--surface-cool);
+      }
+
+      .case {
+        background: var(--surface-warm);
+      }
+
+      .note {
+        color: var(--text-2);
+        background: var(--surface-muted);
+      }
+
+      .label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--accent);
+        font-size: 13px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+      }
+
+      .point ul,
+      .note ul {
+        margin: 0;
+        padding-left: 1.15em;
+      }
+
+      .point li,
+      .note li {
+        margin: 0 0 10px;
+      }
+
+      .point li:last-child,
+      .note li:last-child {
+        margin-bottom: 0;
+      }
+
+      .number-list {
+        counter-reset: item;
+        display: grid;
+        gap: 10px;
+        margin: 18px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .number-list li {
+        counter-increment: item;
+        display: grid;
+        grid-template-columns: 32px 1fr;
+        gap: 10px;
+        align-items: start;
+        margin: 0;
+      }
+
+      .number-list li::before {
+        content: counter(item);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        color: var(--text-2);
+        background: var(--surface-muted);
+        font-size: 13px;
+        font-weight: 850;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .table-wrap {
+        margin: 20px 0;
+        overflow-x: auto;
+        border: 1px solid var(--separator);
+        border-radius: var(--radius-md);
+        background: var(--surface);
+        box-shadow: var(--shadow-sm);
+      }
+
+      table {
+        width: 100%;
+        min-width: 520px;
+        border-collapse: collapse;
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      caption {
+        padding: 12px 14px 0;
+        color: var(--text-2);
+        text-align: left;
+        font-weight: 800;
+      }
+
+      th,
+      td {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--separator-soft);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--text-2);
+        background: var(--surface-muted);
+        font-weight: 800;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .formula-card {
+        background: #fbfcfe;
+      }
+
+      .formula {
+        display: block;
+        margin: 10px 0 0;
+        padding: 13px 14px;
+        overflow-x: auto;
+        border: 1px solid var(--separator-soft);
+        border-radius: var(--radius-sm);
+        color: var(--text);
+        background: var(--surface-muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 14px;
+        line-height: 1.7;
+        white-space: pre;
+      }
+
+      .chapter-end {
+        margin: 28px 0 2px;
+        padding: 14px 0 0;
+        border-top: 1px solid var(--separator-soft);
+        color: var(--text-3);
+        font-size: 13px;
+        font-weight: 750;
+      }
+
+      .right-index {
+        position: fixed;
+        top: calc(128px + var(--safe-top));
+        right: 0;
+        z-index: 40;
+        width: 30px;
+        height: calc(100svh - 128px - var(--safe-top));
+        padding: 0 0 calc(84px + var(--safe-bottom));
+        pointer-events: auto;
+        touch-action: none;
+        user-select: none;
+        --scrub-y: 50%;
+      }
+
+      .index-touch-zone {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 44px;
+        height: 100%;
+      }
+
+      .index-handle {
+        position: absolute;
+        top: 50%;
+        right: 5px;
+        width: 7px;
+        min-height: 168px;
+        transform: translateY(-50%);
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--text) 22%, transparent);
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.48);
+      }
+
+      .index-tracker {
+        position: absolute;
+        top: var(--scrub-y);
+        right: 5px;
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        background: var(--accent);
+        box-shadow: 0 8px 18px rgba(0, 122, 255, 0.26);
+        opacity: 0;
+        transform: translate(3px, -50%) scale(0.72);
+        transition:
+          opacity 120ms ease,
+          transform 120ms ease;
+      }
+
+      .index-panel {
+        position: absolute;
+        top: 0;
+        right: 8px;
+        width: min(276px, calc(100vw - 58px));
+        max-height: calc(100svh - 158px - var(--safe-bottom));
+        overflow: auto;
+        padding: 12px;
+        border: 1px solid color-mix(in srgb, var(--separator) 78%, transparent);
+        border-radius: 22px;
+        background: color-mix(in srgb, var(--surface-elevated) 88%, transparent);
+        box-shadow: var(--shadow-md);
+        backdrop-filter: blur(26px) saturate(1.35);
+        -webkit-backdrop-filter: blur(26px) saturate(1.35);
+        opacity: 0;
+        transform: translateX(24px) scale(0.96);
+        transform-origin: right center;
+        transition:
+          opacity 150ms ease,
+          transform 150ms ease;
+        pointer-events: none;
+      }
+
+      .right-index.open .index-panel,
+      .right-index.scrubbing .index-panel,
+      .right-index:focus-within .index-panel,
+      .right-index:hover .index-panel {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        pointer-events: auto;
+      }
+
+      .right-index.open .index-handle,
+      .right-index.scrubbing .index-handle,
+      .right-index:hover .index-handle {
+        width: 9px;
+        background: color-mix(in srgb, var(--accent) 54%, transparent);
+      }
+
+      .right-index.scrubbing .index-tracker {
+        opacity: 1;
+        transform: translate(0, -50%) scale(1);
+      }
+
+      .index-title {
+        padding: 6px 8px 10px;
+        color: var(--text-2);
+        font-size: 12px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+      }
+
+      .index-list {
+        display: grid;
+        gap: 5px;
+      }
+
+      .index-item {
+        display: grid;
+        gap: 2px;
+        width: 100%;
+        min-height: 46px;
+        padding: 9px 10px;
+        border: 0;
+        border-radius: 13px;
+        color: var(--text-2);
+        text-align: left;
+        background: transparent;
+        cursor: ns-resize;
+        transition:
+          background 120ms ease,
+          color 120ms ease,
+          transform 120ms ease;
+      }
+
+      .index-item:hover,
+      .index-item:focus-visible,
+      .index-item.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+        transform: translateX(-8px) scale(1.045);
+        outline: none;
+      }
+
+      .index-main {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 15px;
+        font-weight: 820;
+        line-height: 1.25;
+      }
+
+      .index-sub {
+        overflow: hidden;
+        color: var(--text-3);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 12px;
+        font-weight: 720;
+        line-height: 1.25;
+      }
+
+      .index-item.active .index-sub,
+      .index-item:hover .index-sub {
+        color: color-mix(in srgb, var(--accent) 72%, var(--text-3));
+      }
+
+      .bottom-bar {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 25;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 4px;
+        padding: 8px 12px calc(8px + var(--safe-bottom));
+        border-top: 1px solid var(--separator-soft);
+        background: color-mix(in srgb, var(--surface-elevated) 92%, transparent);
+        backdrop-filter: blur(22px) saturate(1.35);
+        -webkit-backdrop-filter: blur(22px) saturate(1.35);
+      }
+
+      .tab {
+        display: grid;
+        place-items: center;
+        min-height: 44px;
+        border-radius: 14px;
+        color: var(--text-3);
+        font-size: 12px;
+        font-weight: 780;
+      }
+
+      .tab.active {
+        color: var(--accent);
+        background: var(--accent-soft);
+      }
+
+      @media (min-width: 760px) {
+        body {
+          font-size: 17px;
+        }
+
+        .app {
+          padding-top: 0;
+        }
+
+        .topbar {
+          padding-top: 14px;
+        }
+
+        .book-title {
+          font-size: 24px;
+        }
+
+        .reader {
+          padding-inline: 28px;
+        }
+
+        .chapter {
+          padding-top: 42px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+          transition-duration: 0.01ms !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="topbar-inner">
+          <div class="book-title-row">
+            <div>
+              <p class="book-kicker">Sアセス一次対策</p>
+              <h1 class="book-title">電子教科書</h1>
+            </div>
+            <button class="toc-button" type="button" data-open-index aria-label="目次を開く"><span></span></button>
+          </div>
+
+          <nav class="subject-tabs" aria-label="科目">
+            <a class="subject-chip active" href="#member-4">メンバー指導</a>
+            <a class="subject-chip" href="#roumu-1">労務管理</a>
+            <a class="subject-chip" href="#keisu-3">計数入門</a>
+          </nav>
+
+          <nav class="chapter-strip" aria-label="章ジャンプ">
+            <a class="chapter-chip active" href="#member-4">信頼関係を築く</a>
+            <a class="chapter-chip" href="#roumu-1">労働時間の基礎</a>
+            <a class="chapter-chip" href="#keisu-3">損益分岐点</a>
+          </nav>
+        </div>
+      </header>
+
+      <main class="reader">
+        <section class="chapter" id="member-4" data-index-title="第4章 信頼関係を築く" data-index-sub="メンバー指導">
+          <div class="chapter-meta">
+            <span class="pill">メンバー指導</span>
+            <span class="pill">第4章</span>
+            <span class="pill">校閲済みサンプル</span>
+          </div>
+          <h1>第4章 信頼関係を築く</h1>
+          <p class="lead">この章では、マネジャーがメンバーやその他の人々との信頼関係を築くために備えるべき基本的な能力要件を学習する。メンバーが指示・命令を受け入れて業務を遂行するには、マネジャーとの信頼関係が築かれているかが影響する。</p>
+
+          <article class="section" id="member-4-1" data-index-title="1. マネジャーとしての信頼関係" data-index-sub="人的交流・能力要件">
+            <h2>1. マネジャーとしての信頼関係の構築</h2>
+            <div class="point">
+              <span class="label">POINT</span>
+              <ul>
+                <li>マネジャーは、組織内外の人的交流の中核的存在として位置づけられる。多方面との相互理解、協力関係、協働関係を築くことによって信頼が深まり、その人的ネットワークの力がメンバーの能力アップにも貢献する。</li>
+                <li>創造性、革新性の高い仕事は、多くの人の協力を必要とする。マネジャーが自分自身の広範な信頼関係を活用して、メンバーの仕事を支援することは不可欠の要件となる。</li>
+              </ul>
+            </div>
+            <div class="case">
+              <span class="label">CASE 1</span>
+              メンバーの目標達成に対する悩みや相談に親身に応じているのに、反応が芳しくない。陰では「経営層からの信用が低いから、こっちがいくらいい提案をしても決裁をとれない、いい人なんだけれどね」と言われているようだ。
+            </div>
+            <h3>1-1 人的交流におけるマネジャーへの評価</h3>
+            <p>メンバーは、自分のマネジャーがどの程度の実力をもっているのか、他部署・他部門に対する影響力、発言力はどの程度なのかを常に評価している。経営層に対して信用があるか、他部署・他部門のマネジャーと連携・協力が可能か、お客さまから信頼を得ているかなどが問われる。</p>
+            <p>したがって、マネジャーはメンバーとの直接的な信頼関係だけでなく、自部署・自部門を越えて、どのくらい信頼関係の輪を広げているかが問われる。</p>
+
+            <div class="table-wrap">
+              <table>
+                <caption>図表4-1 マネジャーの人的交流相関図</caption>
+                <thead>
+                  <tr>
+                    <th>関係</th>
+                    <th>相手</th>
+                    <th>読み取りポイント</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>A</td>
+                    <td>経営層</td>
+                    <td>経営層との信頼関係、決裁・支援を得る力</td>
+                  </tr>
+                  <tr>
+                    <td>B</td>
+                    <td>他部署・他部門</td>
+                    <td>組織内での連携・協力関係</td>
+                  </tr>
+                  <tr>
+                    <td>C</td>
+                    <td>顧客・取引先</td>
+                    <td>組織外との信頼関係、情報入手や協働の接点</td>
+                  </tr>
+                  <tr>
+                    <td>D</td>
+                    <td>メンバー</td>
+                    <td>直接の指導・支援関係</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>1-2 広範な信頼関係の構築はマネジャーの能力要件</h3>
+            <p>メンバーが十分に動機づけられ、やる気をもって仕事に取り組むと、今までになかった創造性、革新性の高い仕事に挑戦するようになる。そこには、自部署・自部門を越えて、経営層の決裁を仰ぐ必要のあるものも出てくる。</p>
+            <p>メンバーがより高い次元での仕事を成功させるためには、マネジャーもより高い次元、広い範囲での信頼関係を構築して、両者のバランスを図ることが求められる。メンバーのレベルアップは、それに即したマネジャーのレベルアップがあって、はじめてスムーズに達成されていく。</p>
+            <div class="note">
+              <span class="label">ADVICE</span>
+              図表4-1において、A、B、Cに長けていながら、それをDまでつなげず、自分の利益のためにだけ用いることは慎む。マネジャーは人的交流における潤滑油的存在であることを確認する。
+            </div>
+          </article>
+
+          <article class="section" id="member-4-2" data-index-title="2. 人的ネットワークの広さ" data-index-sub="社外ネットワーク">
+            <h2>2. 人的ネットワークの広さは信頼関係のバロメーター</h2>
+            <div class="point">
+              <span class="label">POINT</span>
+              <ul>
+                <li>創造性、革新性のヒントは、社内よりも社外の情報に多くある。マネジャーは外部の人の意見や提案に対して、真剣に耳を傾ける必要がある。</li>
+                <li>良質な情報は、良質な人的ネットワークによってもたらされる。人的ネットワークの質によって、信頼の度合いが左右される。</li>
+              </ul>
+            </div>
+            <p>社外ネットワークは、目的を明確にして、良質な人脈をつくることが大切である。その根幹となるのは信頼関係である。社外の人とは対等な関係であり、社内で付与されている指示・命令権はいっさいない。あなた自身の人柄を理解してもらい、お互いに利益を分け合えるように、ギブ・アンド・テイクを意識し、実行していく必要がある。</p>
+            <p>良質の人脈づくりで、まず行いたいのが人脈の棚卸しである。ある分野に詳しい人、親身に相談に乗ってくれる人、新しい情報を提供してくれる人というような人脈コードを設けて、親密度の順に整理する。</p>
+          </article>
+
+          <article class="section" id="member-4-3" data-index-title="3. 信頼を得る仕事姿勢" data-index-sub="仕事熱心・利他的・責任">
+            <h2>3. 信頼を得る仕事に対する姿勢</h2>
+            <div class="point">
+              <span class="label">POINT</span>
+              <ul>
+                <li>マネジャーは、自分の権限を周囲との信頼関係を強化するために活用することが望まれる。</li>
+                <li>仕事に対する姿勢をマネジャーが率先垂範することで、メンバーや周囲の人への動機づけとして大きな影響を与える。</li>
+              </ul>
+            </div>
+            <p>すべての関係において信頼感をもたれるために共通する要件は、仕事熱心であること、利他的であること、責任をとることである。マネジャーは、まずこれらの要件をクリアすることからはじめなければならない。</p>
+            <ol class="number-list">
+              <li>仕事熱心であること。前向きで積極的に困難な問題に取り組み、それを解決しようとする行動は、人を動かすマネジャーにとって欠かせない。</li>
+              <li>利他的であること。自分の都合だけではなく、メンバー・他部署・顧客の利益を考えて行動することで、協力関係が築かれる。</li>
+              <li>責任をとること。結果に対して責任を負う態度は、周囲が安心して協働する根拠になる。</li>
+            </ol>
+          </article>
+          <p class="chapter-end">この章は縦スクロールで読み切り、右端目次または上部章チップから別章へ移動する想定。</p>
+        </section>
+
+        <section class="chapter" id="roumu-1" data-index-title="労務 第1章 労働時間" data-index-sub="時間・休憩・休日">
+          <div class="chapter-meta">
+            <span class="pill">労務管理</span>
+            <span class="pill">第1章</span>
+          </div>
+          <h1>時間、休憩、休日の基礎</h1>
+          <p class="lead">労働時間、休憩時間・休日の基本的な考え方を理解したうえで、変形労働時間制や裁量労働などにも対応できるようにする章。</p>
+
+          <article class="section" id="roumu-1-1" data-index-title="1. 労働時間の範囲" data-index-sub="拘束時間・実労働時間">
+            <h2>1. 労働時間はどこまでの範囲をさす？</h2>
+            <div class="point">
+              <span class="label">POINT</span>
+              <ul>
+                <li>労働時間とは、拘束時間から休憩時間を差し引いた実労働時間のことをいう。</li>
+                <li>実労働時間は、従業員が使用者の指揮監督下におかれている時間をいう。実作業時間だけでなく、手待ち時間や準備・整理時間も含まれる。</li>
+                <li>労働時間は原則として、1週40時間、1日8時間が法定労働時間として定められている。</li>
+              </ul>
+            </div>
+            <p>昼の休憩時間中であっても、電話や不意の来客に備えて事務担当者を待機させている場合、その時間を従業員が自由に利用できるのではなく、待機を命じられているため、使用者の指揮監督下にある拘束時間とみなされる。</p>
+            <p>食事や休息をとっている時間であっても、使用者の指揮監督下にあれば労働時間とみなされる。このような時間を手待ち時間と呼ぶ。</p>
+            <div class="table-wrap">
+              <table>
+                <caption>図表1-1 労働時間の範囲</caption>
+                <thead>
+                  <tr>
+                    <th>区分</th>
+                    <th>内容</th>
+                    <th>扱い</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>実作業時間</td>
+                    <td>実際に作業へ従事している時間</td>
+                    <td>労働時間</td>
+                  </tr>
+                  <tr>
+                    <td>手待ち時間</td>
+                    <td>電話・来客などに備えて待機する時間</td>
+                    <td>労働時間</td>
+                  </tr>
+                  <tr>
+                    <td>準備、整理時間</td>
+                    <td>使用者が義務づけた準備・片づけなど</td>
+                    <td>労働時間</td>
+                  </tr>
+                  <tr>
+                    <td>休憩時間</td>
+                    <td>従業員が自由に利用できる時間</td>
+                    <td>労働時間ではない</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="section" id="roumu-1-2" data-index-title="2. 時間外勉強会" data-index-sub="業務命令・不利益取扱い">
+            <h2>2. 時間外に実施している勉強会の扱いは？</h2>
+            <div class="case">
+              <span class="label">CASE 2</span>
+              終業時刻後2時間、会社の会議室で英会話の講習を受講させている。この時間は労働時間となるのか。
+            </div>
+            <p>研修や講習会への出席が従業員の自由意思に任されており、希望者だけが出席しているのであれば労働時間とはならない。しかし、出席が業務命令で行われている場合には、使用者の指揮監督下にあるものとみなされ、労働時間になる。</p>
+            <div class="note">
+              <span class="label">判断軸</span>
+              <ul>
+                <li>業務命令である場合は労働時間。</li>
+                <li>業務命令ではなく、参加が自由で、人事上不利益な取扱いがなければ労働時間ではない。</li>
+                <li>出欠確認があり、賞与や昇給などに反映される場合は、実質的に強制参加とみなされる。</li>
+              </ul>
+            </div>
+          </article>
+        </section>
+
+        <section class="chapter" id="keisu-3" data-index-title="計数 第3章 損益分岐点" data-index-sub="採算計算">
+          <div class="chapter-meta">
+            <span class="pill">計数入門</span>
+            <span class="pill">第3章</span>
+          </div>
+          <h1>損益分岐点と採算計算</h1>
+          <p class="lead">数字・式・表が多い章は、読み物としての余白を保ちつつ、式だけは独立して拾えるようにする。問題解説から飛んだ時に、周辺知識まで一気に確認できる構成。</p>
+
+          <article class="section" id="keisu-3-1" data-index-title="3-1 損益分岐点" data-index-sub="固定費・変動費">
+            <h2>3-1 損益分岐点はいくらか？</h2>
+            <p>売上と費用が一致する売上高を損益分岐点と呼び、獲得する利益の目標を立てるために利用する。</p>
+            <div class="formula-card">
+              <span class="label">FORMULA</span>
+              <code class="formula">損益分岐点売上高 = 固定費 / (1 - 変動費 / 売上高)</code>
+              <code class="formula">損益分岐点売上高 = 固定費 / 限界利益率</code>
+              <code class="formula">損益分岐点比率 = 損益分岐点売上高 / 売上高 × 100</code>
+            </div>
+            <p>売上高から変動費を引いた金額を限界利益と呼ぶ。経営の安全性を確認するために損益分岐点比率が用いられ、90%以上であると危険であるとされる。</p>
+          </article>
+
+          <article class="section" id="keisu-3-2" data-index-title="3-2 目標利益" data-index-sub="必要売上高">
+            <h2>3-2 目標利益を達成するためには？</h2>
+            <p>目標とする利益を達成するために必要な売上高は、固定費に目標利益を加えたうえで、変動費率を差し引いた率で割って求める。</p>
+            <div class="formula-card">
+              <span class="label">FORMULA</span>
+              <code class="formula">必要売上高 = (固定費 + 目標利益) / (1 - 変動費 / 売上高)</code>
+            </div>
+            <p>固定費を変動費化すると、安全余裕率が高まり、経営のリスクを減少させることができる。</p>
+          </article>
+
+          <article class="section" id="keisu-3-3" data-index-title="3-3 採算計算" data-index-sub="増分原価・埋没原価">
+            <h2>3-3 さまざまな採算計算にチャレンジしよう</h2>
+            <p>採算計算では、全部原価ではなく、増分原価、減分原価のみを計算対象とする。また、採算の判断に影響のない原価は埋没原価と呼ばれる。</p>
+            <div class="note">
+              <span class="label">読み取り</span>
+              利益の予測を行う際は、変動費のみを原価とする直接原価計算が用いられることがある。固定費は意思決定の内容によっては短期的に変わらず、採算判断上は埋没原価に近い扱いになる場合がある。
+            </div>
+          </article>
+        </section>
+      </main>
+
+      <aside class="right-index" id="rightIndex" aria-label="右端目次">
+        <div class="index-touch-zone" aria-hidden="true"></div>
+        <div class="index-handle" aria-hidden="true"></div>
+        <div class="index-tracker" aria-hidden="true"></div>
+        <nav class="index-panel" aria-label="目次">
+          <div class="index-title">TOC</div>
+          <div class="index-list" id="indexList"></div>
+        </nav>
+      </aside>
+
+      <nav class="bottom-bar" aria-label="下部タブ">
+        <a class="tab" href="#">今日</a>
+        <a class="tab" href="#">問題</a>
+        <a class="tab active" href="#member-4">教科書</a>
+        <a class="tab" href="#">進捗</a>
+      </nav>
+    </div>
+
+    <script>
+      const rightIndex = document.querySelector("#rightIndex");
+      const indexList = document.querySelector("#indexList");
+      const openIndexButton = document.querySelector("[data-open-index]");
+      const anchors = [...document.querySelectorAll("[data-index-title]")];
+      const chapterChips = [...document.querySelectorAll(".chapter-chip")];
+      const subjectChips = [...document.querySelectorAll(".subject-chip")];
+
+      anchors.forEach((anchor) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "index-item";
+        button.dataset.target = anchor.id;
+        button.innerHTML = `
+          <span class="index-main">${anchor.dataset.indexTitle}</span>
+          <span class="index-sub">${anchor.dataset.indexSub || ""}</span>
+        `;
+        button.addEventListener("click", (event) => event.preventDefault());
+        indexList.appendChild(button);
+      });
+
+      const indexItems = [...document.querySelectorAll(".index-item")];
+      const openIndex = () => rightIndex.classList.add("open");
+      const closeIndex = () => rightIndex.classList.remove("open");
+      let closeTimer;
+      const closeIndexSoon = () => {
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(closeIndex, 420);
+      };
+
+      rightIndex.addEventListener("pointerenter", openIndex);
+      rightIndex.addEventListener("pointerleave", closeIndexSoon);
+      openIndexButton.addEventListener("click", () => rightIndex.classList.toggle("open"));
+
+      let isScrubbing = false;
+      let scrubTargets = [];
+      let activeScrubIndex = -1;
+
+      const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+      const buildScrubTargets = () => {
+        const topbar = document.querySelector(".topbar");
+        const offset = topbar.getBoundingClientRect().height + 16;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+
+        scrubTargets = anchors.map((anchor) => ({
+          id: anchor.id,
+          y: clamp(anchor.getBoundingClientRect().top + window.scrollY - offset, 0, maxScroll),
+        }));
+      };
+
+      const setIndexPanelPosition = (targetIndex) => {
+        const activeItem = indexItems[targetIndex];
+        if (!activeItem) return;
+        const panel = document.querySelector(".index-panel");
+        const itemRect = activeItem.getBoundingClientRect();
+        const panelRect = panel.getBoundingClientRect();
+        if (itemRect.top < panelRect.top + 16 || itemRect.bottom > panelRect.bottom - 16) {
+          activeItem.scrollIntoView({ block: "nearest" });
+        }
+      };
+
+      const scrubToPointer = (clientY) => {
+        if (!scrubTargets.length) buildScrubTargets();
+        const rect = rightIndex.getBoundingClientRect();
+        const progress = clamp((clientY - rect.top) / Math.max(1, rect.height), 0, 1);
+        const scaled = progress * (scrubTargets.length - 1);
+        const lowerIndex = Math.floor(scaled);
+        const upperIndex = Math.min(scrubTargets.length - 1, lowerIndex + 1);
+        const localProgress = scaled - lowerIndex;
+        const lower = scrubTargets[lowerIndex];
+        const upper = scrubTargets[upperIndex];
+        const targetY = lower.y + (upper.y - lower.y) * localProgress;
+        const activeIndex = Math.round(scaled);
+
+        rightIndex.style.setProperty("--scrub-y", `${clamp(clientY - rect.top, 0, rect.height)}px`);
+        window.scrollTo({ top: targetY, behavior: "auto" });
+
+        if (activeScrubIndex !== activeIndex) {
+          activeScrubIndex = activeIndex;
+          setActive(scrubTargets[activeIndex].id);
+          setIndexPanelPosition(activeIndex);
+        }
+      };
+
+      const startScrub = (event) => {
+        if (event.pointerType === "mouse" && event.button !== 0) return;
+        clearTimeout(closeTimer);
+        isScrubbing = true;
+        activeScrubIndex = -1;
+        buildScrubTargets();
+        openIndex();
+        rightIndex.classList.add("scrubbing");
+        rightIndex.setPointerCapture?.(event.pointerId);
+        scrubToPointer(event.clientY);
+        event.preventDefault();
+      };
+
+      const moveScrub = (event) => {
+        if (!isScrubbing) return;
+        scrubToPointer(event.clientY);
+        event.preventDefault();
+      };
+
+      const finishScrub = (event) => {
+        if (!isScrubbing) return;
+        isScrubbing = false;
+        rightIndex.releasePointerCapture?.(event.pointerId);
+        rightIndex.classList.remove("scrubbing");
+        closeIndexSoon();
+        event.preventDefault();
+      };
+
+      rightIndex.addEventListener("pointerdown", startScrub);
+      rightIndex.addEventListener("pointermove", moveScrub);
+      rightIndex.addEventListener("pointerup", finishScrub);
+      rightIndex.addEventListener("pointercancel", finishScrub);
+
+      const setActive = (id) => {
+        indexItems.forEach((item) => item.classList.toggle("active", item.dataset.target === id));
+        chapterChips.forEach((chip) => {
+          const target = chip.getAttribute("href").slice(1);
+          chip.classList.toggle("active", target === id || document.getElementById(id)?.closest(".chapter")?.id === target);
+        });
+        subjectChips.forEach((chip) => {
+          const target = chip.getAttribute("href").slice(1);
+          chip.classList.toggle("active", target === id || document.getElementById(id)?.closest(".chapter")?.id === target);
+        });
+      };
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (isScrubbing) return;
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top))[0];
+          if (visible) setActive(visible.target.id);
+        },
+        {
+          rootMargin: "-28% 0px -62% 0px",
+          threshold: [0, 0.2, 0.6],
+        }
+      );
+
+      anchors.forEach((anchor) => observer.observe(anchor));
+    </script>
+  </body>
+</html>
