@@ -10,7 +10,14 @@ function json(data, status = 200) {
 }
 
 function authorized(request, env) {
-  return Boolean(env.SYNC_KEY) && request.headers.get("X-Sync-Key") === env.SYNC_KEY;
+  if (!env.SYNC_KEY) return false;
+  const header = request.headers.get("X-Sync-Key") ?? "";
+  try {
+    // クライアントはURLエンコードして送る (日本語キー対応)
+    return decodeURIComponent(header) === env.SYNC_KEY;
+  } catch {
+    return false;
+  }
 }
 
 export async function onRequestGet({ request, env }) {

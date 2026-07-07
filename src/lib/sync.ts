@@ -23,7 +23,8 @@ async function api(method: "GET" | "POST", body?: unknown) {
   const response = await fetch("/api/answers", {
     method,
     headers: {
-      "X-Sync-Key": key,
+      // 日本語キーも使えるようURLエンコードして送る (ヘッダーはISO-8859-1しか載らない)
+      "X-Sync-Key": encodeURIComponent(key),
       ...(body ? { "Content-Type": "application/json" } : {}),
     },
     body: body ? JSON.stringify(body) : undefined,
