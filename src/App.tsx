@@ -14,16 +14,22 @@ import {
   X,
 } from "lucide-react";
 import { questions } from "./data/questions";
-import { textbooks } from "./data/textbooks";
-import { loadProgress, saveProgress, summarizeProgress } from "./lib/progress";
+import { loadTextbooks, textbookMeta } from "./data/textbooks";
+import {
+  exportProgressFile,
+  loadProgress,
+  mergeAnswers,
+  saveProgress,
+  summarizeProgress,
+} from "./lib/progress";
 import {
   DAILY_COUNT,
   answeredTodayIds,
   dailyQuestionSet,
   latestAnswerMap,
   optionDisplayOrder,
+  srsDueQuestionIds,
   todayKey,
-  weakQuestionIds,
 } from "./lib/quiz";
 import {
   markdownToBlocks,
@@ -31,7 +37,13 @@ import {
   resolveSourceSection,
   uniqueChapters,
 } from "./lib/textbook";
-import type { AnswerRecord, QuizQuestion, SubjectId, TextbookSection } from "./types";
+import type {
+  AnswerRecord,
+  QuizQuestion,
+  SubjectId,
+  TextbookSection,
+  TextbookSource,
+} from "./types";
 
 type View = "home" | "quiz" | "book" | "progress";
 type QuizMode = "daily" | "weak" | "subject";
@@ -52,9 +64,20 @@ function sameIndexes(left: number[], right: number[]) {
 }
 
 export function App() {
+  // 教科書本文は別チャンク。初回描画を止めず、マウント直後に読み込む
+  const [textbookSources, setTextbookSources] = useState<TextbookSource[] | null>(null);
+  useEffect(() => {
+    let alive = true;
+    loadTextbooks().then((sources) => {
+      if (alive) setTextbookSources(sources);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
   const textbookSections = useMemo(
-    () => textbooks.flatMap((source) => parseTextbook(source)),
-    [],
+    () => (textbookSources ? textbookSources.flatMap((source) => parseTextbook(source)) : []),
+    [textbookSources],
   );
   const dateKey = todayKey();
   const dailyQuestions = useMemo(() => dailyQuestionSet(questions, dateKey), [dateKey]);
@@ -80,7 +103,10 @@ export function App() {
 
   const summary = summarizeProgress(progress.answers);
   const latestByQuestion = useMemo(() => latestAnswerMap(progress.answers), [progress.answers]);
-  const weakIds = useMemo(() => weakQuestionIds(progress.answers), [progress.answers]);
+  const weakIds = useMemo(
+    () => srsDueQuestionIds(progress.answers, dateKey),
+    [progress.answers, dateKey],
+  );
   const todayIds = useMemo(
     () => answeredTodayIds(progress.answers, dateKey),
     [progress.answers, dateKey],
@@ -256,6 +282,12 @@ export function App() {
           />
         )}
 
+        {view === "book" && !activeSection && (
+          <section className="screen">
+            <p className="book-loading">教科書を読み込んでいます…</p>
+          </section>
+        )}
+
         {view === "book" && activeSection && (
           <BookView
             sections={activeSections}
@@ -288,6 +320,22 @@ export function App() {
               const nextProgress = { answers: [] };
               setProgress(nextProgress);
               saveProgress(nextProgress);
+            }}
+            onExport={() => {
+              void exportProgressFile(progress);
+            }}
+            onImportFile={(file) => {
+              void file.text().then((text) => {
+                try {
+                  const merged = mergeAnswers(progress.answers, JSON.parse(text));
+                  const nextProgress = { ...progress, answers: merged };
+                  setProgress(nextProgress);
+                  saveProgress(nextProgress);
+                  window.alert(`読み込みました (回答記録 合計${merged.length}件)`);
+                } catch {
+                  window.alert("読み込めませんでした。エクスポートしたJSONファイルか確認してください");
+                }
+              });
             }}
           />
         )}
@@ -1024,7 +1072,7 @@ function BookView({
                     key={subjectId}
                     onClick={() => onSubjectChange(subjectId)}
                   >
-                    {textbooks.find((book) => book.id === subjectId)?.shortTitle}
+                    {textbookMeta.find((book) => book.id === subjectId)?.shortTitle}
                   </button>
                 ))}
               </div>
@@ -1200,11 +1248,16 @@ function ProgressView({
   summary,
   subjectStats,
   onReset,
+  onExport,
+  onImportFile,
 }: {
   summary: ReturnType<typeof summarizeProgress>;
   subjectStats: { subjectId: SubjectId; total: number; answered: number; percent: number }[];
   onReset: () => void;
+  onExport: () => void;
+  onImportFile: (file: File) => void;
 }) {
+  const importInputRef = useRef<HTMLInputElement>(null);
   return (
     <section className="screen">
       <header className="topbar">
@@ -1242,6 +1295,34 @@ function ProgressView({
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="card">
+        <div className="section-head">
+          <h2>バックアップ</h2>
+        </div>
+        <p className="backup-note">
+          記録は端末のブラウザ内に保存されます。機種変更やSafariのデータ削除に備えて、定期的に書き出してください。
+        </p>
+        <div className="backup-actions">
+          <button className="secondary-action" onClick={onExport}>
+            記録を書き出す
+          </button>
+          <button className="secondary-action" onClick={() => importInputRef.current?.click()}>
+            記録を読み込む
+          </button>
+          <input
+            ref={importInputRef}
+            type="file"
+            accept="application/json,.json"
+            hidden
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              if (file) onImportFile(file);
+              event.target.value = "";
+            }}
+          />
         </div>
       </section>
     </section>

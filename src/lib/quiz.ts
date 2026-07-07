@@ -78,20 +78,58 @@ export function latestAnswerMap(answers: AnswerRecord[]) {
   return map;
 }
 
-// 弱点 = 最新回答が誤答の問題
-export function weakQuestionIds(answers: AnswerRecord[]) {
-  const ids = new Set<string>();
-  for (const [questionId, answer] of latestAnswerMap(answers)) {
-    if (!answer.isCorrect) ids.add(questionId);
+// ISO時刻 (UTC) をローカル日付キーに変換。startsWith比較だと日本時間の朝9時前がずれる
+export function localDayKey(isoString: string) {
+  return todayKey(new Date(isoString));
+}
+
+function daysBetween(fromKey: string, toKey: string) {
+  const [fromYear, fromMonth, fromDay] = fromKey.split("-").map(Number);
+  const [toYear, toMonth, toDay] = toKey.split("-").map(Number);
+  const from = new Date(fromYear, fromMonth - 1, fromDay).getTime();
+  const to = new Date(toYear, toMonth - 1, toDay).getTime();
+  return Math.round((to - from) / 86400000);
+}
+
+// 弱点 = 間隔反復 (SRS) の復習期日が来ている問題。
+// 間違えた問題は当日中の解き直し可+翌日に再出題、正解すると3日後、
+// 2連続正解で卒業。途中でまた間違えたら振り出しに戻る
+export function srsDueQuestionIds(answers: AnswerRecord[], dateKey: string) {
+  const history = new Map<string, AnswerRecord[]>();
+  for (const answer of answers) {
+    const list = history.get(answer.questionId);
+    if (list) list.push(answer);
+    else history.set(answer.questionId, [answer]);
   }
-  return ids;
+  const due = new Set<string>();
+  for (const [questionId, records] of history) {
+    records.sort((a, b) => a.answeredAt.localeCompare(b.answeredAt));
+    let lastWrongIndex = -1;
+    for (let index = records.length - 1; index >= 0; index -= 1) {
+      if (!records[index].isCorrect) {
+        lastWrongIndex = index;
+        break;
+      }
+    }
+    if (lastWrongIndex === -1) continue; // 一度も間違えていない
+    const correctStreak = records.length - 1 - lastWrongIndex;
+    if (correctStreak >= 2) continue; // 卒業
+    const lastDay = localDayKey(records[records.length - 1].answeredAt);
+    if (correctStreak === 0 && lastDay === dateKey) {
+      due.add(questionId);
+      continue;
+    }
+    const interval = correctStreak === 0 ? 1 : 3;
+    if (daysBetween(lastDay, dateKey) >= interval) due.add(questionId);
+  }
+  return due;
 }
 
 // 今日解いた問題ID
 export function answeredTodayIds(answers: AnswerRecord[], dateKey: string) {
   const ids = new Set<string>();
   for (const answer of answers) {
-    if (answer.answeredAt.startsWith(dateKey)) ids.add(answer.questionId);
+    if (localDayKey(answer.answeredAt) === dateKey) ids.add(answer.questionId);
   }
   return ids;
 }
