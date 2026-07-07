@@ -1069,12 +1069,14 @@ blockquote {
 }
 
 .reader-section h3 {
-  margin: 0 0 16px;
+  margin: 0 0 20px;
+  padding-left: 13px;
+  border-left: 4px solid var(--accent);
   color: var(--text);
-  font-size: clamp(21px, 5.6vw, 27px);
-  font-weight: 820;
-  line-height: 1.34;
-  letter-spacing: 0;
+  font-size: clamp(19px, 5.1vw, 24px);
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
 }
 
 .reader-section.is-current h3 {
@@ -1123,21 +1125,30 @@ blockquote {
   min-width: 0;
   max-width: 100%;
   color: var(--text);
-  font-size: 16.8px;
-  font-weight: 430;
-  line-height: 1.96;
-  letter-spacing: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.86;
+  letter-spacing: 0.008em;
   font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Hiragino Sans",
-    "Hiragino Kaku Gothic ProN",
-    "Noto Sans JP",
-    sans-serif;
+    "Hiragino Mincho ProN",
+    "Yu Mincho",
+    "Noto Serif JP",
+    serif;
+}
+
+/* 段落のリズム: 通常段落は詰め、種類が変わるところで空ける */
+.reader-section > * + * {
+  margin-top: 16px;
+}
+
+.reader-section > p + p {
+  margin-top: 11px;
 }
 
 .reader-body p {
   white-space: pre-wrap;
+  text-align: justify;
+  line-break: strict;
 }
 
 /* 重要用語 (**強調**)。蛍光マーカー風の下塗り + 太字 */
@@ -1154,6 +1165,15 @@ blockquote {
   background: var(--surface-2);
   white-space: pre-wrap;
   overflow-x: auto;
+  font-size: 14.5px;
+  line-height: 1.8;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Hiragino Sans",
+    "Hiragino Kaku Gothic ProN",
+    "Noto Sans JP",
+    sans-serif;
 }
 
 .reader-body ul {
@@ -1179,6 +1199,8 @@ blockquote {
 .reader-body li {
   position: relative;
   padding-left: 18px;
+  text-align: justify;
+  line-break: strict;
 }
 
 .reader-body li::before {
@@ -1242,6 +1264,20 @@ blockquote {
 .reader-body .figure-block {
   border: 1px solid var(--line);
   background: var(--surface-2);
+}
+
+/* 図表ボックス内はボックス自体が強調なので、マーカーは重ねない */
+.reader-body .figure-block strong {
+  background: none;
+  padding: 0;
+}
+
+/* Caseボックス内のマーカーは暖色トーンに合わせる */
+.reader-body .case-block strong {
+  background: linear-gradient(
+    transparent 64%,
+    color-mix(in srgb, var(--warn) 24%, transparent) 64%
+  );
 }
 
 .reader-table-wrap {

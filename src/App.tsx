@@ -1290,6 +1290,8 @@ function MarkdownBlock({ block, highlight }: { block: string; highlight: boolean
     .replace(/^>\s?/gm, "")
     .replace(/\n/g, "\n");
   const trimmed = cleaned.trim();
+  // ラベル・ブロック種別の判定は強調記号を剥がした字面で行う (**POINT** 等も拾う)
+  const plain = trimmed.replace(/\*\*/g, "");
 
   const tableLines = trimmed.split("\n").filter((line) => line.trim().startsWith("|"));
   const proseLines = trimmed
@@ -1345,18 +1347,18 @@ function MarkdownBlock({ block, highlight }: { block: string; highlight: boolean
     );
   }
 
-  if (/^【?POINT】?$/.test(trimmed)) {
+  if (/^【?POINT】?$/.test(plain)) {
     return <div className="reader-label point-label">POINT</div>;
   }
-  if (/^\[注釈\]$/.test(trimmed)) {
+  if (/^\[注釈\]$/.test(plain)) {
     return <div className="reader-label note-label">注釈</div>;
   }
 
   const className = [
-    /^【?Case\s*\d+/i.test(trimmed) || trimmed.includes("Case ") ? "case-block" : "",
+    /^【?Case\s*\d+/i.test(plain) || plain.includes("Case ") ? "case-block" : "",
     // 図表スタイルはキャプション (行頭が図表〜) だけ。地の文の言及はボックス化しない
-    /^【?図表/.test(trimmed) ? "figure-block" : "",
-    trimmed.includes("用語解説") || trimmed.includes("[注釈]") ? "note-block" : "",
+    /^【?図表/.test(plain) ? "figure-block" : "",
+    plain.includes("用語解説") || plain.includes("[注釈]") ? "note-block" : "",
     highlight ? "highlight" : "",
   ]
     .filter(Boolean)
