@@ -327,6 +327,26 @@ h2 {
   gap: 10px;
 }
 
+.sync-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+
+.sync-row input {
+  min-height: 46px;
+  padding: 0 13px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 15px;
+}
+
+.sync-row button {
+  padding: 0 18px;
+}
+
 .dark-action {
   display: inline-flex;
   align-items: center;

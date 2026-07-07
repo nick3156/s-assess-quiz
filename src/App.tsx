@@ -37,6 +37,7 @@ import {
   resolveSourceSection,
   uniqueChapters,
 } from "./lib/textbook";
+import { getSyncKey, pullAnswers, pushAnswers, setSyncKey } from "./lib/sync";
 import type {
   AnswerRecord,
   QuizQuestion,
@@ -100,6 +101,36 @@ export function App() {
   const [showExplanation, setShowExplanation] = useState(false);
   const [query, setQuery] = useState("");
   const [activeSourceQuote, setActiveSourceQuote] = useState("");
+  const [syncStatus, setSyncStatus] = useState<"off" | "syncing" | "ok" | "error">(() =>
+    getSyncKey() ? "syncing" : "off",
+  );
+
+  // 端末間同期: サーバーの記録をpullしてローカルと結合し、結合結果をpush (サーバー側で重複排除)
+  const progressRef = useRef(progress);
+  progressRef.current = progress;
+  const syncNow = useCallback(async () => {
+    if (!getSyncKey()) {
+      setSyncStatus("off");
+      return;
+    }
+    setSyncStatus("syncing");
+    try {
+      const remote = await pullAnswers();
+      const merged = remote
+        ? mergeAnswers(progressRef.current.answers, { answers: remote })
+        : progressRef.current.answers;
+      const nextProgress = { ...progressRef.current, answers: merged };
+      setProgress(nextProgress);
+      saveProgress(nextProgress);
+      await pushAnswers(merged);
+      setSyncStatus("ok");
+    } catch {
+      setSyncStatus("error");
+    }
+  }, []);
+  useEffect(() => {
+    void syncNow();
+  }, [syncNow]);
 
   const summary = summarizeProgress(progress.answers);
   const latestByQuestion = useMemo(() => latestAnswerMap(progress.answers), [progress.answers]);
@@ -175,6 +206,8 @@ export function App() {
     };
     setProgress(nextProgress);
     saveProgress(nextProgress);
+    // 端末間同期 (キー未設定・オフライン時は静かにスキップ。起動時の全件pushで回収される)
+    void pushAnswers([answer]).catch(() => {});
   }
 
   function goToQuestion(question: QuizQuestion) {
@@ -336,6 +369,12 @@ export function App() {
                   window.alert("読み込めませんでした。エクスポートしたJSONファイルか確認してください");
                 }
               });
+            }}
+            syncStatus={syncStatus}
+            syncKey={getSyncKey()}
+            onSaveSyncKey={(key) => {
+              setSyncKey(key);
+              void syncNow();
             }}
           />
         )}
@@ -1250,14 +1289,27 @@ function ProgressView({
   onReset,
   onExport,
   onImportFile,
+  syncStatus,
+  syncKey,
+  onSaveSyncKey,
 }: {
   summary: ReturnType<typeof summarizeProgress>;
   subjectStats: { subjectId: SubjectId; total: number; answered: number; percent: number }[];
   onReset: () => void;
   onExport: () => void;
   onImportFile: (file: File) => void;
+  syncStatus: "off" | "syncing" | "ok" | "error";
+  syncKey: string;
+  onSaveSyncKey: (key: string) => void;
 }) {
   const importInputRef = useRef<HTMLInputElement>(null);
+  const [syncKeyDraft, setSyncKeyDraft] = useState(syncKey);
+  const syncLabel = {
+    off: "未設定",
+    syncing: "同期中…",
+    ok: "同期済み",
+    error: "同期エラー",
+  }[syncStatus];
   return (
     <section className="screen">
       <header className="topbar">
@@ -1300,10 +1352,34 @@ function ProgressView({
 
       <section className="card">
         <div className="section-head">
+          <h2>端末間の同期</h2>
+          <span className={`badge ${syncStatus === "error" ? "warn" : "neutral"}`}>{syncLabel}</span>
+        </div>
+        <p className="backup-note">
+          同期キーを設定すると、回答記録がクラウド (D1) に自動保存され、他の端末と共有されます。各端末で同じキーを1回入力してください。
+        </p>
+        <div className="sync-row">
+          <input
+            type="text"
+            inputMode="text"
+            autoCapitalize="off"
+            autoCorrect="off"
+            placeholder="同期キー"
+            value={syncKeyDraft}
+            onChange={(event) => setSyncKeyDraft(event.target.value)}
+          />
+          <button className="secondary-action" onClick={() => onSaveSyncKey(syncKeyDraft)}>
+            同期
+          </button>
+        </div>
+      </section>
+
+      <section className="card">
+        <div className="section-head">
           <h2>バックアップ</h2>
         </div>
         <p className="backup-note">
-          記録は端末のブラウザ内に保存されます。機種変更やSafariのデータ削除に備えて、定期的に書き出してください。
+          同期とは別に、記録をファイルとして書き出し/読み込みできます。
         </p>
         <div className="backup-actions">
           <button className="secondary-action" onClick={onExport}>

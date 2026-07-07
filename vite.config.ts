@@ -31,6 +31,8 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,svg,png,webmanifest}"],
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         navigateFallback: "/index.html",
+        // 同期APIはSWを通さず常にネットワークへ
+        navigateFallbackDenylist: [/^\/api\//],
       },
     }),
   ],

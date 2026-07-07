@@ -1,0 +1,13 @@
+{
+  // Cloudflare Pages 設定。回答記録の端末間同期用D1を functions/api/ から env.DB で使う
+  "name": "s-assess-quiz",
+  "compatibility_date": "2026-07-01",
+  "pages_build_output_dir": "dist",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "s-assess-quiz-db",
+      "database_id": "2ebbba1d-f01f-45ac-ae2d-b2856f00c4a0"
+    }
+  ]
+}
