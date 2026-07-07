@@ -6,10 +6,11 @@
 
 ## 追加先
 
-- 問題データ: `src/data/questions.ts`
+- 問題データ: `src/data/questions.ts` (既存分) と `src/data/questions-<member|roumu|keisu>-add.ts` (追加分。questions.ts が結合してエクスポートする。並列作問時は科目別ファイルだけを触る)
 - 教科書本文: `source-review/cleaned/*.md`
 - 法令確認メモ: `source-review/law-audit.md`
 - 計数確認メモ: `source-review/calculation-audit.md`
+- 出題傾向・実試験の確定正誤ポイント: `source-review/report-reference.md` (JMAMレポート採点結果+公式解説由来。論点選定・誤り選択肢パターン・検証済み計算公式として教科書本文と併用する)
 
 ## 作問の基本ルール
 

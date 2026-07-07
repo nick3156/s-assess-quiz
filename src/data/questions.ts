@@ -1,6 +1,9 @@
 import type { QuizQuestion } from "../types";
+import { memberAdditions } from "./questions-member-add";
+import { roumuAdditions } from "./questions-roumu-add";
+import { keisuAdditions } from "./questions-keisu-add";
 
-export const questions: QuizQuestion[] = [
+const baseQuestions: QuizQuestion[] = [
   {
     id: "member-ojt-definition-001",
     type: "trueFalse",
@@ -1454,4 +1457,11 @@ export const questions: QuizQuestion[] = [
         "商品Aの発注日の適正在庫 = 2日 x 4個 + 4個 = 12個",
     },
   },
+];
+
+export const questions: QuizQuestion[] = [
+  ...baseQuestions,
+  ...memberAdditions,
+  ...roumuAdditions,
+  ...keisuAdditions,
 ];

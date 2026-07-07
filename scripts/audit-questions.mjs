@@ -2,7 +2,12 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const questionFile = path.join(root, "src/data/questions.ts");
+// questions.ts 本体 + 科目別追加ファイル (questions-*-add.ts) をすべて監査対象にする
+const dataDir = path.join(root, "src/data");
+const questionFiles = fs
+  .readdirSync(dataDir)
+  .filter((name) => name === "questions.ts" || /^questions-.*-add\.ts$/.test(name))
+  .map((name) => path.join(dataDir, name));
 const sources = {
   member: path.join(root, "source-review/cleaned/member_shido_reviewed.md"),
   roumu: path.join(root, "source-review/cleaned/roumu_kanri_reviewed.md"),
@@ -24,7 +29,7 @@ const sourceText = Object.fromEntries(
     fs.existsSync(file) ? fs.readFileSync(file, "utf8") : "",
   ]),
 );
-const ts = fs.readFileSync(questionFile, "utf8");
+const ts = questionFiles.map((file) => fs.readFileSync(file, "utf8")).join("\n");
 const idMatches = [...ts.matchAll(/\bid:\s*"([^"]+)"/g)].map((match) => match[1]);
 const duplicates = idMatches.filter((id, index) => idMatches.indexOf(id) !== index);
 
