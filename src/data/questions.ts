@@ -2,6 +2,15 @@ import type { QuizQuestion } from "../types";
 import { memberAdditions } from "./questions-member-add";
 import { roumuAdditions } from "./questions-roumu-add";
 import { keisuAdditions } from "./questions-keisu-add";
+import { memberC1Additions } from "./questions-member-c1-add";
+import { memberC2Additions } from "./questions-member-c2-add";
+import { memberC34Additions } from "./questions-member-c34-add";
+import { roumuC1Additions } from "./questions-roumu-c1-add";
+import { roumuC23Additions } from "./questions-roumu-c23-add";
+import { roumuC456Additions } from "./questions-roumu-c456-add";
+import { keisuC01Additions } from "./questions-keisu-c01-add";
+import { keisuC2Additions } from "./questions-keisu-c2-add";
+import { keisuC34Additions } from "./questions-keisu-c34-add";
 
 const baseQuestions: QuizQuestion[] = [
   {
@@ -1464,4 +1473,13 @@ export const questions: QuizQuestion[] = [
   ...memberAdditions,
   ...roumuAdditions,
   ...keisuAdditions,
+  ...memberC1Additions,
+  ...memberC2Additions,
+  ...memberC34Additions,
+  ...roumuC1Additions,
+  ...roumuC23Additions,
+  ...roumuC456Additions,
+  ...keisuC01Additions,
+  ...keisuC2Additions,
+  ...keisuC34Additions,
 ];
