@@ -11,6 +11,12 @@ import { roumuC456Additions } from "./questions-roumu-c456-add";
 import { keisuC01Additions } from "./questions-keisu-c01-add";
 import { keisuC2Additions } from "./questions-keisu-c2-add";
 import { keisuC34Additions } from "./questions-keisu-c34-add";
+import { memberC12Additions700 } from "./questions-member-c12-700-add";
+import { memberC34Additions700 } from "./questions-member-c34-700-add";
+import { roumuC012Additions700 } from "./questions-roumu-c012-700-add";
+import { roumuC36Additions700 } from "./questions-roumu-c36-700-add";
+import { keisuC01Additions700 } from "./questions-keisu-c01-700-add";
+import { keisuC24Additions700 } from "./questions-keisu-c24-700-add";
 
 const baseQuestions: QuizQuestion[] = [
   {
@@ -1482,4 +1488,10 @@ export const questions: QuizQuestion[] = [
   ...keisuC01Additions,
   ...keisuC2Additions,
   ...keisuC34Additions,
+  ...memberC12Additions700,
+  ...memberC34Additions700,
+  ...roumuC012Additions700,
+  ...roumuC36Additions700,
+  ...keisuC01Additions700,
+  ...keisuC24Additions700,
 ];
