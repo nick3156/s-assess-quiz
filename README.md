@@ -112,3 +112,9 @@ npm run build
 - 次に処理するページは `npm run progress:textbook -- claim 4` で確保し、完了時に `npm run progress:textbook -- done <scan-id> <pages>` で記録する
 - 全ページのスキャン照合は一通り完了済み。今後は問題化時に必要箇所を追加確認する
 - iCloud側の文字起こしMarkdownも、清書済み成果物として更新対象。同期は `npm run sync:icloud -- <subject>` を使う
+
+## 作業資料・起動補助
+
+- `tmp/` は教材照合の画像・OCR・検証記録を含むローカル作業資料。名前だけで一括削除しない。
+- `.git` 内の作業スナップショットも履歴として保持する。容量整理で参照・reflogを削除しない。
+- ワークスペースの `.claude/launch.json` の `s-assess-quiz` はVite版を http://127.0.0.1:8003 で起動する。プロジェクト内の通常の `npm run dev` は従来どおり5173番。
