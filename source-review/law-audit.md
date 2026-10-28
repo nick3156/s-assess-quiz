@@ -325,3 +325,16 @@
     - https://laws.e-gov.go.jp/law/322AC0000000049
     - https://www.mhlw.go.jp/web/t_doc?dataId=73022000&dataType=0&pageNo=1
 - 労務管理の本文全体について、問題化前に出題年度時点の制度変更を再確認する。
+
+
+## 2026-10-28 欠落復元に伴う制度確認
+
+- 図表2-2の脚注にある両親取得時の1歳2か月の特例を復元。厚生労働省「パパ・ママ育休プラス」で、一定要件のもと対象となる子の年齢が1歳2か月に延長されることを確認。各人の取得可能期間が原則1年間という上限も補足し、1歳2か月間の休業との誤読を防ぐ。
+  - https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/koyoukintou/ryouritsu/ikuji/plus/
+- 間接差別の3措置は、厚生労働省「労働条件・職場環境に関するルール」と指針を確認。身長・体重・体力、募集・採用/昇進/職種変更の転居を伴う転勤要件、昇進の転勤経験要件について、原本の具体例を復元。合理的理由がない場合という前提を維持。
+  - https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudouseisaku/chushoukigyou/joken_kankyou_rule.html
+  - https://www.mhlw.go.jp/web/t_doc?dataId=00004320&dataType=0&pageNo=1
+- パート・アルバイトも業務/通勤災害の労災保険給付対象であることを厚生労働省Q&Aで確認。個別の加入手続きに関する説明はスキャン②9枚目p63の原文を復元。事業主側の保険成立手続きまで不要という意味にはしない。
+  - https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000154443.html
+- 既存本文と問題解説に残っていた「賃金月額8.8万円要件は2026年10月撤廃予定」は、厚生労働省「適用拡大Q&A」Q1/Q4で「2026年10月に撤廃されました」と明記されているため、撤廃済みへ更新。2027年9月まで51人以上、同10月から36人以上の企業規模条件も同Q1で確認した。2026-07の照合メモは当時の記録として残す。
+  - https://www.mhlw.go.jp/tekiyoukakudai/qa/

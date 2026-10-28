@@ -25,7 +25,7 @@ APIトークンにAccess権限がないため、初回はダッシュボード�
 
 既存の単一HTMLクイズは `legacy-index.html` に保存し、React/Vite PWAとして作り直している。
 
-2026-07-06時点で、メンバー指導・労務管理・計数入門のスキャン照合とiCloud Markdown同期は一通り完了。アプリ作成へ移行中。
+2026-10-28に再照合で判明した本文・欄外注の欠落、説明と示範の項目混入、手書きメモ由来の本文を修正。文字起こし3件と電子教科書の読み込み元を同期する。全165枚のOCR照合は実施したが、全字・全表セルの目視確認済みという意味ではない。計数③12枚目左（印刷p118）は薄写りのため未確定で、教科書にも明記。修正根拠と範囲は `source-review/review-notes.md` の2026-10-28記録を参照。
 
 ## 特徴
 
@@ -110,7 +110,7 @@ npm run build
 - 作業ルールは `source-review/proofreading-routine.md`
 - ページ単位の進捗台帳は `source-review/proofreading-progress.json`
 - 次に処理するページは `npm run progress:textbook -- claim 4` で確保し、完了時に `npm run progress:textbook -- done <scan-id> <pages>` で記録する
-- 全ページのスキャン照合は一通り完了済み。今後は問題化時に必要箇所を追加確認する
+- ページ台帳の過去のdoneは完全転記の保証ではない。2026-10-28の再照合で既知の欠落を補完し、計数③12枚目はneeds-reviewへ戻した。鮮明な別原本がない限り、この面を推測で復元しない
 - iCloud側の文字起こしMarkdownも、清書済み成果物として更新対象。同期は `npm run sync:icloud -- <subject>` を使う
 
 ## 作業資料・起動補助

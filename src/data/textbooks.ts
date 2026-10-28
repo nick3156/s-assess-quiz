@@ -18,9 +18,9 @@ const rawLoaders: Record<SubjectId, () => Promise<string>> = {
 };
 
 export const textbookMeta: Omit<TextbookSource, "raw">[] = [
-  { id: "member", title: "メンバー指導", shortTitle: "メンバー", reviewStatus: "reviewed" },
-  { id: "roumu", title: "労務管理", shortTitle: "労務", reviewStatus: "reviewed" },
-  { id: "keisu", title: "計数入門", shortTitle: "計数", reviewStatus: "reviewed" },
+  { id: "member", title: "メンバー指導", shortTitle: "メンバー", reviewStatus: "partialScan" },
+  { id: "roumu", title: "労務管理", shortTitle: "労務", reviewStatus: "partialScan" },
+  { id: "keisu", title: "計数入門", shortTitle: "計数", reviewStatus: "partialScan" },
 ];
 
 let cache: Promise<TextbookSource[]> | null = null;
